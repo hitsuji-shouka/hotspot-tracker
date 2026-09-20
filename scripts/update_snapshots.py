@@ -1,15 +1,21 @@
 # 热点追踪站数据快照生成器
-# 抓取 skills.sh 排行榜 + 新浪财经 7x24 快讯，写入网站 public/data 与 dist/data
+# 抓取 skills.sh 排行榜 + 新浪财经 7x24 快讯 + HF 论文榜 + AI 新闻，写入网站数据目录
+# 本地：写入 E 盘项目的 public/data 与 dist/data
+# 服务器：设置 HOTSPOT_DATA_DIR 环境变量后只写该目录
 import json
+import os
 import re
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-# 网站已迁移到 E:\AGENT\KIMI\hotspot-tracker，快照直接写入该项目的 public/data 与 dist/data
-SITE_ROOT = Path(r"E:\AGENT\KIMI\hotspot-tracker")
-OUT_DIRS = [SITE_ROOT / "public" / "data", SITE_ROOT / "dist" / "data"]
+_env_out = os.environ.get("HOTSPOT_DATA_DIR")
+if _env_out:
+    OUT_DIRS = [Path(_env_out)]
+else:
+    SITE_ROOT = Path(r"E:\AGENT\KIMI\hotspot-tracker")
+    OUT_DIRS = [SITE_ROOT / "public" / "data", SITE_ROOT / "dist" / "data"]
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
