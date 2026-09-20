@@ -127,7 +127,7 @@ export default function Home() {
               <p className="text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
             </div>
             <a
-              href="./"
+              href="/"
               title="返回我的博客"
               aria-label="返回我的博客"
               className="group ml-3 flex w-9 h-9 items-center justify-center rounded-full border border-[#30363d] bg-[#161b22] transition-all hover:border-[#a371f7]/60 hover:bg-[#a371f7]/10 hover:scale-110"
