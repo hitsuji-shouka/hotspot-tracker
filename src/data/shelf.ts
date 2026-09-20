@@ -68,11 +68,13 @@ export const SHELF: ShelfItem[] = [
     note: 'UP 主剪辑版——两个把生命献给火山的人，和他们彼此的爱',
   },
   {
-    id: 'music-benji',
+    id: 'music-maruzen',
     category: 'music',
-    title: 'そしたらベンジーが肺に映ってトリップ',
+    title: '丸ノ内サディスティック',
     creator: '椎名林檎 ·《無罪モラトリアム》',
     cover: '/shelf/benji.jpg',
+    musicUrl: 'https://music.163.com/song?id=642776',
+    note: 'そしたらベンジーが肺に映ってトリップ',
   },
   {
     id: 'music-wanqing',
