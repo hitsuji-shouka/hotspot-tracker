@@ -90,6 +90,10 @@ export default function Home() {
   )
 
   useEffect(() => {
+    document.title = '热点追踪 · 羊宇宙漫游指南'
+  }, [])
+
+  useEffect(() => {
     load()
   }, [load])
 
@@ -119,8 +123,8 @@ export default function Home() {
               <Flame className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white leading-tight">热点追踪站</h1>
-              <p className="text-xs text-[#8b949e]">GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
+              <h1 className="text-lg font-bold text-white leading-tight">羊宇宙漫游指南</h1>
+              <p className="text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
             </div>
             <a
               href="./"

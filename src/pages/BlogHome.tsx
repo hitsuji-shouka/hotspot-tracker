@@ -61,6 +61,7 @@ export default function BlogHome() {
   const [repos, setRepos] = useState<Repo[]>([])
 
   useEffect(() => {
+    document.title = '羊宇宙漫游指南'
     fetchUser(GITHUB_USER).then(setUser).catch(() => {})
     fetchUserRepos(GITHUB_USER)
       .then((list) => setRepos([...list].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6)))
@@ -71,7 +72,7 @@ export default function BlogHome() {
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       {/* 顶部导航 */}
       <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <span className="font-serif font-bold text-lg">{PROFILE.name}</span>
+        <span className="font-serif font-bold text-lg">羊宇宙漫游指南</span>
         <nav className="flex items-center gap-5 text-[#6b655c]">
           <a href="#posts" className="hover:text-[#26221c] transition-colors">博文</a>
           <a href="#projects" className="hover:text-[#26221c] transition-colors">项目</a>

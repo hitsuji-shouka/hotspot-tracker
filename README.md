@@ -1,81 +1,57 @@
-# React + TypeScript + Vite
+# 羊宇宙漫游指南
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 在羊的宇宙里漫游——杨胜翔的个人博客，也是一座每日热点追踪站。
 
-Currently, two official plugins are available:
+[![Deploy to ECS](https://github.com/hitsuji-shouka/hotspot-tracker/actions/workflows/deploy.yml/badge.svg)](https://github.com/hitsuji-shouka/hotspot-tracker/actions/workflows/deploy.yml)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**在线访问**：<https://hitsuji-shouka.com/> ｜ **热点追踪**：<https://hitsuji-shouka.com/hotspot> ｜ **GitHub**：[@hitsuji-shouka](https://github.com/hitsuji-shouka)
 
-## React Compiler
+## 站点地图
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| 页面 | 内容 |
+| --- | --- |
+| `/` | 个人首页：自我介绍、实习经历、教育经历、科研论文、精选 GitHub 项目、博文列表 |
+| `/post/:slug` | 博文详情页（Markdown 渲染，支持标签与日期） |
+| `/hotspot` | 热点追踪站：GitHub 热点、Agent Skills、论文热点、AI 新闻、财经看点、统一收藏 |
 
-## Expanding the ESLint configuration
+## 功能
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **个人博客**：极简编辑风首页，自动拉取 GitHub 头像与按 Star 排序的精选仓库；博文存放在 `src/posts/*.md`，frontmatter 支持 `title / date / tags / summary`。
+- **GitHub 热点**：按语言 / 主题分类，支持今日 / 本周 / 本月时间范围、关键词搜索与限流兜底提示。
+- **每日榜单**：GitHub 项目、Agent Skills、Hugging Face 论文、AI 新闻四个榜单由服务器定时任务每天早间更新（`update_snapshots.py`，cron 08:10）。
+- **每日推送**：本地定时任务每天早间推送 Skills / GitHub / 论文 / AI 新闻 Top10（08:14–08:20，增量去重）。
+- **统一收藏**：网址、仓库、Skill、论文收藏集中在一个 Tab，通过 `/api/sync` 在服务器端持久化，手机与电脑数据一致。
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 技术栈
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- 前端：React 19 · TypeScript · Vite · Tailwind CSS · shadcn/ui · lucide-react
+- 服务端：Node.js 静态服务 + `/api/sync`（`server.mjs`，systemd 常驻）
+- 基础设施：阿里云 ECS · Cloudflare 命名隧道（HTTPS，免备案）· GitHub Actions CI/CD
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 本地开发
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 部署
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **日常**：`git push origin main` 即可——GitHub Actions 会自动构建并发布到 ECS（commit message 加 `[skip ci]` 可跳过）。
+- **手动**：`npm run build && DEPLOY_PASS='服务器密码' npm run deploy`（也支持 `DEPLOY_KEY` 私钥）。
+- 部署只替换服务器上的 `index.html` 与 `assets/`，不影响 `dist/data` 榜单数据与 `sync-data.json` 收藏数据。
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 目录结构
+
+```
+src/pages/      页面：博客首页 / 热点追踪 / 博文详情
+src/sections/   追踪站各数据源模块（Skills、论文、AI 新闻、财经、收藏…）
+src/posts/      Markdown 博文
+src/lib/        GitHub API、缓存、文章加载等工具
+scripts/        每日榜单与推送脚本、部署脚本
+public/         站点图标与静态资源
 ```
 
+## 数据来源
 
-## 改完上线
-
-- 日常：直接 `git add -A && git commit -m "..." && git push origin main`。push 到 `main` 后 GitHub Actions 会自动 `npm ci && npm run build`，打包 `dist` 并通过 SSH 发布到 ECS（https://hitsuji-shouka.com/）。部署只替换 `index.html` 和 `assets/`，不动 `dist/data` 榜单数据，也不动 `sync-data.json` 收藏同步数据。
-- 本地预览：`npm run dev`。
-- 不想触发部署的提交：commit message 里加 `[skip ci]`。
-- 手动部署（不 push 时）：`npm run build && DEPLOY_PASS='服务器密码' npm run deploy`，或 `DEPLOY_KEY='~/.ssh/id_ed25519' npm run deploy`。
+GitHub Search API · skills.sh · Hugging Face Papers · 量子位 · Hacker News · 新浪财经。收藏与同步数据保存在服务器 `sync-data.json`，仓库中不包含任何密码或密钥。
