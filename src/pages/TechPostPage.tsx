@@ -2,7 +2,6 @@ import { Link, useParams } from 'react-router'
 import { getTechPost, renderMarkdown } from '@/lib/posts'
 import { ArrowLeft, Calendar, Hash } from 'lucide-react'
 
-const BORDER = '#e8e4dc'
 const ACCENT = '#c2410c'
 
 export default function TechPostPage() {
