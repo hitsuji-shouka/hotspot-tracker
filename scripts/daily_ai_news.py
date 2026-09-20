@@ -1,9 +1,11 @@
-# 每日 AI 要闻 Top10 推送
-# 量子位最新 5 条 + Hacker News 首页最热 5 条，生成中文摘要
+# 每日 AI 要闻 Top10 推送（增量推送）
+# 候选池：量子位最新 + Hacker News 首页最热，每次只推距上次推送以来未推过的新闻
 import json
 import re
 import urllib.request
 from datetime import datetime, timezone
+
+from push_state import pick_new, window_text
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
@@ -49,21 +51,31 @@ def hn_top(n: int = 2) -> list[dict]:
 
 def run(ctx):
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
-    items = []
+    qb_pool: list[dict] = []
+    hn_pool: list[dict] = []
     errors = []
     try:
-        items += qbitai_top(5)
+        qb_pool = qbitai_top(10)
     except Exception as e:  # noqa: BLE001
         errors.append(f"量子位: {e}")
     try:
-        items += hn_top(5)
+        hn_pool = hn_top(10)
     except Exception as e:  # noqa: BLE001
         errors.append(f"Hacker News: {e}")
-    if not items:
+    if not qb_pool and not hn_pool:
         raise RuntimeError(f"AI 新闻源全部不可用: {'; '.join(errors)}")
 
+    # 每个来源独立做增量筛选，各取 5 条，保证双源均衡不互相挤占
+    qb_items, prev_run, qb_new = pick_new("ai_news_qbitai", qb_pool, "url", 5)
+    hn_items, _, hn_new = pick_new("ai_news_hn", hn_pool, "url", 5)
+    items = qb_items + hn_items
+    new_count = qb_new + hn_new
+
     lines = [f"# 🤖 AI 今日要闻 Top{len(items)}（{today}）", ""]
-    lines.append("量子位最新报道 + Hacker News 社区最热：")
+    lines.append(
+        f"{window_text(prev_run)}：量子位最新报道 + Hacker News 社区最热，"
+        f"其中 {new_count} 条是首次推送的新要闻："
+    )
     lines.append("")
     for i, n in enumerate(items, 1):
         tag = "🇨🇳" if n["source"] == "量子位" else "🟧"

@@ -1,9 +1,11 @@
-# 每日热点论文抓取
-# 从 Hugging Face Papers 抓取当日热门论文（按 upvotes 排序），生成中文摘要
+# 每日热点论文抓取（增量推送）
+# 候选池：Hugging Face Papers 每日榜（按 upvotes 排序），每次只推距上次推送以来未推过的新论文
 import json
 import time
 import urllib.request
 from datetime import datetime, timezone
+
+from push_state import pick_new, window_text
 
 SOURCES = [
     "https://huggingface.co/api/papers?limit=30",
@@ -29,12 +31,17 @@ def fetch_papers():
 
 def run(ctx):
     papers = fetch_papers()
-    top = sorted(papers, key=lambda p: p.get("upvotes", 0), reverse=True)[:10]
+    pool = sorted(papers, key=lambda p: p.get("upvotes", 0), reverse=True)
+    # 增量筛选：优先推距上次推送以来未推过的论文，不足用榜单其余补足
+    top, prev_run, new_count = pick_new("papers", pool, "id", 10)
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
 
     result_items = []
     lines = [f"# 📄 今日热点论文（{today}）", ""]
-    lines.append(f"来自 Hugging Face Papers 每日榜，按社区投票排序，Top {len(top)}：")
+    lines.append(
+        f"{window_text(prev_run)}：候选池为 Hugging Face Papers 每日榜（按社区投票排序），"
+        f"其中 {new_count} 篇是首次上榜的新论文，共 {len(top)} 条："
+    )
     lines.append("")
 
     for i, p in enumerate(top, 1):

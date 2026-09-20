@@ -1,12 +1,14 @@
-# GitHub 今日热门项目 Top 10
-# 抓取当日（不足时回退近 7 天）新创建的高星开源项目，生成中文摘要
+# GitHub 今日热门项目 Top 10（增量推送）
+# 候选池：近 3 天创建的高星项目（不足回退近 7 天），每次只推距上次推送以来未推过的新面孔
 import json
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
+from push_state import pick_new, window_text
 
-def gh_search(days: int, per_page: int = 10):
+
+def gh_search(days: int, per_page: int = 30):
     since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
     q = f"created:>{since} stars:>10"
     url = (
@@ -28,15 +30,16 @@ def run(ctx):
         data = gh_search(7)
         items = data.get("items", [])
 
-    top = items[:10]
+    # 增量筛选：优先推距上次推送以来未推过的项目，不足用候选池补足
+    top, prev_run, new_count = pick_new("github_repos", items, "full_name", 10)
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
 
     result_items = []
     lines = [f"# 🔥 GitHub 今日热门项目 Top 10（{today}）", ""]
-    if window_days == 3:
-        lines.append(f"近 3 天新创建的热门开源项目，共 {data.get('total_count', 0)} 个，按 Star 排序 Top {len(top)}：")
-    else:
-        lines.append(f"近 3 天新增较少，展示近 7 天新星项目 Top {len(top)}：")
+    lines.append(
+        f"{window_text(prev_run)}：候选池为近 {window_days} 天新创建的热门项目（按 Star 排序），"
+        f"其中 {new_count} 个是首次上榜的新面孔，共 {len(top)} 条："
+    )
     lines.append("")
 
     for i, r in enumerate(top, 1):

@@ -1,9 +1,11 @@
-# 每日热门 Skills 抓取
-# 从 GitHub 搜索抓取新出现的热门 AI Agent Skill 仓库，生成中文摘要
+# 每日热门 Skills 抓取（增量推送）
+# 候选池：近 7 天新出现的热门 AI Agent Skill 仓库，每次只推距上次推送以来未推过的新面孔
 import json
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
+
+from push_state import pick_new, window_text
 
 CATEGORIES = [
     ("编程开发", "💻", ["code", "coding", "program", "debug", "refactor", "review", "dev"]),
@@ -43,20 +45,21 @@ def run(ctx):
     window_days = 1
     data = gh_search(1)
     items = data.get("items", [])
-    if len(items) < 3:  # 当日不足时回退到近 7 天
+    if len(items) < 10:  # 当日不足时直接用近 7 天候选池
         window_days = 7
         data = gh_search(7)
         items = data.get("items", [])
 
-    top = items[:10]
+    # 增量筛选：优先推距上次推送以来未推过的 Skill，不足用候选池补足
+    top, prev_run, new_count = pick_new("skills", items, "full_name", 10)
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
 
     result_items = []
     lines = [f"# 🧩 每日热门 Skills（{today}）", ""]
-    if window_days == 1:
-        lines.append(f"过去 24 小时新出现的热门 AI Agent Skills，共 {data.get('total_count', 0)} 个，以下为 Top {len(top)}：")
-    else:
-        lines.append(f"过去 24 小时新增较少，展示近 7 天新星 Skills Top {len(top)}：")
+    lines.append(
+        f"{window_text(prev_run)}：候选池为近 {window_days} 天新出现的热门 AI Agent Skills（按 Star 排序），"
+        f"其中 {new_count} 个是首次上榜的新面孔，共 {len(top)} 条："
+    )
     lines.append("")
 
     for i, r in enumerate(top, 1):
