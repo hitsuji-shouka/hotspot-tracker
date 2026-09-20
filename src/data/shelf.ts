@@ -29,6 +29,7 @@ export const SHELF: ShelfItem[] = [
     title: '夜晚的潜水艇',
     creator: '陈春成',
     cover: '/shelf/qianshuiting.jpg',
+    note: '有时我甚至觉得我们星球上所发生的一切，其实只是另一个人对着尘埃的幻想罢了',
   },
   {
     id: 'movie-interstellar',
@@ -36,6 +37,7 @@ export const SHELF: ShelfItem[] = [
     title: '星际穿越',
     creator: '克里斯托弗·诺兰',
     cover: '/shelf/interstellar.jpg',
+    note: '爱是一种力量，让我们超越时空感知它的存在',
   },
   {
     id: 'music-wanqing',
@@ -43,5 +45,6 @@ export const SHELF: ShelfItem[] = [
     title: '万能青年旅店',
     creator: '万能青年旅店',
     cover: '/shelf/wanqing.jpg',
+    note: '云层深处的黑暗啊 淹没心底的景观',
   },
 ]
