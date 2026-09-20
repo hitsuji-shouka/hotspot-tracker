@@ -85,7 +85,7 @@ function embedMedia(md: string): string {
       const t = line.trim()
       const bv = t.match(/^https?:\/\/(?:www\.)?bilibili\.com\/video\/(BV[\w]+)/)
       if (bv) {
-        return `<div class="video-embed"><iframe src="https://player.bilibili.com/player.html?bvid=${bv[1]}&high_quality=1" allowfullscreen scrolling="no" frameborder="0"></iframe></div>`
+        return `<div class="video-embed"><iframe src="https://player.bilibili.com/player.html?bvid=${bv[1]}&high_quality=1&danmaku=0" allowfullscreen scrolling="no" frameborder="0"></iframe></div>`
       }
       const yt = t.match(/^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
       if (yt) {

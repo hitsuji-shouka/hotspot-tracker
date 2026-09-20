@@ -112,7 +112,7 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
         </div>
         {bvid ? (
           <iframe
-            src={`https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&high_quality=1`}
+            src={`https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&high_quality=1&danmaku=0`}
             className="w-full aspect-video rounded-lg bg-black"
             allowFullScreen
             scrolling="no"
