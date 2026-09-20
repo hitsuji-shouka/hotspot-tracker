@@ -26,7 +26,7 @@ jobs:
         run: npm run build
 
       - name: Package dist
-        run: tar -czf dist.tgz -C dist index.html assets
+        run: tar -czf dist.tgz -C dist --exclude='./data' .
 
       - name: Upload package
         uses: appleboy/scp-action@v0.1.7

@@ -83,8 +83,15 @@ def main() -> None:
         run(client, f"rm -rf {REMOTE_DIST}/assets && mkdir -p {REMOTE_DIST}")
         sftp = client.open_sftp()
         try:
-            sftp.put(str(LOCAL_DIST / "index.html"), f"{REMOTE_DIST}/index.html")
-            n = upload_dir(sftp, LOCAL_DIST / "assets", f"{REMOTE_DIST}/assets")
+            uploaded = []
+            for entry in sorted(LOCAL_DIST.iterdir()):
+                if entry.name == "data":
+                    continue
+                if entry.is_file():
+                    sftp.put(str(entry), f"{REMOTE_DIST}/{entry.name}")
+                    uploaded.append(entry.name)
+                elif entry.is_dir():
+                    uploaded.append(f"{entry.name}/({upload_dir(sftp, entry, REMOTE_DIST + '/' + entry.name)})")
         finally:
             sftp.close()
 
@@ -92,7 +99,7 @@ def main() -> None:
         js = next((p.name for p in assets if p.suffix == ".js"), None)
         home_code = run(client, "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/")
         asset_code = run(client, f"curl -s -o /dev/null -w '%{{http_code}}' http://127.0.0.1/assets/{js}") if js else "skip"
-        print(f"上传完成：index.html + assets({n} 个文件)")
+        print(f"上传完成：{', '.join(uploaded)}")
         print(f"本机校验：/ => {home_code}，/assets/{js} => {asset_code}")
         print("线上地址：https://hitsuji-shouka.com/")
     finally:
