@@ -109,6 +109,57 @@ def scrape_finance() -> list[dict]:
     return items
 
 
+def scrape_ai_news() -> list[dict]:
+    """AI 领域新闻：量子位（中文）+ Hacker News 首页（英文）双源合并"""
+    items: list[dict] = []
+
+    # 量子位 WordPress REST API
+    try:
+        posts = json.loads(fetch("https://www.qbitai.com/wp-json/wp/v2/posts?per_page=15"))
+        for p in posts:
+            title = re.sub(r"<[^>]+>", "", p.get("title", {}).get("rendered", "")).strip()
+            excerpt = re.sub(r"<[^>]+>", "", p.get("excerpt", {}).get("rendered", "")).strip()
+            excerpt = re.sub(r"\s+", " ", excerpt)
+            if len(excerpt) > 160:
+                excerpt = excerpt[:160] + "…"
+            if not title:
+                continue
+            items.append(
+                {
+                    "source": "量子位",
+                    "time": (p.get("date") or "").replace("T", " "),
+                    "title": title,
+                    "text": excerpt or None,
+                    "url": p.get("link") or "",
+                    "points": None,
+                }
+            )
+    except Exception as e:  # noqa: BLE001
+        print(f"量子位抓取失败: {e}")
+
+    # Hacker News 首页榜（Algolia 官方 API）
+    try:
+        d = json.loads(fetch("https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=12"))
+        for h in d.get("hits", []):
+            title = (h.get("title") or "").strip()
+            if not title:
+                continue
+            items.append(
+                {
+                    "source": "Hacker News",
+                    "time": (h.get("created_at") or "").replace("T", " ")[:19],
+                    "title": title,
+                    "text": None,
+                    "url": h.get("url") or f"https://news.ycombinator.com/item?id={h.get('objectID')}",
+                    "points": h.get("points"),
+                }
+            )
+    except Exception as e:  # noqa: BLE001
+        print(f"Hacker News 抓取失败: {e}")
+
+    return items
+
+
 PAPERS_SOURCES = [
     "https://huggingface.co/api/papers?limit=30",
     "https://hf-mirror.com/api/papers?limit=30",  # 国内镜像兜底
@@ -158,18 +209,27 @@ def main() -> dict:
     skills = scrape_skills()
     finance = scrape_finance()
     papers = scrape_papers()
+    ai_news = scrape_ai_news()
 
     skills_json = {"updatedAt": now, "source": "skills.sh", "count": len(skills), "items": skills}
     finance_json = {"updatedAt": now, "source": "新浪财经 7x24", "count": len(finance), "items": finance}
     papers_json = {"updatedAt": now, "source": "Hugging Face Papers", "count": len(papers), "items": papers}
+    ai_news_json = {"updatedAt": now, "source": "量子位 · Hacker News", "count": len(ai_news), "items": ai_news}
 
     for d in OUT_DIRS:
         d.mkdir(parents=True, exist_ok=True)
         (d / "skills.json").write_text(json.dumps(skills_json, ensure_ascii=False, indent=1), encoding="utf-8")
         (d / "finance.json").write_text(json.dumps(finance_json, ensure_ascii=False, indent=1), encoding="utf-8")
         (d / "papers.json").write_text(json.dumps(papers_json, ensure_ascii=False, indent=1), encoding="utf-8")
+        (d / "ai_news.json").write_text(json.dumps(ai_news_json, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    return {"updatedAt": now, "skillsCount": len(skills), "financeCount": len(finance), "papersCount": len(papers)}
+    return {
+        "updatedAt": now,
+        "skillsCount": len(skills),
+        "financeCount": len(finance),
+        "papersCount": len(papers),
+        "aiNewsCount": len(ai_news),
+    }
 
 
 # 支持两种用法：直接 python 运行，或被 Blueprint Automation 以 run(ctx) 调用
@@ -177,7 +237,8 @@ def run(ctx=None):
     stats = main()
     summary = (
         f"热点追踪站数据已更新：skills.sh 榜单 {stats['skillsCount']} 个，"
-        f"财经快讯 {stats['financeCount']} 条，热点论文 {stats['papersCount']} 篇（{stats['updatedAt']}）"
+        f"财经快讯 {stats['financeCount']} 条，热点论文 {stats['papersCount']} 篇，"
+        f"AI 新闻 {stats['aiNewsCount']} 条（{stats['updatedAt']}）"
     )
     return {"artifact": {**stats, "summary": summary}}
 
