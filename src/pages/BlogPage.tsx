@@ -14,7 +14,10 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <Link to="/" className="font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">羊宇宙漫游指南</Link>
+        <Link to="/" className="flex items-center gap-2 font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">
+          <img src="/sheep-planet.png" alt="返回首页" className="w-6 h-6 object-contain" />
+          羊宇宙漫游指南
+        </Link>
         <SiteNav />
       </header>
 
