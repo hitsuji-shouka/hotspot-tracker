@@ -2,14 +2,15 @@
 // 封面图放到 public/shelf/ 目录（比如 public/shelf/qianshuiting.jpg），cover 写 '/shelf/qianshuiting.jpg'；
 // 不填 cover 会自动生成一个渐变占位封面，也很好看。
 //
-// 视频作品：category 用 'video'，videoUrl 填视频链接——
-//   · 直链视频（mp4/webm 等）：不填 cover 时会自动截取首帧当封面，点击卡片在当前页弹窗播放；
-//   · B 站视频（https://www.bilibili.com/video/BV...）：点击卡片内嵌 B 站播放器播放，
+// 视频：任何分类（影视 / 书籍 / 音乐）的作品都可以配 videoUrl，配上后卡片会带「▶ 视频」标签，
+// 点击卡片在当前页弹窗播放——
+//   · 直链视频（mp4/webm 等）：不填 cover 时会自动截取首帧当封面；
+//   · B 站视频（https://www.bilibili.com/video/BV...）：内嵌 B 站播放器播放，
 //     封面建议手动放一张图到 public/shelf/ 并配置 cover（B 站封面有跨域限制，无法自动抓）。
 // 示例：
 //   {
-//     id: 'video-xxx',
-//     category: 'video',
+//     id: 'movie-xxx',
+//     category: 'movie',
 //     title: '某个很喜欢的视频',
 //     creator: 'UP 主名字',
 //     videoUrl: 'https://www.bilibili.com/video/BV1xx411c7mD',
@@ -18,7 +19,7 @@
 //     rating: 5,
 //   },
 
-export type ShelfCategory = 'movie' | 'book' | 'music' | 'video'
+export type ShelfCategory = 'movie' | 'book' | 'music'
 export type ShelfFilter = ShelfCategory | 'all'
 
 export interface ShelfItem {
@@ -27,7 +28,7 @@ export interface ShelfItem {
   title: string
   creator: string
   cover?: string
-  videoUrl?: string // category 为 video 时填写
+  videoUrl?: string // 配上即为「视频」作品，卡片出现播放标签
   note?: string
   rating?: number // 1-5
 }
@@ -37,7 +38,6 @@ export const CATEGORY_META: Record<ShelfFilter, { label: string; emoji: string }
   movie: { label: '影视', emoji: '🎬' },
   book: { label: '书籍', emoji: '📖' },
   music: { label: '音乐', emoji: '🎵' },
-  video: { label: '视频', emoji: '🎞️' },
 }
 
 export const SHELF: ShelfItem[] = [

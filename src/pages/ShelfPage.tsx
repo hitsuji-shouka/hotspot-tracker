@@ -11,14 +11,12 @@ const GRADIENTS: Record<ShelfCategory, string> = {
   movie: 'from-[#1f2937] to-[#0f172a]',
   book: 'from-[#d6a85c] to-[#a97b3f]',
   music: 'from-[#8b7bd8] to-[#5b4fb8]',
-  video: 'from-[#0e7490] to-[#164e63]',
 }
 
 const ASPECT: Record<ShelfCategory, string> = {
   movie: 'aspect-[2/3]',
   book: 'aspect-[2/3]',
   music: 'aspect-square',
-  video: 'aspect-video',
 }
 
 /** 从 B 站链接里提取 BV 号，非 B 站链接返回 null */
@@ -27,9 +25,9 @@ function bilibiliBvid(url: string): string | null {
   return m ? m[1] : null
 }
 
-/** 卡片封面区：普通作品是一张封面；视频作品带播放按钮，点击弹窗播放 */
+/** 卡片封面区：普通作品是一张封面；配了 videoUrl 的作品带「▶ 视频」标签，点击弹窗播放 */
 function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
-  const isVideo = item.category === 'video' && !!item.videoUrl
+  const isVideo = !!item.videoUrl
 
   const inner = item.cover ? (
     <img src={item.cover} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
@@ -58,6 +56,10 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
   return (
     <button type="button" onClick={() => onPlay(item)} className="relative w-full h-full block text-left">
       {inner}
+      <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/55 backdrop-blur-sm px-2 py-0.5 text-[11px] text-white">
+        <Play className="w-3 h-3" fill="currentColor" />
+        视频
+      </span>
       <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/25">
         <span className="w-11 h-11 rounded-full bg-black/55 backdrop-blur-sm flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-110">
           <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
@@ -135,7 +137,7 @@ export default function ShelfPage() {
       <main className="max-w-5xl mx-auto px-6 pb-16">
         <section className="pt-10 pb-6">
           <h1 className="font-serif text-2xl font-bold">漫游</h1>
-          <p className="text-sm text-[#6b655c] mt-2">在文学、电影、音乐和视频里漫游——这个书架会慢慢填满。</p>
+          <p className="text-sm text-[#6b655c] mt-2">在文学、电影和音乐里漫游——这个书架会慢慢填满。</p>
         </section>
 
         <div className="flex gap-2 mb-8 flex-wrap">
