@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 
 def gh_search(days: int, per_page: int = 10):
     since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
-    q = f"created:>{since} stars:>5"
+    q = f"created:>{since} stars:>10"
     url = (
         "https://api.github.com/search/repositories?q="
         + urllib.parse.quote(q)
@@ -20,10 +20,10 @@ def gh_search(days: int, per_page: int = 10):
 
 
 def run(ctx):
-    window_days = 1
-    data = gh_search(1)
+    window_days = 3
+    data = gh_search(3)
     items = data.get("items", [])
-    if len(items) < 3:  # 当日不足时回退到近 7 天
+    if len(items) < 10:  # 近 3 天不足时回退到近 7 天
         window_days = 7
         data = gh_search(7)
         items = data.get("items", [])
@@ -33,10 +33,10 @@ def run(ctx):
 
     result_items = []
     lines = [f"# 🔥 GitHub 今日热门项目 Top 10（{today}）", ""]
-    if window_days == 1:
-        lines.append(f"过去 24 小时新创建的热门开源项目，共 {data.get('total_count', 0)} 个，以下为 Top {len(top)}：")
+    if window_days == 3:
+        lines.append(f"近 3 天新创建的热门开源项目，共 {data.get('total_count', 0)} 个，按 Star 排序 Top {len(top)}：")
     else:
-        lines.append(f"过去 24 小时新增较少，展示近 7 天新星项目 Top {len(top)}：")
+        lines.append(f"近 3 天新增较少，展示近 7 天新星项目 Top {len(top)}：")
     lines.append("")
 
     for i, r in enumerate(top, 1):
