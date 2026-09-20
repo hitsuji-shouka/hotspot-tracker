@@ -29,6 +29,7 @@ export interface ShelfItem {
   creator: string
   cover?: string
   videoUrl?: string // 配上即为「视频」作品，卡片出现播放标签
+  musicUrl?: string // 网易云歌曲链接（https://music.163.com/song?id=xxx），配上后卡片出现「♪ 试听」标签，页面内播放
   note?: string
   rating?: number // 1-5
 }

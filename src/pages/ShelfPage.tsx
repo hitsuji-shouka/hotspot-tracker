@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { Play, Star, X } from 'lucide-react'
+import { Music, Play, Star, X } from 'lucide-react'
 import SiteNav from '@/components/SiteNav'
 import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfFilter, type ShelfItem } from '@/data/shelf'
 
@@ -25,13 +25,19 @@ function bilibiliBvid(url: string): string | null {
   return m ? m[1] : null
 }
 
-/** 卡片封面区：普通作品是一张封面；配了 videoUrl 的作品带「▶ 视频」标签，点击弹窗播放 */
+/** 从网易云链接里提取歌曲 ID，非网易云链接返回 null */
+function neteaseSongId(url: string): string | null {
+  const m = url.match(/music\.163\.com\/(?:#\/)?(?:song|m\/song)\/?\?.*?[?&]id=(\d+)/) ?? url.match(/music\.163\.com\/.*?[?&]id=(\d+)/)
+  return m ? m[1] : null
+}
+
+/** 卡片封面区：普通作品是一张封面；配了 videoUrl / musicUrl 的作品带播放标签，点击弹窗播放 */
 function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
-  const isVideo = !!item.videoUrl
+  const media: 'video' | 'music' | null = item.videoUrl ? 'video' : item.musicUrl ? 'music' : null
 
   const inner = item.cover ? (
     <img src={item.cover} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
-  ) : isVideo ? (
+  ) : media === 'video' ? (
     // 直链视频：截首帧当封面（#t=0.1 让浏览器定位到第一帧附近的画面）
     <video
       src={`${item.videoUrl}#t=0.1`}
@@ -51,14 +57,14 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
     </div>
   )
 
-  if (!isVideo) return <>{inner}</>
+  if (!media) return <>{inner}</>
 
   return (
     <button type="button" onClick={() => onPlay(item)} className="relative w-full h-full block text-left">
       {inner}
       <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/55 backdrop-blur-sm px-2 py-0.5 text-[11px] text-white">
-        <Play className="w-3 h-3" fill="currentColor" />
-        视频
+        {media === 'video' ? <Play className="w-3 h-3" fill="currentColor" /> : <Music className="w-3 h-3" />}
+        {media === 'video' ? '视频' : '试听'}
       </span>
       <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/25">
         <span className="w-11 h-11 rounded-full bg-black/55 backdrop-blur-sm flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-110">
@@ -69,8 +75,8 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
   )
 }
 
-/** 页面内弹窗播放器：直链用 <video>，B 站用内嵌 iframe */
-function VideoModal({ item, onClose }: { item: ShelfItem; onClose: () => void }) {
+/** 页面内弹窗播放器：直链视频用 <video>，B 站内嵌 iframe，网易云用外链播放器 */
+function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
@@ -82,13 +88,15 @@ function VideoModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
   }, [onClose])
 
   const bvid = item.videoUrl ? bilibiliBvid(item.videoUrl) : null
+  const nid = !bvid && item.musicUrl ? neteaseSongId(item.musicUrl) : null
+  const isMusic = !!nid
 
   return (
     <div
       className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div className="w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
+      <div className={`w-full ${isMusic ? 'max-w-md' : 'max-w-3xl'}`} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-3 text-white">
           <div className="font-medium truncate pr-4">{item.title}</div>
           <button onClick={onClose} className="p-1.5 rounded-full hover:bg-white/15 transition-colors" aria-label="关闭">
@@ -103,6 +111,20 @@ function VideoModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
             scrolling="no"
             frameBorder="0"
           />
+        ) : nid ? (
+          <div className="rounded-xl overflow-hidden bg-[#faf9f6] shadow-2xl">
+            {item.cover && <img src={item.cover} alt={item.title} className="w-full aspect-square object-cover" />}
+            <div className="p-4">
+              <div className="font-medium text-[15px] text-[#26221c] truncate">{item.title}</div>
+              <div className="text-xs text-[#a39e93] mt-0.5 truncate">{item.creator}</div>
+              <iframe
+                src={`https://music.163.com/outchain/player?type=2&id=${nid}&auto=1&height=66`}
+                className="w-full mt-3"
+                height={86}
+                frameBorder="0"
+              />
+            </div>
+          </div>
         ) : (
           <video src={item.videoUrl} controls autoPlay playsInline className="w-full max-h-[75vh] rounded-lg bg-black" />
         )}
@@ -199,7 +221,7 @@ export default function ShelfPage() {
         )}
       </main>
 
-      {playing && <VideoModal item={playing} onClose={() => setPlaying(null)} />}
+      {playing && <MediaModal item={playing} onClose={() => setPlaying(null)} />}
     </div>
   )
 }
