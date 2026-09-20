@@ -16,7 +16,7 @@ export default function ShelfPage() {
   const [filter, setFilter] = useState<ShelfFilter>('all')
 
   useEffect(() => {
-    document.title = '作品分享 · 羊宇宙漫游指南'
+    document.title = '分享 · 羊宇宙漫游指南'
   }, [])
 
   const items = useMemo(
@@ -33,7 +33,7 @@ export default function ShelfPage() {
 
       <main className="max-w-5xl mx-auto px-6 pb-16">
         <section className="pt-10 pb-6">
-          <h1 className="font-serif text-2xl font-bold">作品分享</h1>
+          <h1 className="font-serif text-2xl font-bold">分享</h1>
           <p className="text-sm text-[#6b655c] mt-2">我喜欢的电影、书和音乐——这个书架会慢慢填满。</p>
         </section>
 
