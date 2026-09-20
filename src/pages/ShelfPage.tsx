@@ -31,6 +31,12 @@ function neteaseSongId(url: string): string | null {
   return m ? m[1] : null
 }
 
+/** 从 Spotify 链接里提取类型和 ID，支持 track / album / playlist，非 Spotify 链接返回 null */
+function spotifyEmbed(url: string): { kind: string; id: string } | null {
+  const m = url.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?(track|album|playlist)\/([A-Za-z0-9]+)/)
+  return m ? { kind: m[1], id: m[2] } : null
+}
+
 /** 卡片封面区：普通作品是一张封面；配了 videoUrl / musicUrl 的作品带播放标签，点击弹窗播放 */
 function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
   const media: 'video' | 'music' | null = item.videoUrl ? 'video' : item.musicUrl ? 'music' : null
@@ -88,8 +94,9 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
   }, [onClose])
 
   const bvid = item.videoUrl ? bilibiliBvid(item.videoUrl) : null
-  const nid = !bvid && item.musicUrl ? neteaseSongId(item.musicUrl) : null
-  const isMusic = !!nid
+  const sp = !bvid && item.musicUrl ? spotifyEmbed(item.musicUrl) : null
+  const nid = !bvid && !sp && item.musicUrl ? neteaseSongId(item.musicUrl) : null
+  const isMusic = !!nid || !!sp
 
   return (
     <div
@@ -110,6 +117,15 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
             allowFullScreen
             scrolling="no"
             frameBorder="0"
+          />
+        ) : sp ? (
+          <iframe
+            src={`https://open.spotify.com/embed/${sp.kind}/${sp.id}?utm_source=generator&theme=0`}
+            className="w-full rounded-xl"
+            height={sp.kind === 'track' ? 152 : 352}
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
           />
         ) : nid ? (
           <div className="rounded-xl overflow-hidden bg-[#faf9f6] shadow-2xl">
