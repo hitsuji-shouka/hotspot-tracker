@@ -117,6 +117,9 @@ export interface GithubUser {
   name: string | null
   public_repos: number
   followers: number
+  following?: number
+  bio?: string | null
+  location?: string | null
 }
 
 async function ghFetchRaw<T>(url: string, token?: string): Promise<T> {

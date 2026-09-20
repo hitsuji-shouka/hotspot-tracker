@@ -124,6 +124,12 @@ export default function Home() {
               <h1 className="text-lg font-bold text-white leading-tight">热点追踪站</h1>
               <p className="text-xs text-[#8b949e]">GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
             </div>
+            <a
+              href="./"
+              className="ml-3 px-3 py-1.5 rounded-lg text-xs border border-[#30363d] text-[#8b949e] hover:text-white hover:border-[#8b949e] transition-colors"
+            >
+              📝 我的博客
+            </a>
           </div>
 
           <div className="relative">
