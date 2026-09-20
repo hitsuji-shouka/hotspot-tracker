@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-20T11:32:34+08:00",
+ "updatedAt": "2026-09-20T12:13:40+08:00",
  "source": "Hugging Face Papers",
  "count": 20,
  "items": [
@@ -8,7 +8,7 @@
    "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
    "url": "https://huggingface.co/papers/2609.19969",
    "arxiv": "https://arxiv.org/abs/2609.19969",
-   "upvotes": 110,
+   "upvotes": 113,
    "publishedAt": "2026-09-17",
    "authors": [
     "DeepSeek-AI",
@@ -25,7 +25,7 @@
    "title": "When EOS Tokens Disagree: Understanding Length Inflation in On-Policy Distillation",
    "url": "https://huggingface.co/papers/2609.20511",
    "arxiv": "https://arxiv.org/abs/2609.20511",
-   "upvotes": 89,
+   "upvotes": 90,
    "publishedAt": "2026-09-17",
    "authors": [
     "Yuxiao Yang",
@@ -42,7 +42,7 @@
    "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness",
    "url": "https://huggingface.co/papers/2609.20519",
    "arxiv": "https://arxiv.org/abs/2609.20519",
-   "upvotes": 81,
+   "upvotes": 82,
    "publishedAt": "2026-09-17",
    "authors": [
     "Haozhe Liu",
@@ -76,7 +76,7 @@
    "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
    "url": "https://huggingface.co/papers/2609.20800",
    "arxiv": "https://arxiv.org/abs/2609.20800",
-   "upvotes": 51,
+   "upvotes": 52,
    "publishedAt": "2026-09-17",
    "authors": [
     "Taoyong Cui",
@@ -161,7 +161,7 @@
    "title": "VABench: Measuring Embodied Spatial Intelligence through Visual Demonstrations, Active Perception, and Metric Control",
    "url": "https://huggingface.co/papers/2609.19554",
    "arxiv": "https://arxiv.org/abs/2609.19554",
-   "upvotes": 31,
+   "upvotes": 32,
    "publishedAt": "2026-09-17",
    "authors": [
     "Zhongbo Zhang",
@@ -304,6 +304,23 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19607.png"
   },
   {
+   "id": "2609.20818",
+   "title": "SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos",
+   "url": "https://huggingface.co/papers/2609.20818",
+   "arxiv": "https://arxiv.org/abs/2609.20818",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Peiyu Liu",
+    "Dingxi Zhang",
+    "Federico Tombari",
+    "Marc Pollefeys",
+    "Christina Tsalicoglou"
+   ],
+   "abstract": "A splash lives for a fraction of a second: sheets tear into ligaments and droplets, appearance is view-dependent and nearly textureless, and little persists long enough to track. Reconstruction resear…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20818.png"
+  },
+  {
    "id": "2609.20807",
    "title": "Score Centering Stabilizes Off-policy Reinforcement Learning",
    "url": "https://huggingface.co/papers/2609.20807",
@@ -316,23 +333,6 @@
    ],
    "abstract": "Reinforcement learning (RL) of large language models is notoriously sensitive to small differences between training and inference engines, often referred to as the training-inference mismatch (TIM). H…",
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20807.png"
-  },
-  {
-   "id": "2609.20593",
-   "title": "WiC is Not WSD: A Study on LLMs and Lexical Ambiguity Resolution",
-   "url": "https://huggingface.co/papers/2609.20593",
-   "arxiv": "https://arxiv.org/abs/2609.20593",
-   "upvotes": 0,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Yi Zhou",
-    "Kiamehr Rezaee",
-    "Danushka Bollegala",
-    "Mohammad Taher Pilehvar",
-    "Jose Camacho-Collados"
-   ],
-   "abstract": "Word-in-Context (WiC) remains challenging for language models, despite recent progress on lexical-semantic tasks. We hypothesise that this difficulty arises not only from comparing two contextual uses…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20593.png"
   }
  ]
 }
