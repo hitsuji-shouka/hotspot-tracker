@@ -14,7 +14,8 @@ const PROFILE = {
   tagline: '复旦大学硕士 · AI Agent / 后端开发',
   introPre: '你好，我是 ',
   introName: '杨胜翔',
-  introPost: '，复旦大学电子信息硕士在读，曾在蚂蚁和蔚来实习。',
+  introPost: '。',
+  introLine2: '喜欢探究技术，也喜欢感受故事。',
   introParagraphs: [
     '我热衷于 AI Agent 与后端技术，喜欢探究智能体如何理解问题、使用工具，也关心支撑它们的系统如何做到可靠、高效。这里记录我从原理到实践的探索，以及构建过程中遇到的问题与思考。',
     '技术之外，我也喜欢在文学、电影和音乐里漫游，记录那些让我停留、回味或产生新想法的作品。',
@@ -81,6 +82,8 @@ export default function BlogHome() {
             {PROFILE.introPre}
             <span style={{ color: ACCENT }}>{PROFILE.introName}</span>
             {PROFILE.introPost}
+            <br />
+            {PROFILE.introLine2}
           </p>
           <div className="mt-6 space-y-4 text-[15px] sm:text-base leading-[1.9] text-[#57534a]">
             {PROFILE.introParagraphs.map((p) => (
