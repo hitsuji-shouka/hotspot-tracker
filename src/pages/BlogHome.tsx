@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { fetchUser, fetchUserRepos, formatNumber, type GithubUser, type Repo } from '@/lib/github'
-import { posts } from '@/lib/posts'
+import SiteNav from '@/components/SiteNav'
 import { ArrowUpRight, Flame, Github, Mail, MapPin, Star } from 'lucide-react'
 
 const GITHUB_USER = 'hitsuji-shouka'
@@ -55,17 +55,7 @@ export default function BlogHome() {
       {/* 顶部导航 */}
       <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
         <span className="font-serif font-bold text-lg">羊宇宙漫游指南</span>
-        <nav className="flex items-center gap-5 text-[#6b655c]">
-          <a href="#posts" className="hover:text-[#26221c] transition-colors">博文</a>
-          <a href="#projects" className="hover:text-[#26221c] transition-colors">项目</a>
-          <Link to="/hotspot" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
-            <Flame className="w-3.5 h-3.5" style={{ color: ACCENT }} />
-            热点追踪站
-          </Link>
-          <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noreferrer" aria-label="GitHub">
-            <Github className="w-4 h-4 hover:text-[#26221c] transition-colors" />
-          </a>
-        </nav>
+        <SiteNav />
       </header>
 
       <main className="max-w-3xl mx-auto px-6 pb-16">
@@ -164,31 +154,6 @@ export default function BlogHome() {
             </div>
           </section>
         )}
-
-        {/* 博文 */}
-        <section id="posts" className="py-8 border-t" style={{ borderColor: BORDER }}>
-          <h2 className="font-serif text-xl font-bold mb-6">博文</h2>
-          <div className="space-y-1">
-            {posts.map((p) => (
-              <Link
-                key={p.slug}
-                to={`/post/${p.slug}`}
-                className="group flex items-baseline gap-4 py-3 border-b last:border-0 hover:bg-white/60 -mx-3 px-3 rounded-lg transition-colors"
-                style={{ borderColor: BORDER }}
-              >
-                <span className="text-xs text-[#a39e93] font-mono shrink-0 w-20">{p.date}</span>
-                <div className="min-w-0">
-                  <span className="font-medium text-[15px] group-hover:underline underline-offset-4" style={{ textDecorationColor: ACCENT }}>
-                    {p.title}
-                  </span>
-                  {p.summary && (
-                    <span className="block text-sm text-[#6b655c] mt-0.5 line-clamp-1">{p.summary}</span>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
 
         {/* 页脚 */}
         <footer className="pt-10 mt-6 border-t text-sm text-[#a39e93] flex items-center justify-between flex-wrap gap-3" style={{ borderColor: BORDER }}>

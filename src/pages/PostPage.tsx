@@ -15,8 +15,8 @@ export default function PostPage() {
         <div className="text-center">
           <p className="text-4xl mb-3">🫥</p>
           <p className="text-[#6b655c]">文章不存在</p>
-          <Link to="/" className="hover:underline text-sm mt-2 inline-block" style={{ color: ACCENT }}>
-            返回首页
+          <Link to="/blog" className="hover:underline text-sm mt-2 inline-block" style={{ color: ACCENT }}>
+            返回博客
           </Link>
         </div>
       </div>
@@ -26,9 +26,9 @@ export default function PostPage() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       <main className="max-w-3xl mx-auto px-6 py-10">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-[#a39e93] hover:text-[#26221c] transition-colors mb-8">
+        <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-[#a39e93] hover:text-[#26221c] transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          返回首页
+          返回博客
         </Link>
 
         <h1 className="font-serif text-3xl font-bold text-[#1d1a15] leading-tight">{post.title}</h1>
@@ -57,8 +57,8 @@ export default function PostPage() {
         />
 
         <footer className="text-center text-xs text-[#a39e93] pt-8 pb-8 mt-10 border-t" style={{ borderColor: BORDER }}>
-          <Link to="/" className="hover:underline" style={{ color: ACCENT }}>
-            ← 回到博客首页
+          <Link to="/blog" className="hover:underline" style={{ color: ACCENT }}>
+            ← 回到博客
           </Link>
         </footer>
       </main>
