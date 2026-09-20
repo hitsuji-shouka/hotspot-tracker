@@ -43,9 +43,7 @@ export const LANGUAGES: Category[] = [
   { id: 'rust', label: 'Rust', qualifier: 'language:rust', emoji: '🦀' },
   { id: 'java', label: 'Java', qualifier: 'language:java', emoji: '☕' },
   { id: 'cpp', label: 'C++', qualifier: 'language:c++', emoji: '⚙️' },
-  { id: 'csharp', label: 'C#', qualifier: 'language:c#', emoji: '🟪' },
   { id: 'swift', label: 'Swift', qualifier: 'language:swift', emoji: '🕊️' },
-  { id: 'kotlin', label: 'Kotlin', qualifier: 'language:kotlin', emoji: '🟧' },
   { id: 'vue', label: 'Vue', qualifier: 'language:vue', emoji: '💚' },
 ]
 
