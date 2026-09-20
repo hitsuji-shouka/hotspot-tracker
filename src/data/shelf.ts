@@ -58,6 +58,22 @@ export const SHELF: ShelfItem[] = [
     note: '爱是一种力量，让我们超越时空感知它的存在',
   },
   {
+    id: 'movie-fire-of-love',
+    category: 'movie',
+    title: '火山挚恋（Fire of Love 剪辑）',
+    creator: 'SadAndBlue',
+    cover: '/shelf/fire-of-love.jpg',
+    videoUrl: 'https://www.bilibili.com/video/BV1Fr421A74L',
+    note: 'UP 主剪辑版——两个把生命献给火山的人，和他们彼此的爱',
+  },
+  {
+    id: 'music-benji',
+    category: 'music',
+    title: 'そしたらベンジーが肺に映ってトリップ',
+    creator: '椎名林檎 ·《無罪モラトリアム》',
+    cover: '/shelf/benji.jpg',
+  },
+  {
     id: 'music-wanqing',
     category: 'music',
     title: '万能青年旅店',
