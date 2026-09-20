@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AlertTriangle, ArrowUpRight, FileText, RefreshCw, ThumbsUp } from 'lucide-react'
+import { useCollection } from '@/hooks/use-collection'
+import { AlertTriangle, ArrowUpRight, FileText, Heart, RefreshCw, ThumbsUp } from 'lucide-react'
 
-interface PaperItem {
+export interface PaperItem {
   id: string
   title: string
   url: string
@@ -22,10 +23,13 @@ interface PapersSnapshot {
   items: PaperItem[]
 }
 
+export const paperId = (p: PaperItem) => p.id
+
 export default function Papers({ keyword }: { keyword: string }) {
   const [data, setData] = useState<PapersSnapshot | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { toggle: toggleFav, has: isFav } = useCollection<PaperItem>('fav_papers', paperId)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -122,17 +126,28 @@ export default function Papers({ keyword }: { keyword: string }) {
                   </div>
                   {p.abstract && <p className="text-sm text-[#8b949e] mt-2 leading-relaxed">{p.abstract}</p>}
                 </div>
-                <a
-                  href={p.arxiv}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="查看 arXiv 原文"
-                  className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d] shrink-0"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  arXiv
-                  <ArrowUpRight className="w-3 h-3" />
-                </a>
+                <div className="flex flex-col items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => toggleFav(p)}
+                    title={isFav(p.id) ? '取消收藏' : '收藏这篇论文'}
+                    className={`p-1.5 rounded-md transition-colors ${
+                      isFav(p.id) ? 'text-[#f85149]' : 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#30363d]'
+                    }`}
+                  >
+                    <Heart className="w-4 h-4" fill={isFav(p.id) ? 'currentColor' : 'none'} />
+                  </button>
+                  <a
+                    href={p.arxiv}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="查看 arXiv 原文"
+                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d]"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    arXiv
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
             </div>
           ))}

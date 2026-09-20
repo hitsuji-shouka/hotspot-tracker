@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   BOOKMARK_CATEGORIES,
+  canonicalUrl,
   domainOf,
   faviconUrl,
   fetchLinkPreview,
@@ -51,8 +52,8 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
       setAddError('网址格式不正确，请输入如 blog.example.com 或完整链接')
       return
     }
-    if (list.some((b) => b.url === normalized)) {
-      setAddError('这个网址已经收藏过了')
+    if (list.some((b) => canonicalUrl(b.url) === canonicalUrl(normalized))) {
+      setAddError('这个网址已经收藏过了（含 http/https、www、末尾斜杠等写法差异）')
       return
     }
     setAdding(true)

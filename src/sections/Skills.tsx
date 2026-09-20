@@ -12,7 +12,8 @@ import {
   type SkillRange,
 } from '@/lib/skills'
 import { formatNumber, type Repo } from '@/lib/github'
-import { AlertTriangle, Download, Github, RefreshCw } from 'lucide-react'
+import { useCollection } from '@/hooks/use-collection'
+import { AlertTriangle, Download, Github, Heart, RefreshCw } from 'lucide-react'
 
 interface Props {
   keyword: string
@@ -20,7 +21,7 @@ interface Props {
   onToggleFavorite: (repo: Repo) => void
 }
 
-interface SkillShItem {
+export interface SkillShItem {
   rank: number | null
   name: string
   source: string
@@ -28,6 +29,8 @@ interface SkillShItem {
   url: string
   github: string
 }
+
+export const skillShId = (s: SkillShItem) => s.url
 
 interface SkillShSnapshot {
   updatedAt: string
@@ -92,6 +95,7 @@ function SkillShBoard({ keyword }: { keyword: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [catId, setCatId] = useState('all')
+  const { toggle: toggleFav, has: isFav } = useCollection<SkillShItem>('fav_skills', skillShId)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -191,6 +195,15 @@ function SkillShBoard({ keyword }: { keyword: string }) {
                 <Download className="w-3.5 h-3.5" />
                 {formatNumber(s.installs)} 安装
               </span>
+              <button
+                onClick={() => toggleFav(s)}
+                title={isFav(s.url) ? '取消收藏' : '收藏这个 Skill'}
+                className={`p-1.5 rounded-md transition-colors shrink-0 ${
+                  isFav(s.url) ? 'text-[#f85149]' : 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#30363d]'
+                }`}
+              >
+                <Heart className="w-4 h-4" fill={isFav(s.url) ? 'currentColor' : 'none'} />
+              </button>
               <a
                 href={s.github}
                 target="_blank"

@@ -57,6 +57,18 @@ export function domainOf(url: string): string {
   }
 }
 
+/** 规范化 URL 用于查重：协议/域名小写、去 www、去末尾斜杠、去 # 锚点 */
+export function canonicalUrl(url: string): string {
+  try {
+    const u = new URL(url)
+    const host = u.hostname.toLowerCase().replace(/^www\./, '')
+    const path = u.pathname.replace(/\/+$/, '')
+    return `${u.protocol.toLowerCase()}//${host}${path}${u.search}`
+  } catch {
+    return url.trim().toLowerCase().replace(/\/+$/, '')
+  }
+}
+
 export function faviconUrl(url: string): string {
   return `https://www.google.com/s2/favicons?domain=${domainOf(url)}&sz=128`
 }

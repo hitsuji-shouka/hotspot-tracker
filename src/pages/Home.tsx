@@ -7,9 +7,9 @@ import RepoCard from '@/components/RepoCard'
 import MyGithub from '@/sections/MyGithub'
 import Skills from '@/sections/Skills'
 import Finance from '@/sections/Finance'
-import Bookmarks from '@/sections/Bookmarks'
 import Papers from '@/sections/Papers'
 import AINews from '@/sections/AINews'
+import Favorites from '@/sections/Favorites'
 import { useFavorites } from '@/hooks/use-favorites'
 import {
   cacheGet,
@@ -26,7 +26,7 @@ import {
 import { Flame, Github, RefreshCw, Search, Sparkles, AlertTriangle } from 'lucide-react'
 
 type CategoryMode = 'language' | 'topic'
-type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav' | 'mine' | 'links'
+type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav' | 'mine'
 
 const NAV: { id: View; label: string; emoji: string }[] = [
   { id: 'hot', label: 'GitHub 热点', emoji: '🔥' },
@@ -34,8 +34,7 @@ const NAV: { id: View; label: string; emoji: string }[] = [
   { id: 'papers', label: '论文热点', emoji: '📄' },
   { id: 'ai', label: 'AI 新闻', emoji: '🤖' },
   { id: 'finance', label: '财经看点', emoji: '💹' },
-  { id: 'links', label: '网址收藏', emoji: '🔖' },
-  { id: 'fav', label: '仓库收藏', emoji: '❤️' },
+  { id: 'fav', label: '收藏', emoji: '⭐' },
   { id: 'mine', label: '我的 GitHub', emoji: '👤' },
 ]
 
@@ -97,16 +96,15 @@ export default function Home() {
   }, [load])
 
   const filtered = useMemo(() => {
-    const source = view === 'fav' ? favorites : repos
     const k = keyword.trim().toLowerCase()
-    if (!k) return source
-    return source.filter(
+    if (!k) return repos
+    return repos.filter(
       (r) =>
         r.full_name.toLowerCase().includes(k) ||
         (r.description ?? '').toLowerCase().includes(k) ||
         r.topics.some((t) => t.includes(k)),
     )
-  }, [repos, favorites, view, keyword])
+  }, [repos, keyword])
 
   const totalStars = useMemo(
     () => repos.reduce((s, r) => s + r.stargazers_count, 0),
@@ -152,8 +150,8 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-        {/* 统计条（仅热点/收藏视图显示） */}
-        {(view === 'hot' || view === 'fav') && (
+        {/* 统计条（仅热点视图显示） */}
+        {view === 'hot' && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
           <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
@@ -262,8 +260,8 @@ export default function Home() {
           <AINews keyword={keyword} />
         ) : view === 'finance' ? (
           <Finance keyword={keyword} />
-        ) : view === 'links' ? (
-          <Bookmarks keyword={keyword} />
+        ) : view === 'fav' ? (
+          <Favorites keyword={keyword} />
         ) : loading && view === 'hot' ? (
           <div className="grid gap-3 sm:grid-cols-2">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -272,13 +270,11 @@ export default function Home() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 text-[#8b949e]">
-            <p className="text-4xl mb-3">{view === 'fav' ? '💖' : '🛸'}</p>
+            <p className="text-4xl mb-3">🛸</p>
             <p>
-              {view === 'fav'
-                ? '还没有收藏任何仓库，点击卡片右上角的 ♡ 即可收藏'
-                : keyword
-                  ? '没有匹配的仓库，换个关键词试试'
-                  : '该分类下暂时没有热点项目，换个时间范围试试'}
+              {keyword
+                ? '没有匹配的仓库，换个关键词试试'
+                : '该分类下暂时没有热点项目，换个时间范围试试'}
             </p>
           </div>
         ) : (
