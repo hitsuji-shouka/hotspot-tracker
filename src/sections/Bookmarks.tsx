@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -18,6 +18,7 @@ import {
   saveBookmarks,
   type Bookmark,
 } from '@/lib/bookmarks'
+import { pullKey } from '@/lib/sync'
 import { Bookmark as BookmarkIcon, ExternalLink, Loader2, Plus, Trash2 } from 'lucide-react'
 
 export default function Bookmarks({ keyword }: { keyword: string }) {
@@ -28,6 +29,13 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
   const [category, setCategory] = useState('blog')
   const [adding, setAdding] = useState(false)
   const [addError, setAddError] = useState<string | null>(null)
+
+  // 启动时从服务器拉取（其他设备的收藏会同步过来）
+  useEffect(() => {
+    pullKey<Bookmark[]>('bookmarks').then((v) => {
+      if (v) setList(v)
+    })
+  }, [])
 
   const persist = (next: Bookmark[]) => {
     setList(next)

@@ -1,4 +1,5 @@
-// 网址收藏：本地存储 + 链接预览抓取（microlink.io，支持跨域）
+// 网址收藏：服务器多端同步 + 本地缓存 + 链接预览抓取（microlink.io，支持跨域）
+import { pushSync } from './sync'
 
 export interface BookmarkCategory {
   id: string
@@ -39,11 +40,7 @@ export function loadBookmarks(): Bookmark[] {
 }
 
 export function saveBookmarks(list: Bookmark[]) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(list))
-  } catch {
-    /* ignore */
-  }
+  pushSync('bookmarks', list)
 }
 
 export function normalizeUrl(input: string): string {

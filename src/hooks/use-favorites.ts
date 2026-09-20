@@ -1,29 +1,31 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { Repo } from '@/lib/github'
+import { pullKey, pushSync } from '@/lib/sync'
 
-const KEY = 'ghhot:favorites'
-
-function load(): Repo[] {
+function loadLocal(): Repo[] {
   try {
-    return JSON.parse(localStorage.getItem(KEY) ?? '[]')
+    return JSON.parse(localStorage.getItem('ghhot:favorites') ?? '[]')
   } catch {
     return []
   }
 }
 
-/** 收藏夹：localStorage 持久化，跨页面刷新保留 */
+/** 收藏夹：服务器多端同步 + localStorage 本地缓存 */
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<Repo[]>(load)
+  const [favorites, setFavorites] = useState<Repo[]>(loadLocal)
+
+  // 启动时从服务器拉取（其他设备的收藏会同步过来）
+  useEffect(() => {
+    pullKey<Repo[]>('favorites').then((v) => {
+      if (v) setFavorites(v)
+    })
+  }, [])
 
   const toggle = useCallback((repo: Repo) => {
     setFavorites((prev) => {
       const exists = prev.some((r) => r.id === repo.id)
       const next = exists ? prev.filter((r) => r.id !== repo.id) : [repo, ...prev]
-      try {
-        localStorage.setItem(KEY, JSON.stringify(next))
-      } catch {
-        /* ignore */
-      }
+      pushSync('favorites', next)
       return next
     })
   }, [])
