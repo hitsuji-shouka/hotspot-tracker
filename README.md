@@ -73,14 +73,9 @@ export default defineConfig([
 ```
 
 
-## 本地改完上线
+## 改完上线
 
-```bash
-cd /e/AGENT/KIMI/hotspot-tracker
-npm run dev        # 本地预览
-npm run build      # 构建到 dist/
-DEPLOY_PASS='服务器密码' npm run deploy   # 发布到 https://hitsuji-shouka.com/
-```
-
-也可以用 SSH 私钥代替密码：`DEPLOY_KEY='~/.ssh/id_ed25519' npm run deploy`。
-部署只替换服务器上的 `index.html` 和 `assets/`，不会动 `dist/data` 榜单数据，也不会动 `sync-data.json` 收藏同步数据。
+- 日常：直接 `git add -A && git commit -m "..." && git push origin main`。push 到 `main` 后 GitHub Actions 会自动 `npm ci && npm run build`，打包 `dist` 并通过 SSH 发布到 ECS（https://hitsuji-shouka.com/）。部署只替换 `index.html` 和 `assets/`，不动 `dist/data` 榜单数据，也不动 `sync-data.json` 收藏同步数据。
+- 本地预览：`npm run dev`。
+- 不想触发部署的提交：commit message 里加 `[skip ci]`。
+- 手动部署（不 push 时）：`npm run build && DEPLOY_PASS='服务器密码' npm run deploy`，或 `DEPLOY_KEY='~/.ssh/id_ed25519' npm run deploy`。
