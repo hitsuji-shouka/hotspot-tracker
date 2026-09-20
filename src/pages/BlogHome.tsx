@@ -200,9 +200,9 @@ export default function BlogHome() {
             <Link to="/hotspot" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
               <Flame className="w-3.5 h-3.5" /> 热点追踪站
             </Link>
-            <a href={`mailto:${PROFILE.email}`} className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
-              <Mail className="w-3.5 h-3.5" /> 邮箱
-            </a>
+            <span className="flex items-center gap-1">
+              <Mail className="w-3.5 h-3.5" /> {PROFILE.email}
+            </span>
           </div>
         </footer>
       </main>
