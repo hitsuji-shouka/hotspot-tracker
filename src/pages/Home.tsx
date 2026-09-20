@@ -119,20 +119,16 @@ export default function Home() {
       <header className="sticky top-0 z-10 border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 mr-auto">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#f78166] to-[#a371f7] flex items-center justify-center">
-              <Flame className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-white leading-tight">羊宇宙漫游指南</h1>
-              <p className="text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
-            </div>
-            <a
-              href="/"
-              title="返回我的博客"
-              aria-label="返回我的博客"
-              className="group ml-3 flex w-9 h-9 items-center justify-center rounded-full border border-[#30363d] bg-[#161b22] transition-all hover:border-[#a371f7]/60 hover:bg-[#a371f7]/10 hover:scale-110"
-            >
-              <img src="/sheep-planet.png" alt="我的博客" className="w-6 h-6 object-contain transition-transform group-hover:-rotate-12" />
+            <a href="/" className="group flex items-center gap-2.5" title="返回我的博客" aria-label="返回我的博客">
+              <img
+                src="/sheep-planet.png"
+                alt="羊宇宙漫游指南"
+                className="w-9 h-9 object-contain transition-transform group-hover:-rotate-12"
+              />
+              <div>
+                <h1 className="text-lg font-bold text-white leading-tight transition-colors group-hover:text-[#a371f7]">羊宇宙漫游指南</h1>
+                <p className="text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
+              </div>
             </a>
           </div>
 
