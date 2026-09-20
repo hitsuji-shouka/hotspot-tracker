@@ -100,5 +100,11 @@ function embedMedia(md: string): string {
 }
 
 export function renderMarkdown(md: string): string {
-  return marked.parse(embedMedia(md), { async: false }) as string
+  const html = marked.parse(embedMedia(md), { async: false }) as string
+  // 有 alt 文字的图片转成 figure + figcaption，注释显示在图片下方
+  return html.replace(/<img([^>]*?)>/g, (tag, attrs: string) => {
+    const alt = attrs.match(/alt="([^"]*)"/)?.[1]
+    if (!alt) return tag
+    return `<figure><img${attrs}><figcaption>${alt}</figcaption></figure>`
+  })
 }
