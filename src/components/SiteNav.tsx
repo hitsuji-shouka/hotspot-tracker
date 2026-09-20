@@ -4,8 +4,7 @@ import { Flame, Github } from 'lucide-react'
 const GITHUB_USER = 'hitsuji-shouka'
 
 const ITEMS: { to: string; label: string; end?: boolean }[] = [
-  { to: '/', label: '简历', end: true },
-  { to: '/shelf', label: '分享' },
+  { to: '/shelf', label: '漫游' },
   { to: '/blog', label: '博客' },
 ]
 

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router'
 import { Star } from 'lucide-react'
 import SiteNav from '@/components/SiteNav'
 import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfFilter } from '@/data/shelf'
@@ -16,7 +17,7 @@ export default function ShelfPage() {
   const [filter, setFilter] = useState<ShelfFilter>('all')
 
   useEffect(() => {
-    document.title = '分享 · 羊宇宙漫游指南'
+    document.title = '漫游 · 羊宇宙漫游指南'
   }, [])
 
   const items = useMemo(
@@ -27,14 +28,14 @@ export default function ShelfPage() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       <header className="max-w-5xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <span className="font-serif font-bold text-lg">羊宇宙漫游指南</span>
+        <Link to="/" className="font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">羊宇宙漫游指南</Link>
         <SiteNav />
       </header>
 
       <main className="max-w-5xl mx-auto px-6 pb-16">
         <section className="pt-10 pb-6">
-          <h1 className="font-serif text-2xl font-bold">分享</h1>
-          <p className="text-sm text-[#6b655c] mt-2">我喜欢的电影、书和音乐——这个书架会慢慢填满。</p>
+          <h1 className="font-serif text-2xl font-bold">漫游</h1>
+          <p className="text-sm text-[#6b655c] mt-2">在文学、电影和音乐里漫游——这个书架会慢慢填满。</p>
         </section>
 
         <div className="flex gap-2 mb-8 flex-wrap">

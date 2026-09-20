@@ -14,8 +14,12 @@ const PROFILE = {
   tagline: '复旦大学硕士 · AI Agent / 后端开发',
   introPre: '你好，我是 ',
   introName: '杨胜翔',
-  introPost:
-    '，复旦大学电子信息硕士在读。我专注于 AI Agent 与后端开发，曾在蚂蚁和蔚来实习。这里是我的数字自留地：记录项目与论文，也帮你追踪每天的技术热点。',
+  introPost: '，复旦大学电子信息硕士在读，曾在蚂蚁和蔚来实习。',
+  introParagraphs: [
+    '我热衷于 AI Agent 与后端技术，喜欢探究智能体如何理解问题、使用工具，也关心支撑它们的系统如何做到可靠、高效。这里记录我从原理到实践的探索，以及构建过程中遇到的问题与思考。',
+    '技术之外，我也喜欢在文学、电影和音乐里漫游，记录那些让我停留、回味或产生新想法的作品。',
+    '欢迎来到我的「羊宇宙漫游指南」，一起探索技术，也交换关于世界的感受。',
+  ],
   location: '上海',
   email: '2483346490@qq.com',
 }
@@ -54,7 +58,7 @@ export default function BlogHome() {
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       {/* 顶部导航 */}
       <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <span className="font-serif font-bold text-lg">羊宇宙漫游指南</span>
+        <Link to="/" className="font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">羊宇宙漫游指南</Link>
         <SiteNav />
       </header>
 
@@ -78,6 +82,11 @@ export default function BlogHome() {
             <span style={{ color: ACCENT }}>{PROFILE.introName}</span>
             {PROFILE.introPost}
           </p>
+          <div className="mt-6 space-y-4 text-[15px] sm:text-base leading-[1.9] text-[#57534a]">
+            {PROFILE.introParagraphs.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </div>
         </section>
 
         {/* 经历 */}
