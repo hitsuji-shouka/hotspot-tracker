@@ -186,7 +186,7 @@ export default function ShelfPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8">
             {items.map((item) => (
-              <div key={item.id} className="group">
+              <div key={item.id} className={`group ${item.videoUrl ? 'col-span-2 sm:col-span-1' : ''}`}>
                 <div
                   className={`overflow-hidden rounded-lg border bg-white shadow-sm transition-all group-hover:shadow-md group-hover:-translate-y-1 ${item.videoUrl ? 'aspect-video' : ASPECT[item.category]}`}
                   style={{ borderColor: BORDER }}
