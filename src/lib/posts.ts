@@ -72,7 +72,7 @@ export function getStudyPost(slug: string): Post | undefined {
 }
 
 /**
- * 把正文里单独一行的视频链接转成内嵌播放器：
+ * 把正文里单独一行的视频链接转成内嵌播放器（v2）：
  *   · B 站链接（https://www.bilibili.com/video/BV...）→ B 站内嵌播放器
  *   · YouTube 链接 → YouTube 内嵌播放器
  *   · 直链视频（.mp4/.webm 结尾）→ <video> 标签
