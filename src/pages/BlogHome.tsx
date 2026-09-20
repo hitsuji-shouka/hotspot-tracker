@@ -8,23 +8,49 @@ import { ArrowUpRight, Flame, Github, Mail, MapPin, Star } from 'lucide-react'
 
 const GITHUB_USER = 'hitsuji-shouka'
 
-/** 个人资料：真实信息由本人提供后更新 */
+/** 个人资料（依据简历整理） */
 const PROFILE = {
-  name: 'yang-shengxiang',
-  tagline: '专注 AI Agent 与后端开发',
+  name: '杨胜翔',
+  tagline: '复旦大学硕士 · AI Agent / 后端开发',
   introPre: '你好，我是 ',
-  introName: '盛翔',
+  introName: '杨胜翔',
   introPost:
-    '，一名住在上海的开发者。我着迷于 AI Agent 和一切能让开发变得更优雅的工具。这个网站是我的数字自留地：记录项目、分享想法，也帮你追踪每天的技术热点。',
+    '，复旦大学电子信息硕士在读（2027 届）。我专注于 AI Agent 与后端开发，曾在蚂蚁集团财富 AI Lab 和蔚来能源实习，做过服务百万用户的个性化推送系统和多 Agent 协作的工程化落地。这里是我的数字自留地：记录项目与论文，也帮你追踪每天的技术热点。',
   location: '上海',
+  email: '2483346490@qq.com',
 }
 
 const EDUCATION = [
-  { period: '20XX – 20XX', title: 'XX 大学 · 计算机科学（示例）', detail: '主修课程：数据结构、操作系统、分布式系统（发我真实信息替换）' },
+  {
+    period: '2024 – 2027',
+    title: '复旦大学 · 电子信息 · 硕士',
+    detail: 'GPA 3.67/4.0 · 核心课程：人工智能的数学基础（A）、机器学习（A）、数据分析与算法设计（A）',
+  },
+  {
+    period: '2019 – 2023',
+    title: '上海大学 · 通信工程 · 本科',
+    detail: 'CET-6 545 · 核心课程：数据结构、计算机网络、信号与系统',
+  },
 ]
 
 const EXPERIENCE = [
-  { period: '20XX.XX – 20XX.XX', title: 'XX 公司 · 后端开发实习生（示例）', detail: '负责 XX 系统的设计与落地，做了 XX 事情（发我真实信息替换）' },
+  {
+    period: '2026.05 – 2026.08',
+    title: '蚂蚁集团 · 财富 AI Lab · 智能体与大模型应用开发',
+    detail:
+      '负责财富 APP 的 AI 内容生产与个性化解读后端：打通 A/B 实验全链路，落地三类个性化 PUSH（个股公告覆盖近百万用户，账户复盘 UV CTR 相对提升 15.7%），治理 1,500 UID/s 峰值下的高并发触达。',
+  },
+  {
+    period: '2025.11 – 2026.04',
+    title: '蔚来 · 能源数智化 · Java 后端开发',
+    detail:
+      '负责 OCC 事件分配与升级、换电支付单管理等后端系统；基于 AgentScope Java 构建智能辅助做单 Agent，实现 Skill 编排、流式交互与人工确认（HITL）机制。',
+  },
+]
+
+const PUBLICATIONS = [
+  'BCGFMamba: Boundary-Context Guided Feature Fusion Mamba for Postoperative Glioma Residual Tumor Segmentation — ICBIP 2026（已录用）',
+  'Latent Domain-Specific Prompt-Driven SAM via Conditional Diffusion Refinement for Postoperative Glioma Segmentation — IEEE TII 2026（已录用）',
 ]
 
 const ACCENT = '#c2410c'
@@ -110,6 +136,16 @@ export default function BlogHome() {
               </div>
             ))}
           </div>
+
+          <h3 className="text-xs font-semibold tracking-widest text-[#a39e93] mt-8 mb-3">科研论文</h3>
+          <ul className="space-y-2.5">
+            {PUBLICATIONS.map((p) => (
+              <li key={p} className="flex gap-2.5 text-sm text-[#6b655c] leading-relaxed">
+                <span style={{ color: ACCENT }} className="shrink-0">▪</span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* 精选项目 */}
@@ -183,7 +219,7 @@ export default function BlogHome() {
             <Link to="/hotspot" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
               <Flame className="w-3.5 h-3.5" /> 热点追踪站
             </Link>
-            <a href="mailto:hi@hitsuji-shouka.com" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
+            <a href={`mailto:${PROFILE.email}`} className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
               <Mail className="w-3.5 h-3.5" /> 邮箱
             </a>
           </div>

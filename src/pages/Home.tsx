@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import RepoCard from '@/components/RepoCard'
-import MyGithub from '@/sections/MyGithub'
 import Skills from '@/sections/Skills'
 import Finance from '@/sections/Finance'
 import Papers from '@/sections/Papers'
@@ -23,10 +22,10 @@ import {
   type Repo,
   type TimeRange,
 } from '@/lib/github'
-import { Flame, Github, RefreshCw, Search, Sparkles, AlertTriangle } from 'lucide-react'
+import { AlertTriangle, BookOpenText, Flame, Github, RefreshCw, Search, Sparkles } from 'lucide-react'
 
 type CategoryMode = 'language' | 'topic'
-type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav' | 'mine'
+type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav'
 
 const NAV: { id: View; label: string; emoji: string }[] = [
   { id: 'hot', label: 'GitHub 热点', emoji: '🔥' },
@@ -35,7 +34,6 @@ const NAV: { id: View; label: string; emoji: string }[] = [
   { id: 'ai', label: 'AI 新闻', emoji: '🤖' },
   { id: 'finance', label: '财经看点', emoji: '💹' },
   { id: 'fav', label: '收藏', emoji: '⭐' },
-  { id: 'mine', label: '我的 GitHub', emoji: '👤' },
 ]
 
 export default function Home() {
@@ -126,9 +124,12 @@ export default function Home() {
             </div>
             <a
               href="./"
-              className="ml-3 px-3 py-1.5 rounded-lg text-xs border border-[#30363d] text-[#8b949e] hover:text-white hover:border-[#8b949e] transition-colors"
+              className="group ml-3 flex items-center gap-1.5 rounded-full border border-[#30363d] bg-[#161b22] px-3.5 py-1.5 text-xs font-medium text-[#c9d1d9] transition-all hover:border-[#f78166]/60 hover:bg-[#f78166]/10 hover:text-white"
             >
-              📝 我的博客
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#f78166] to-[#a371f7] text-white shadow-sm transition-transform group-hover:scale-110">
+                <BookOpenText className="h-3 w-3" />
+              </span>
+              我的博客
             </a>
           </div>
 
@@ -255,10 +256,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* 仓库列表 / Skills / 财经 / 我的 GitHub */}
-        {view === 'mine' ? (
-          <MyGithub keyword={keyword} isFavorite={isFavorite} onToggleFavorite={toggle} />
-        ) : view === 'skills' ? (
+        {/* 仓库列表 / Skills / 论文 / AI 新闻 / 财经 / 收藏 */}
+        {view === 'skills' ? (
           <Skills keyword={keyword} isFavorite={isFavorite} onToggleFavorite={toggle} />
         ) : view === 'papers' ? (
           <Papers keyword={keyword} />
