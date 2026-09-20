@@ -61,7 +61,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-fire-of-love',
     category: 'movie',
-    title: '火山挚恋（Fire of Love 剪辑）',
+    title: '【𝙁𝙞𝙧𝙚 𝙤𝙛 𝙇𝙤𝙫𝙚】火山挚恋',
     creator: 'SadAndBlue',
     cover: '/shelf/fire-of-love.jpg',
     videoUrl: 'https://www.bilibili.com/video/BV1Fr421A74L',
