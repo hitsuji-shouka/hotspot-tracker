@@ -21,4 +21,7 @@ summary: 为什么开这个专栏，以及它的写作原则——技术、语�
 
 https://www.bilibili.com/video/BV1Fr421A74L
 
+
+![图1：羊宇宙](/public/sheep-planet.png)
+
 **写给半年后的自己。** 假设读者已经忘光了背景知识，每一个概念第一次出现时都解释清楚。
