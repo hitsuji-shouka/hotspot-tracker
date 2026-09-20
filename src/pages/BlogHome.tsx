@@ -15,37 +15,19 @@ const PROFILE = {
   introPre: '你好，我是 ',
   introName: '杨胜翔',
   introPost:
-    '，复旦大学电子信息硕士在读。我专注于 AI Agent 与后端开发，曾在蚂蚁集团财富 AI Lab 和蔚来实习。这里是我的数字自留地：记录项目与论文，也帮你追踪每天的技术热点。',
+    '，复旦大学电子信息硕士在读。我专注于 AI Agent 与后端开发，曾在蚂蚁和蔚来实习。这里是我的数字自留地：记录项目与论文，也帮你追踪每天的技术热点。',
   location: '上海',
   email: '2483346490@qq.com',
 }
 
 const EDUCATION = [
-  {
-    period: '2024 – 2027',
-    title: '复旦大学 · 电子信息 · 硕士',
-    detail: 'GPA 3.67/4.0 · 核心课程：人工智能的数学基础（A）、机器学习（A）、数据分析与算法设计（A）',
-  },
-  {
-    period: '2019 – 2023',
-    title: '上海大学 · 通信工程 · 本科',
-    detail: 'CET-6 545 · 核心课程：数据结构、计算机网络、信号与系统',
-  },
+  { period: '2024 – 2027', title: '复旦大学 · 电子信息 · 硕士' },
+  { period: '2019 – 2023', title: '上海大学 · 通信工程 · 本科' },
 ]
 
 const EXPERIENCE = [
-  {
-    period: '2026.05 – 2026.08',
-    title: '蚂蚁集团 · 财富 AI Lab · 智能体与大模型应用开发',
-    detail:
-      '负责财富 APP 的 AI 内容生产与个性化解读后端：打通 A/B 实验全链路，落地三类个性化 PUSH（个股公告覆盖近百万用户，账户复盘 UV CTR 相对提升 15.7%），治理 1,500 UID/s 峰值下的高并发触达。',
-  },
-  {
-    period: '2025.11 – 2026.04',
-    title: '蔚来 · 能源数智化 · Java 后端开发',
-    detail:
-      '负责 OCC 事件分配与升级、换电支付单管理等后端系统；基于 AgentScope Java 构建智能辅助做单 Agent，实现 Skill 编排、流式交互与人工确认（HITL）机制。',
-  },
+  { period: '2026.05 – 2026.08', title: '蚂蚁集团 · 财富 AI Lab · 智能体与大模型应用开发' },
+  { period: '2025.11 – 2026.04', title: '蔚来 · 能源数智化 · Java 后端开发' },
 ]
 
 const PUBLICATIONS = [
@@ -119,7 +101,6 @@ export default function BlogHome() {
                 <div className="w-28 shrink-0 text-xs text-[#a39e93] pt-1 font-mono">{e.period}</div>
                 <div>
                   <div className="font-semibold text-[15px]">{e.title}</div>
-                  <div className="text-sm text-[#6b655c] mt-0.5 leading-relaxed">{e.detail}</div>
                 </div>
               </div>
             ))}
@@ -132,7 +113,6 @@ export default function BlogHome() {
                 <div className="w-28 shrink-0 text-xs text-[#a39e93] pt-1 font-mono">{e.period}</div>
                 <div>
                   <div className="font-semibold text-[15px]">{e.title}</div>
-                  <div className="text-sm text-[#6b655c] mt-0.5 leading-relaxed">{e.detail}</div>
                 </div>
               </div>
             ))}
