@@ -71,3 +71,16 @@ export default defineConfig([
   },
 ])
 ```
+
+
+## 本地改完上线
+
+```bash
+cd /e/AGENT/KIMI/hotspot-tracker
+npm run dev        # 本地预览
+npm run build      # 构建到 dist/
+DEPLOY_PASS='服务器密码' npm run deploy   # 发布到 https://hitsuji-shouka.com/
+```
+
+也可以用 SSH 私钥代替密码：`DEPLOY_KEY='~/.ssh/id_ed25519' npm run deploy`。
+部署只替换服务器上的 `index.html` 和 `assets/`，不会动 `dist/data` 榜单数据，也不会动 `sync-data.json` 收藏同步数据。
