@@ -6,6 +6,12 @@
 
 **在线访问**：<https://hitsuji-shouka.com/> ｜ **热点追踪**：<https://hitsuji-shouka.com/hotspot> ｜ **GitHub**：[@hitsuji-shouka](https://github.com/hitsuji-shouka)
 
+## 截图
+
+| 个人首页 | 热点追踪站 |
+| --- | --- |
+| ![个人首页](docs/screenshot-home.png) | ![热点追踪站](docs/screenshot-hotspot.png) |
+
 ## 站点地图
 
 | 页面 | 内容 |
