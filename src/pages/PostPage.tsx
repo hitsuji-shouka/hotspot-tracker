@@ -55,12 +55,6 @@ export default function PostPage() {
           className="md-body mt-8"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
         />
-
-        <footer className="text-center text-xs text-[#a39e93] pt-8 pb-8 mt-10 border-t" style={{ borderColor: BORDER }}>
-          <Link to="/blog" className="hover:underline" style={{ color: ACCENT }}>
-            ← 回到博客
-          </Link>
-        </footer>
       </main>
     </div>
   )
