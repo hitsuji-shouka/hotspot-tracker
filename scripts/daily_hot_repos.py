@@ -1,4 +1,4 @@
-# GitHub 今日热门项目 Top 5
+# GitHub 今日热门项目 Top 10
 # 抓取当日（不足时回退近 7 天）新创建的高星开源项目，生成中文摘要
 import json
 import urllib.parse
@@ -6,7 +6,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 
-def gh_search(days: int, per_page: int = 5):
+def gh_search(days: int, per_page: int = 10):
     since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
     q = f"created:>{since} stars:>5"
     url = (
@@ -28,11 +28,11 @@ def run(ctx):
         data = gh_search(7)
         items = data.get("items", [])
 
-    top = items[:5]
+    top = items[:10]
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
 
     result_items = []
-    lines = [f"# 🔥 GitHub 今日热门项目 Top 5（{today}）", ""]
+    lines = [f"# 🔥 GitHub 今日热门项目 Top 10（{today}）", ""]
     if window_days == 1:
         lines.append(f"过去 24 小时新创建的热门开源项目，共 {data.get('total_count', 0)} 个，以下为 Top {len(top)}：")
     else:

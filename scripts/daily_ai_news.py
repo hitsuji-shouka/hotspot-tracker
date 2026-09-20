@@ -1,5 +1,5 @@
-# 每日 AI 要闻 Top5 推送
-# 量子位最新 3 条 + Hacker News 首页最热 2 条，生成中文摘要
+# 每日 AI 要闻 Top10 推送
+# 量子位最新 5 条 + Hacker News 首页最热 5 条，生成中文摘要
 import json
 import re
 import urllib.request
@@ -52,11 +52,11 @@ def run(ctx):
     items = []
     errors = []
     try:
-        items += qbitai_top(3)
+        items += qbitai_top(5)
     except Exception as e:  # noqa: BLE001
         errors.append(f"量子位: {e}")
     try:
-        items += hn_top(2)
+        items += hn_top(5)
     except Exception as e:  # noqa: BLE001
         errors.append(f"Hacker News: {e}")
     if not items:
