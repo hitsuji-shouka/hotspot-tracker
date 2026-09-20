@@ -188,7 +188,7 @@ export default function ShelfPage() {
             {items.map((item) => (
               <div key={item.id} className="group">
                 <div
-                  className={`overflow-hidden rounded-lg border bg-white shadow-sm transition-all group-hover:shadow-md group-hover:-translate-y-1 ${ASPECT[item.category]}`}
+                  className={`overflow-hidden rounded-lg border bg-white shadow-sm transition-all group-hover:shadow-md group-hover:-translate-y-1 ${item.videoUrl ? 'aspect-video' : ASPECT[item.category]}`}
                   style={{ borderColor: BORDER }}
                 >
                   <CoverBox item={item} onPlay={setPlaying} />
