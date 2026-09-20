@@ -22,7 +22,7 @@ import {
   type Repo,
   type TimeRange,
 } from '@/lib/github'
-import { AlertTriangle, BookOpenText, Flame, Github, RefreshCw, Search, Sparkles } from 'lucide-react'
+import { AlertTriangle, Flame, Github, RefreshCw, Search, Sparkles } from 'lucide-react'
 
 type CategoryMode = 'language' | 'topic'
 type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav'
@@ -128,12 +128,11 @@ export default function Home() {
             </div>
             <a
               href="./"
-              className="group ml-3 flex items-center gap-1.5 rounded-full border border-[#30363d] bg-[#161b22] px-3.5 py-1.5 text-xs font-medium text-[#c9d1d9] transition-all hover:border-[#f78166]/60 hover:bg-[#f78166]/10 hover:text-white"
+              title="返回我的博客"
+              aria-label="返回我的博客"
+              className="group ml-3 flex w-9 h-9 items-center justify-center rounded-full border border-[#30363d] bg-[#161b22] transition-all hover:border-[#a371f7]/60 hover:bg-[#a371f7]/10 hover:scale-110"
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#f78166] to-[#a371f7] text-white shadow-sm transition-transform group-hover:scale-110">
-                <BookOpenText className="h-3 w-3" />
-              </span>
-              我的博客
+              <img src="/sheep-planet.png" alt="我的博客" className="w-6 h-6 object-contain transition-transform group-hover:-rotate-12" />
             </a>
           </div>
 

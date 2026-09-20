@@ -149,10 +149,10 @@ export default function BlogHome() {
           </ul>
         </section>
 
-        {/* 精选项目 */}
+        {/* 项目 */}
         {repos.length > 0 && (
           <section id="projects" className="py-8 border-t" style={{ borderColor: BORDER }}>
-            <h2 className="font-serif text-xl font-bold mb-6">精选项目</h2>
+            <h2 className="font-serif text-xl font-bold mb-6">项目</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {repos.map((r) => (
                 <a
