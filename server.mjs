@@ -69,12 +69,23 @@ const server = http.createServer(async (req, res) => {
     try {
       data = await readFile(file)
     } catch {
+      // 带扩展名的请求视为静态资源，缺失时返回 404 ——
+      // 不能回退到 index.html，否则 Cloudflare 会把 HTML 当 JS 缓存 4 小时，整站白屏
+      if (extname(path)) {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' })
+        return res.end('Not Found')
+      }
       // SPA 回退
       data = await readFile(join(root, 'index.html'))
-      res.writeHead(200, { 'Content-Type': MIME['.html'] })
+      res.writeHead(200, { 'Content-Type': MIME['.html'], 'Cache-Control': 'no-cache' })
       return res.end(data)
     }
-    res.writeHead(200, { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' })
+    const headers = { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' }
+    // index.html 不缓存（内容hash在JS文件名里），assets 可长缓存，其余静态文件短缓存
+    if (path === '/index.html') headers['Cache-Control'] = 'no-cache'
+    else if (path.startsWith('/assets/')) headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+    else headers['Cache-Control'] = 'public, max-age=3600'
+    res.writeHead(200, headers)
     res.end(data)
   } catch {
     res.writeHead(404)
