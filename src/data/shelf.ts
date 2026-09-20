@@ -70,8 +70,8 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-maruzen',
     category: 'music',
-    title: '丸ノ内サディスティック',
-    creator: '椎名林檎 ·《無罪モラトリアム》',
+    title: '無罪モラトリアム',
+    creator: '椎名林檎',
     cover: '/shelf/benji.jpg',
     musicUrl: 'https://open.spotify.com/album/2GPMPtwaSjGKvQ5zZui7s2',
     note: 'そしたらベンジーが肺に映ってトリップ',
