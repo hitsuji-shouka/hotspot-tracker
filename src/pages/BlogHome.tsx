@@ -26,7 +26,7 @@ const EDUCATION = [
 ]
 
 const EXPERIENCE = [
-  { period: '2026.05 – 2026.08', title: '蚂蚁集团 · 财富 AI Lab · 智能体与大模型应用开发' },
+  { period: '2026.05 – 2026.08', title: '蚂蚁 · 财富 AI Lab · 智能体与大模型应用开发' },
   { period: '2025.11 – 2026.04', title: '蔚来 · 能源数智化 · Java 后端开发' },
 ]
 
