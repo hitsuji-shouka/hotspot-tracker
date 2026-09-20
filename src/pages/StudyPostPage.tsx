@@ -1,12 +1,12 @@
 import { Link, useParams } from 'react-router'
-import { getTechPost, renderMarkdown } from '@/lib/posts'
+import { getStudyPost, renderMarkdown } from '@/lib/posts'
 import { ArrowLeft, Calendar, Hash } from 'lucide-react'
 
 const ACCENT = '#c2410c'
 
 export default function TechPostPage() {
   const { slug } = useParams()
-  const post = slug ? getTechPost(slug) : undefined
+  const post = slug ? getStudyPost(slug) : undefined
 
   if (!post) {
     return (
@@ -14,8 +14,8 @@ export default function TechPostPage() {
         <div className="text-center">
           <p className="text-4xl mb-3">🫥</p>
           <p className="text-[#6b655c]">文章不存在</p>
-          <Link to="/tech" className="hover:underline text-sm mt-2 inline-block" style={{ color: ACCENT }}>
-            返回技术
+          <Link to="/study" className="hover:underline text-sm mt-2 inline-block" style={{ color: ACCENT }}>
+            返回学习
           </Link>
         </div>
       </div>
@@ -25,9 +25,9 @@ export default function TechPostPage() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
       <main className="max-w-3xl mx-auto px-6 py-10">
-        <Link to="/tech" className="inline-flex items-center gap-1.5 text-sm text-[#a39e93] hover:text-[#26221c] transition-colors mb-8">
+        <Link to="/study" className="inline-flex items-center gap-1.5 text-sm text-[#a39e93] hover:text-[#26221c] transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          返回技术
+          返回学习
         </Link>
 
         <h1 className="font-serif text-3xl font-bold text-[#1d1a15] leading-tight">{post.title}</h1>

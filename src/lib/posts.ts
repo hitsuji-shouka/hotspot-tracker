@@ -39,7 +39,7 @@ function parseFrontmatter(raw: string): { meta: Frontmatter; body: string } {
 }
 
 const modules = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true })
-const techModules = import.meta.glob('../tech/*.md', { query: '?raw', import: 'default', eager: true })
+const studyModules = import.meta.glob('../study/*.md', { query: '?raw', import: 'default', eager: true })
 
 function toPosts(mods: Record<string, unknown>): Post[] {
   return Object.entries(mods)
@@ -60,17 +60,45 @@ function toPosts(mods: Record<string, unknown>): Post[] {
 
 export const posts: Post[] = toPosts(modules)
 
-/** 技术专栏文章：Markdown 文件存在 src/tech/ */
-export const techPosts: Post[] = toPosts(techModules)
+/** 学习专栏文章：Markdown 文件存在 src/study/ */
+export const studyPosts: Post[] = toPosts(studyModules)
 
 export function getPost(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug)
 }
 
-export function getTechPost(slug: string): Post | undefined {
-  return techPosts.find((p) => p.slug === slug)
+export function getStudyPost(slug: string): Post | undefined {
+  return studyPosts.find((p) => p.slug === slug)
+}
+
+/**
+ * 把正文里单独一行的视频链接转成内嵌播放器：
+ *   · B 站链接（https://www.bilibili.com/video/BV...）→ B 站内嵌播放器
+ *   · YouTube 链接 → YouTube 内嵌播放器
+ *   · 直链视频（.mp4/.webm 结尾）→ <video> 标签
+ * 其他行原样保留。
+ */
+function embedMedia(md: string): string {
+  return md
+    .split('\n')
+    .map((line) => {
+      const t = line.trim()
+      const bv = t.match(/^https?:\/\/(?:www\.)?bilibili\.com\/video\/(BV[\w]+)/)
+      if (bv) {
+        return `<div class="video-embed"><iframe src="https://player.bilibili.com/player.html?bvid=${bv[1]}&high_quality=1" allowfullscreen scrolling="no" frameborder="0"></iframe></div>`
+      }
+      const yt = t.match(/^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
+      if (yt) {
+        return `<div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/${yt[1]}" allowfullscreen frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`
+      }
+      if (/^https?:\/\/\S+\.(mp4|webm)(\?\S*)?$/i.test(t)) {
+        return `<video class="video-embed" src="${t}" controls playsinline preload="metadata"></video>`
+      }
+      return line
+    })
+    .join('\n')
 }
 
 export function renderMarkdown(md: string): string {
-  return marked.parse(md, { async: false }) as string
+  return marked.parse(embedMedia(md), { async: false }) as string
 }
