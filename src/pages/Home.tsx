@@ -8,6 +8,7 @@ import MyGithub from '@/sections/MyGithub'
 import Skills from '@/sections/Skills'
 import Finance from '@/sections/Finance'
 import Bookmarks from '@/sections/Bookmarks'
+import Papers from '@/sections/Papers'
 import { useFavorites } from '@/hooks/use-favorites'
 import {
   cacheGet,
@@ -24,11 +25,12 @@ import {
 import { Flame, Github, RefreshCw, Search, Sparkles, AlertTriangle } from 'lucide-react'
 
 type CategoryMode = 'language' | 'topic'
-type View = 'hot' | 'skills' | 'finance' | 'fav' | 'mine' | 'links'
+type View = 'hot' | 'skills' | 'papers' | 'finance' | 'fav' | 'mine' | 'links'
 
 const NAV: { id: View; label: string; emoji: string }[] = [
   { id: 'hot', label: 'GitHub 热点', emoji: '🔥' },
   { id: 'skills', label: 'Skills', emoji: '🧩' },
+  { id: 'papers', label: '论文热点', emoji: '📄' },
   { id: 'finance', label: '财经看点', emoji: '💹' },
   { id: 'links', label: '网址收藏', emoji: '🔖' },
   { id: 'fav', label: '仓库收藏', emoji: '❤️' },
@@ -120,7 +122,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white leading-tight">热点追踪站</h1>
-              <p className="text-xs text-[#8b949e]">GitHub 项目 · Agent Skills · 财经看点，每日热点一站掌握</p>
+              <p className="text-xs text-[#8b949e]">GitHub 项目 · Agent Skills · 热点论文 · 财经看点，每日热点一站掌握</p>
             </div>
           </div>
 
@@ -252,6 +254,8 @@ export default function Home() {
           <MyGithub keyword={keyword} isFavorite={isFavorite} onToggleFavorite={toggle} />
         ) : view === 'skills' ? (
           <Skills keyword={keyword} isFavorite={isFavorite} onToggleFavorite={toggle} />
+        ) : view === 'papers' ? (
+          <Papers keyword={keyword} />
         ) : view === 'finance' ? (
           <Finance keyword={keyword} />
         ) : view === 'links' ? (
@@ -288,7 +292,7 @@ export default function Home() {
         )}
 
         <footer className="text-center text-xs text-[#8b949e] pt-4 pb-8 border-t border-[#30363d]">
-          数据来自 GitHub Search API · skills.sh · 新浪财经 · 热点每 10 分钟缓存 · 榜单每日早间自动更新
+          数据来自 GitHub Search API · skills.sh · Hugging Face Papers · 新浪财经 · 热点每 10 分钟缓存 · 榜单每日早间自动更新
         </footer>
       </main>
     </div>

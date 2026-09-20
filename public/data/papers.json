@@ -1,0 +1,338 @@
+{
+ "updatedAt": "2026-09-20T11:25:38+08:00",
+ "source": "Hugging Face Papers",
+ "count": 20,
+ "items": [
+  {
+   "id": "2609.19969",
+   "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
+   "url": "https://huggingface.co/papers/2609.19969",
+   "arxiv": "https://arxiv.org/abs/2609.19969",
+   "upvotes": 110,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "DeepSeek-AI",
+    "Anyi Xu",
+    "B. Li",
+    "Bangcai Lin",
+    "Bing Xue"
+   ],
+   "abstract": "The widespread adoption of long-horizon agents has made model workloads increasingly input-heavy. Although prior work has substantially reduced the cost of long-context computation, prefill remains co…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19969.png"
+  },
+  {
+   "id": "2609.20511",
+   "title": "When EOS Tokens Disagree: Understanding Length Inflation in On-Policy Distillation",
+   "url": "https://huggingface.co/papers/2609.20511",
+   "arxiv": "https://arxiv.org/abs/2609.20511",
+   "upvotes": 89,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yuxiao Yang",
+    "Tianrun Yu",
+    "Shangzhe Li",
+    "Kaixiang Zhao",
+    "Xuchao Zhang"
+   ],
+   "abstract": "We study length inflation in on-policy distillation (OPD), where student responses can become excessively long and even exhaust the generation budget. We identify termination-token mismatch between ba…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20511.png"
+  },
+  {
+   "id": "2609.20519",
+   "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness",
+   "url": "https://huggingface.co/papers/2609.20519",
+   "arxiv": "https://arxiv.org/abs/2609.20519",
+   "upvotes": 81,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Haozhe Liu",
+    "Tian Ye",
+    "Sensen Gao",
+    "Qihang Cao",
+    "Yitong Li"
+   ],
+   "abstract": "As coding agents move from supervised code completion to unattended, around-the-clock exploration, their work expands from isolated predictions into long trajectories of reasoning, tool use, and feedb…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20519.png"
+  },
+  {
+   "id": "2609.20804",
+   "title": "An Empirical Study of Harness Design for Coding Agents",
+   "url": "https://huggingface.co/papers/2609.20804",
+   "arxiv": "https://arxiv.org/abs/2609.20804",
+   "upvotes": 67,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Run-Ze Fan",
+    "Zihao Zhang",
+    "Simin Ma",
+    "Yebowen Hu",
+    "Shouju Wang"
+   ],
+   "abstract": "Coding harnesses shape how autonomous coding agents translate model capabilities into long-horizon software-engineering performance, yet existing work typically evaluates harnesses as monolithic syste…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20804.png"
+  },
+  {
+   "id": "2609.20800",
+   "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
+   "url": "https://huggingface.co/papers/2609.20800",
+   "arxiv": "https://arxiv.org/abs/2609.20800",
+   "upvotes": 51,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Taoyong Cui",
+    "Zhongyao Wang",
+    "Xinyue Xu",
+    "Weiyang Liu",
+    "Zhaochen Yu"
+   ],
+   "abstract": "World modeling enables intelligence to anticipate consequences, guide interventions, and learn from interaction. Yet predictive models remain domain-specific: can a common learning principle support w…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20800.png"
+  },
+  {
+   "id": "2609.19656",
+   "title": "Self-Evolving Search Index",
+   "url": "https://huggingface.co/papers/2609.19656",
+   "arxiv": "https://arxiv.org/abs/2609.19656",
+   "upvotes": 39,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Sangam Lee",
+    "Wonjae Lee",
+    "Sunghwan Kim",
+    "Deogyong Kim",
+    "Jaehoon Kim"
+   ],
+   "abstract": "Information retrieval is increasingly important as LLM agents tackle complex tasks involving diverse information needs. Because retrieval relies on an index that represents each document through index…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19656.png"
+  },
+  {
+   "id": "2609.20784",
+   "title": "RetireOPD: Self-Retiring On-Policy Distillation for Agentic Reinforcement Learning",
+   "url": "https://huggingface.co/papers/2609.20784",
+   "arxiv": "https://arxiv.org/abs/2609.20784",
+   "upvotes": 37,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yan Yu",
+    "Zhengxi Lu",
+    "Yizhou Liu",
+    "Yichen Pan",
+    "Aozhe Wang"
+   ],
+   "abstract": "Multi-turn agents trained with reinforcement learning (RL) receive a single scalar reward per trajectory, which motivates self on-policy distillation (OPD) to supply dense token-level supervision from…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20784.png"
+  },
+  {
+   "id": "2609.20744",
+   "title": "Video DeltaNet: A Video-Native Hybrid Attention for Livestream Video Generation",
+   "url": "https://huggingface.co/papers/2609.20744",
+   "arxiv": "https://arxiv.org/abs/2609.20744",
+   "upvotes": 34,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Haocheng Xi",
+    "Yiming Xie",
+    "Hexu Zhao",
+    "Yiwen Zhang",
+    "Michael Liu"
+   ],
+   "abstract": "Video diffusion models repeatedly process long spatiotemporal token sequences during denoising, making attention a major computational bottleneck. Linear attention offers an appealing alternative and …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20744.png"
+  },
+  {
+   "id": "2609.20423",
+   "title": "WeVisDoc: From Coverage to Capability for Robust End-to-End Document Parsing",
+   "url": "https://huggingface.co/papers/2609.20423",
+   "arxiv": "https://arxiv.org/abs/2609.20423",
+   "upvotes": 34,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Hao Yu",
+    "Kang Liu",
+    "Linnan Zhao",
+    "Jiabo Zhan",
+    "Chong Sun"
+   ],
+   "abstract": "Document parsing converts document images into structured content and requires reliable performance across diverse layouts and acquisition conditions. Yet training corpora are biased toward common doc…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20423.png"
+  },
+  {
+   "id": "2609.19554",
+   "title": "VABench: Measuring Embodied Spatial Intelligence through Visual Demonstrations, Active Perception, and Metric Control",
+   "url": "https://huggingface.co/papers/2609.19554",
+   "arxiv": "https://arxiv.org/abs/2609.19554",
+   "upvotes": 31,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Zhongbo Zhang",
+    "Jiayi Jin",
+    "Yifan Wang",
+    "Zaibin Zhang",
+    "Haiwen Diao"
+   ],
+   "abstract": "Spatial intelligence requires more than describing object locations. Under incomplete observation, models must identify and acquire missing evidence, interpret it in a common spatial frame, and act on…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19554.png"
+  },
+  {
+   "id": "2609.19671",
+   "title": "When2Think: Learning Difficulty-Aware Length Control for Efficient Hybrid Reasoning Models",
+   "url": "https://huggingface.co/papers/2609.19671",
+   "arxiv": "https://arxiv.org/abs/2609.19671",
+   "upvotes": 30,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Jaejun Shim",
+    "HyunJin Kim",
+    "Young Jin Kim",
+    "JinYeong Bak"
+   ],
+   "abstract": "Large Reasoning Models (LRMs) achieve strong performance on complex tasks but exhibit systematic inefficiency: they often overthink easy problems and underthink hard ones. Existing approaches based on…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19671.png"
+  },
+  {
+   "id": "2609.20817",
+   "title": "FAMOS: Feed-Forward 3D Articulation Modeling from Sparse Observations",
+   "url": "https://huggingface.co/papers/2609.20817",
+   "arxiv": "https://arxiv.org/abs/2609.20817",
+   "upvotes": 28,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Kevin Qu",
+    "Tao Sun",
+    "Massimiliano Viola",
+    "Liyuan Zhu",
+    "Zhizhuo Zhou"
+   ],
+   "abstract": "Modeling articulated objects from sparse monocular views is challenging because each observation reveals only partial geometry and motion evidence. Most feed-forward methods infer articulation from a …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20817.png"
+  },
+  {
+   "id": "2609.20612",
+   "title": "What Does Privileged Information Add to On-Policy Self-Distillation?",
+   "url": "https://huggingface.co/papers/2609.20612",
+   "arxiv": "https://arxiv.org/abs/2609.20612",
+   "upvotes": 27,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "XiuYu Zhang",
+    "Wei Chow",
+    "Junfeng Fang",
+    "Zhenkai Liang",
+    "Tat-Seng Chua"
+   ],
+   "abstract": "On-policy self-distillation (OPSD) lets a language model learn from a frozen copy of itself that sees an answer or a worked solution. Giving the teacher this extra information seems to offer the stude…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20612.png"
+  },
+  {
+   "id": "2609.20715",
+   "title": "Don't Mask the Environment: Observation Supervision Changes How Agents Explore Under RL",
+   "url": "https://huggingface.co/papers/2609.20715",
+   "arxiv": "https://arxiv.org/abs/2609.20715",
+   "upvotes": 26,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Juzheng Zhang",
+    "Disha Makhija",
+    "Manoj Ghuhan Arivazhagan",
+    "Vinayshekhar Bannihatti Kumar",
+    "Rashmi Gangadharaiah"
+   ],
+   "abstract": "Agent trajectories record what an agent does and what happens next. Yet standard supervised fine-tuning (SFT) applies loss only to agent-authored action tokens, using environment observations as conte…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20715.png"
+  },
+  {
+   "id": "2609.19745",
+   "title": "Region-Level Policy Optimization for Fine-grained MLLM Perception",
+   "url": "https://huggingface.co/papers/2609.19745",
+   "arxiv": "https://arxiv.org/abs/2609.19745",
+   "upvotes": 26,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yuheng Shi",
+    "Xiaohuan Pei",
+    "Minjing Dong",
+    "Chang Xu"
+   ],
+   "abstract": "Fine-grained visual perception in MLLMs is commonly improved by raising the resolution, but the added visual tokens inflate vision-encoding and language-model prefilling costs. We show that the two op…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19745.png"
+  },
+  {
+   "id": "2609.19879",
+   "title": "VākQA: A Benchmark and Evaluation Study for Telugu Spoken Factoid Question Answering",
+   "url": "https://huggingface.co/papers/2609.19879",
+   "arxiv": "https://arxiv.org/abs/2609.19879",
+   "upvotes": 22,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Bhavana Akkiraju",
+    "Ravi Sastry Kolluru",
+    "Sri Charan D",
+    "Srihari Bandarupalli",
+    "Santosh Kesiraju"
+   ],
+   "abstract": "Question answering has advanced rapidly with large language models, but predominantly for high-resource languages, in both text and spoken settings. Spoken question answering (SQA) benchmark for Telug…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19879.png"
+  },
+  {
+   "id": "2609.20751",
+   "title": "dQwen3.5: Hybrid-Attention Diffusion Language Models",
+   "url": "https://huggingface.co/papers/2609.20751",
+   "arxiv": "https://arxiv.org/abs/2609.20751",
+   "upvotes": 1,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Anton Xue",
+    "Litu Rout",
+    "Aditya Akella",
+    "Adam Klivans",
+    "Sujay Sanghavi"
+   ],
+   "abstract": "Adapting a pretrained autoregressive (AR) model is a cost-efficient route to a diffusion language model (DLM). While nearly all such adaptations start from a full-attention transformer, AR modeling ha…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20751.png"
+  },
+  {
+   "id": "2609.19607",
+   "title": "DeltaSelect: Affordable A/B Testing for Coding Agents",
+   "url": "https://huggingface.co/papers/2609.19607",
+   "arxiv": "https://arxiv.org/abs/2609.19607",
+   "upvotes": 1,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Nicholas J. Conn"
+   ],
+   "abstract": "Coding-agent benchmarks are built for broad and comprehensive comparisons, not frequent development decisions. Individual runs vary, full suites are expensive, and the benchmark harness may differ fro…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19607.png"
+  },
+  {
+   "id": "2609.20807",
+   "title": "Score Centering Stabilizes Off-policy Reinforcement Learning",
+   "url": "https://huggingface.co/papers/2609.20807",
+   "arxiv": "https://arxiv.org/abs/2609.20807",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Martin Marek",
+    "Max Ryabinin"
+   ],
+   "abstract": "Reinforcement learning (RL) of large language models is notoriously sensitive to small differences between training and inference engines, often referred to as the training-inference mismatch (TIM). H…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20807.png"
+  },
+  {
+   "id": "2609.20593",
+   "title": "WiC is Not WSD: A Study on LLMs and Lexical Ambiguity Resolution",
+   "url": "https://huggingface.co/papers/2609.20593",
+   "arxiv": "https://arxiv.org/abs/2609.20593",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yi Zhou",
+    "Kiamehr Rezaee",
+    "Danushka Bollegala",
+    "Mohammad Taher Pilehvar",
+    "Jose Camacho-Collados"
+   ],
+   "abstract": "Word-in-Context (WiC) remains challenging for language models, despite recent progress on lexical-semantic tasks. We hypothesise that this difficulty arises not only from comparing two contextual uses…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20593.png"
+  }
+ ]
+}
