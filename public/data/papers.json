@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-20T12:13:40+08:00",
+ "updatedAt": "2026-09-21T08:10:23+08:00",
  "source": "Hugging Face Papers",
  "count": 20,
  "items": [
@@ -8,7 +8,7 @@
    "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
    "url": "https://huggingface.co/papers/2609.19969",
    "arxiv": "https://arxiv.org/abs/2609.19969",
-   "upvotes": 113,
+   "upvotes": 135,
    "publishedAt": "2026-09-17",
    "authors": [
     "DeepSeek-AI",
@@ -21,28 +21,11 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19969.png"
   },
   {
-   "id": "2609.20511",
-   "title": "When EOS Tokens Disagree: Understanding Length Inflation in On-Policy Distillation",
-   "url": "https://huggingface.co/papers/2609.20511",
-   "arxiv": "https://arxiv.org/abs/2609.20511",
-   "upvotes": 90,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Yuxiao Yang",
-    "Tianrun Yu",
-    "Shangzhe Li",
-    "Kaixiang Zhao",
-    "Xuchao Zhang"
-   ],
-   "abstract": "We study length inflation in on-policy distillation (OPD), where student responses can become excessively long and even exhaust the generation budget. We identify termination-token mismatch between ba…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20511.png"
-  },
-  {
    "id": "2609.20519",
    "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness",
    "url": "https://huggingface.co/papers/2609.20519",
    "arxiv": "https://arxiv.org/abs/2609.20519",
-   "upvotes": 82,
+   "upvotes": 94,
    "publishedAt": "2026-09-17",
    "authors": [
     "Haozhe Liu",
@@ -55,11 +38,28 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20519.png"
   },
   {
+   "id": "2609.20511",
+   "title": "When EOS Tokens Disagree: Understanding Length Inflation in On-Policy Distillation",
+   "url": "https://huggingface.co/papers/2609.20511",
+   "arxiv": "https://arxiv.org/abs/2609.20511",
+   "upvotes": 94,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yuxiao Yang",
+    "Tianrun Yu",
+    "Shangzhe Li",
+    "Kaixiang Zhao",
+    "Xuchao Zhang"
+   ],
+   "abstract": "We study length inflation in on-policy distillation (OPD), where student responses can become excessively long and even exhaust the generation budget. We identify termination-token mismatch between ba…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20511.png"
+  },
+  {
    "id": "2609.20804",
    "title": "An Empirical Study of Harness Design for Coding Agents",
    "url": "https://huggingface.co/papers/2609.20804",
    "arxiv": "https://arxiv.org/abs/2609.20804",
-   "upvotes": 67,
+   "upvotes": 71,
    "publishedAt": "2026-09-17",
    "authors": [
     "Run-Ze Fan",
@@ -76,7 +76,7 @@
    "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
    "url": "https://huggingface.co/papers/2609.20800",
    "arxiv": "https://arxiv.org/abs/2609.20800",
-   "upvotes": 52,
+   "upvotes": 56,
    "publishedAt": "2026-09-17",
    "authors": [
     "Taoyong Cui",
@@ -89,28 +89,11 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20800.png"
   },
   {
-   "id": "2609.19656",
-   "title": "Self-Evolving Search Index",
-   "url": "https://huggingface.co/papers/2609.19656",
-   "arxiv": "https://arxiv.org/abs/2609.19656",
-   "upvotes": 39,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Sangam Lee",
-    "Wonjae Lee",
-    "Sunghwan Kim",
-    "Deogyong Kim",
-    "Jaehoon Kim"
-   ],
-   "abstract": "Information retrieval is increasingly important as LLM agents tackle complex tasks involving diverse information needs. Because retrieval relies on an index that represents each document through index…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19656.png"
-  },
-  {
    "id": "2609.20784",
    "title": "RetireOPD: Self-Retiring On-Policy Distillation for Agentic Reinforcement Learning",
    "url": "https://huggingface.co/papers/2609.20784",
    "arxiv": "https://arxiv.org/abs/2609.20784",
-   "upvotes": 37,
+   "upvotes": 39,
    "publishedAt": "2026-09-17",
    "authors": [
     "Yan Yu",
@@ -121,6 +104,23 @@
    ],
    "abstract": "Multi-turn agents trained with reinforcement learning (RL) receive a single scalar reward per trajectory, which motivates self on-policy distillation (OPD) to supply dense token-level supervision from…",
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20784.png"
+  },
+  {
+   "id": "2609.20423",
+   "title": "WeVisDoc: From Coverage to Capability for Robust End-to-End Document Parsing",
+   "url": "https://huggingface.co/papers/2609.20423",
+   "arxiv": "https://arxiv.org/abs/2609.20423",
+   "upvotes": 35,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Hao Yu",
+    "Kang Liu",
+    "Linnan Zhao",
+    "Jiabo Zhan",
+    "Chong Sun"
+   ],
+   "abstract": "Document parsing converts document images into structured content and requires reliable performance across diverse layouts and acquisition conditions. Yet training corpora are biased toward common doc…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20423.png"
   },
   {
    "id": "2609.20744",
@@ -140,78 +140,11 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20744.png"
   },
   {
-   "id": "2609.20423",
-   "title": "WeVisDoc: From Coverage to Capability for Robust End-to-End Document Parsing",
-   "url": "https://huggingface.co/papers/2609.20423",
-   "arxiv": "https://arxiv.org/abs/2609.20423",
-   "upvotes": 34,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Hao Yu",
-    "Kang Liu",
-    "Linnan Zhao",
-    "Jiabo Zhan",
-    "Chong Sun"
-   ],
-   "abstract": "Document parsing converts document images into structured content and requires reliable performance across diverse layouts and acquisition conditions. Yet training corpora are biased toward common doc…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20423.png"
-  },
-  {
-   "id": "2609.19554",
-   "title": "VABench: Measuring Embodied Spatial Intelligence through Visual Demonstrations, Active Perception, and Metric Control",
-   "url": "https://huggingface.co/papers/2609.19554",
-   "arxiv": "https://arxiv.org/abs/2609.19554",
-   "upvotes": 32,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Zhongbo Zhang",
-    "Jiayi Jin",
-    "Yifan Wang",
-    "Zaibin Zhang",
-    "Haiwen Diao"
-   ],
-   "abstract": "Spatial intelligence requires more than describing object locations. Under incomplete observation, models must identify and acquire missing evidence, interpret it in a common spatial frame, and act on…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19554.png"
-  },
-  {
-   "id": "2609.19671",
-   "title": "When2Think: Learning Difficulty-Aware Length Control for Efficient Hybrid Reasoning Models",
-   "url": "https://huggingface.co/papers/2609.19671",
-   "arxiv": "https://arxiv.org/abs/2609.19671",
-   "upvotes": 30,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Jaejun Shim",
-    "HyunJin Kim",
-    "Young Jin Kim",
-    "JinYeong Bak"
-   ],
-   "abstract": "Large Reasoning Models (LRMs) achieve strong performance on complex tasks but exhibit systematic inefficiency: they often overthink easy problems and underthink hard ones. Existing approaches based on…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19671.png"
-  },
-  {
-   "id": "2609.20817",
-   "title": "FAMOS: Feed-Forward 3D Articulation Modeling from Sparse Observations",
-   "url": "https://huggingface.co/papers/2609.20817",
-   "arxiv": "https://arxiv.org/abs/2609.20817",
-   "upvotes": 28,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Kevin Qu",
-    "Tao Sun",
-    "Massimiliano Viola",
-    "Liyuan Zhu",
-    "Zhizhuo Zhou"
-   ],
-   "abstract": "Modeling articulated objects from sparse monocular views is challenging because each observation reveals only partial geometry and motion evidence. Most feed-forward methods infer articulation from a …",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20817.png"
-  },
-  {
    "id": "2609.20612",
    "title": "What Does Privileged Information Add to On-Policy Self-Distillation?",
    "url": "https://huggingface.co/papers/2609.20612",
    "arxiv": "https://arxiv.org/abs/2609.20612",
-   "upvotes": 27,
+   "upvotes": 30,
    "publishedAt": "2026-09-17",
    "authors": [
     "XiuYu Zhang",
@@ -224,11 +157,28 @@
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20612.png"
   },
   {
+   "id": "2609.20817",
+   "title": "FAMOS: Feed-Forward 3D Articulation Modeling from Sparse Observations",
+   "url": "https://huggingface.co/papers/2609.20817",
+   "arxiv": "https://arxiv.org/abs/2609.20817",
+   "upvotes": 29,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Kevin Qu",
+    "Tao Sun",
+    "Massimiliano Viola",
+    "Liyuan Zhu",
+    "Zhizhuo Zhou"
+   ],
+   "abstract": "Modeling articulated objects from sparse monocular views is challenging because each observation reveals only partial geometry and motion evidence. Most feed-forward methods infer articulation from a …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20817.png"
+  },
+  {
    "id": "2609.20715",
    "title": "Don't Mask the Environment: Observation Supervision Changes How Agents Explore Under RL",
    "url": "https://huggingface.co/papers/2609.20715",
    "arxiv": "https://arxiv.org/abs/2609.20715",
-   "upvotes": 26,
+   "upvotes": 28,
    "publishedAt": "2026-09-17",
    "authors": [
     "Juzheng Zhang",
@@ -245,7 +195,7 @@
    "title": "Region-Level Policy Optimization for Fine-grained MLLM Perception",
    "url": "https://huggingface.co/papers/2609.19745",
    "arxiv": "https://arxiv.org/abs/2609.19745",
-   "upvotes": 26,
+   "upvotes": 27,
    "publishedAt": "2026-09-17",
    "authors": [
     "Yuheng Shi",
@@ -261,7 +211,7 @@
    "title": "VākQA: A Benchmark and Evaluation Study for Telugu Spoken Factoid Question Answering",
    "url": "https://huggingface.co/papers/2609.19879",
    "arxiv": "https://arxiv.org/abs/2609.19879",
-   "upvotes": 22,
+   "upvotes": 23,
    "publishedAt": "2026-09-17",
    "authors": [
     "Bhavana Akkiraju",
@@ -289,19 +239,6 @@
    ],
    "abstract": "Adapting a pretrained autoregressive (AR) model is a cost-efficient route to a diffusion language model (DLM). While nearly all such adaptations start from a full-attention transformer, AR modeling ha…",
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20751.png"
-  },
-  {
-   "id": "2609.19607",
-   "title": "DeltaSelect: Affordable A/B Testing for Coding Agents",
-   "url": "https://huggingface.co/papers/2609.19607",
-   "arxiv": "https://arxiv.org/abs/2609.19607",
-   "upvotes": 1,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Nicholas J. Conn"
-   ],
-   "abstract": "Coding-agent benchmarks are built for broad and comprehensive comparisons, not frequent development decisions. Individual runs vary, full suites are expensive, and the benchmark harness may differ fro…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19607.png"
   },
   {
    "id": "2609.20818",
@@ -333,6 +270,74 @@
    ],
    "abstract": "Reinforcement learning (RL) of large language models is notoriously sensitive to small differences between training and inference engines, often referred to as the training-inference mismatch (TIM). H…",
    "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20807.png"
+  },
+  {
+   "id": "2609.20756",
+   "title": "OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher",
+   "url": "https://huggingface.co/papers/2609.20756",
+   "arxiv": "https://arxiv.org/abs/2609.20756",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Damiano Da Col",
+    "Maximilian Igl",
+    "Peter Karkus",
+    "Kashyap Chitta",
+    "Boris Ivanovic"
+   ],
+   "abstract": "As scaling pre-training data alone yields diminishing returns, post-training is becoming increasingly important across physical AI domains such as autonomous driving. End-to-end driving policies are p…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20756.png"
+  },
+  {
+   "id": "2609.20659",
+   "title": "HIL-UMI: Bringing Human-in-the-Loop Post-Training of Vision-Language-Action Models to Universal Manipulation Interface",
+   "url": "https://huggingface.co/papers/2609.20659",
+   "arxiv": "https://arxiv.org/abs/2609.20659",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Zimu Han",
+    "Yiming Zeng",
+    "Jiyao Zhang",
+    "Zihao Zhao",
+    "Yuanfei Wang"
+   ],
+   "abstract": "Large-scale vision-language-action (VLA) models provide powerful priors for robot manipulation, yet adapting them to a specific deployment remains challenging. Supervised fine-tuning (SFT) on task-spe…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20659.png"
+  },
+  {
+   "id": "2609.20593",
+   "title": "WiC is Not WSD: A Study on LLMs and Lexical Ambiguity Resolution",
+   "url": "https://huggingface.co/papers/2609.20593",
+   "arxiv": "https://arxiv.org/abs/2609.20593",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Yi Zhou",
+    "Kiamehr Rezaee",
+    "Danushka Bollegala",
+    "Mohammad Taher Pilehvar",
+    "Jose Camacho-Collados"
+   ],
+   "abstract": "Word-in-Context (WiC) remains challenging for language models, despite recent progress on lexical-semantic tasks. We hypothesise that this difficulty arises not only from comparing two contextual uses…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20593.png"
+  },
+  {
+   "id": "2609.20504",
+   "title": "Model-Agnostic and Language-Agnostic Voice Pipeline Improvement for the Agriculture Domain",
+   "url": "https://huggingface.co/papers/2609.20504",
+   "arxiv": "https://arxiv.org/abs/2609.20504",
+   "upvotes": 0,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Aakash Singh",
+    "Lakshmi Pedapudi",
+    "Chandrashekar M S",
+    "Sanyam Singh",
+    "Naga Ganesh"
+   ],
+   "abstract": "FarmerChat is Digital Green's AI-powered agricultural advisory assistant for smallholder farmers, who access it in their own language through text, voice, or photographs. Voice is a critical channel f…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20504.png"
   }
  ]
 }

