@@ -156,6 +156,21 @@ export async function fetchUserStarred(username: string, token?: string): Promis
   return ghFetchRaw<Repo[]>(url, token)
 }
 
+/** 根据 owner/repo 获取单个公开仓库，用于手动导入收藏。 */
+export async function fetchRepo(fullName: string): Promise<Repo> {
+  const path = fullName.split('/').map(encodeURIComponent).join('/')
+  const res = await fetch(`https://api.github.com/repos/${path}`, {
+    headers: { Accept: 'application/vnd.github+json' },
+  })
+  if (res.status === 403 || res.status === 429) {
+    const reset = res.headers.get('x-ratelimit-reset')
+    throw new RateLimitError(reset ? new Date(Number(reset) * 1000) : null)
+  }
+  if (res.status === 404) throw new Error('仓库不存在或不是公开仓库')
+  if (!res.ok) throw new Error(`GitHub API 请求失败 (${res.status})`)
+  return res.json()
+}
+
 /** 拉取各语言热度概览（用于首页统计条） */
 export async function fetchOverview(range: TimeRange) {
   const since = dateDaysAgo(RANGE_DAYS[range])
