@@ -11,7 +11,7 @@ const ITEMS: { to: string; label: string; end?: boolean }[] = [
 
 export default function SiteNav() {
   return (
-    <nav className="flex items-center gap-5 text-[#6b655c]">
+    <nav className="flex items-center gap-5 pt-1 text-[#6b655c]">
       {ITEMS.map((it) => (
         <NavLink
           key={it.to}
