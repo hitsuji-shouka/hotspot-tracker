@@ -13,6 +13,7 @@ export interface Repo {
   created_at: string
   pushed_at: string
   topics: string[]
+  favoriteCategory?: string
   owner: {
     login: string
     avatar_url: string

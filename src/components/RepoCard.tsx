@@ -26,11 +26,13 @@ export default function RepoCard({
   rank,
   favorite,
   onToggleFavorite,
+  categoryBadge,
 }: {
   repo: Repo
   rank: number
   favorite: boolean
   onToggleFavorite: (repo: Repo) => void
+  categoryBadge?: { emoji: string; label: string }
 }) {
   const langColor = repo.language ? (LANG_COLORS[repo.language] ?? '#8b949e') : null
   return (
@@ -74,13 +76,21 @@ export default function RepoCard({
                 {repo.description ?? '暂无描述'}
               </p>
 
-              {repo.topics.length > 0 && (
-                <div className="hidden flex-wrap gap-1 mt-2 sm:flex">
+              {(categoryBadge || repo.topics.length > 0) && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {categoryBadge && (
+                    <Badge
+                      variant="secondary"
+                      className="border border-[#e3b341]/35 bg-[#e3b341]/10 px-1.5 py-0 text-[10px] text-[#e3b341]"
+                    >
+                      {categoryBadge.emoji} {categoryBadge.label}
+                    </Badge>
+                  )}
                   {repo.topics.slice(0, 4).map((t) => (
                     <Badge
                       key={t}
                       variant="secondary"
-                      className="text-[10px] px-1.5 py-0 bg-[#1f6feb]/15 text-[#58a6ff] border border-[#1f6feb]/30"
+                      className="hidden border border-[#1f6feb]/30 bg-[#1f6feb]/15 px-1.5 py-0 text-[10px] text-[#58a6ff] sm:inline-flex"
                     >
                       {t}
                     </Badge>

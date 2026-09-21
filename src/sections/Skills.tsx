@@ -28,6 +28,7 @@ export interface SkillShItem {
   installs: number
   url: string
   github: string
+  favoriteCategory?: string
 }
 
 export const skillShId = (s: SkillShItem) => s.url

@@ -15,6 +15,7 @@ export interface PaperItem {
   abstract: string | null
   thumbnail?: string | null
   tags?: string[]
+  favoriteCategory?: string
 }
 
 interface PapersSnapshot {
