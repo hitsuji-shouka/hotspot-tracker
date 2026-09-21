@@ -63,7 +63,7 @@ export const SHELF: ShelfItem[] = [
     category: 'movie',
     title: '【𝙁𝙞𝙧𝙚 𝙤𝙛 𝙇𝙤𝙫𝙚】火山挚恋',
     creator: '萨拉·多萨',
-    cover: '/shelf/fire-of-love.jpg',
+    cover: '/shelf/fire-of-love-2.jpg',
     note: 'Understaning is just love\'s other name',
   },
   {
