@@ -18,20 +18,27 @@ interface Frontmatter {
 }
 
 function parseFrontmatter(raw: string): { meta: Frontmatter; body: string } {
-  const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
-  if (!m) return { meta: {}, body: raw }
+  const normalized = raw.replace(/\r\n?/g, '\n')
+  const m = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
+  if (!m) return { meta: {}, body: normalized }
   const meta: Frontmatter = {}
+  let collectingTags = false
   for (const line of m[1].split('\n')) {
+    const listItem = line.match(/^\s*-\s*(.+)$/)
+    if (collectingTags && listItem) {
+      meta.tags?.push(listItem[1].trim())
+      continue
+    }
     const kv = line.match(/^(\w+):\s*(.*)$/)
     if (!kv) continue
     const [, key, value] = kv
     if (key === 'tags') {
       meta.tags = value
-        .replace(/^\[|\]$/g, '')
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean)
+        ? value.replace(/^\[|\]$/g, '').split(',').map((t) => t.trim()).filter(Boolean)
+        : []
+      collectingTags = !value
     } else {
+      collectingTags = false
       ;(meta as Record<string, unknown>)[key] = value.trim()
     }
   }
@@ -99,6 +106,16 @@ function embedMedia(md: string): string {
     .join('\n')
 }
 
+/**
+ * 编辑 Markdown 时用 ../../public/... 可让本地预览直接读取 public 目录；
+ * 浏览器中 public 是站点根目录，因此渲染前去掉这段文件系统前缀。
+ */
+function normalizePublicAssetPaths(md: string): string {
+  return md
+    .replace(/(\]\()\.\.\/\.\.\/public\//g, '$1/')
+    .replace(/(src=["'])\.\.\/\.\.\/public\//gi, '$1/')
+}
+
 export interface TocItem {
   id: string
   text: string
@@ -107,7 +124,7 @@ export interface TocItem {
 
 /** 在同一份渲染结果上生成锚点和目录，避免两次解析出现偏差。 */
 export function renderMarkdownWithToc(md: string): { html: string; toc: TocItem[] } {
-  const html = marked.parse(embedMedia(md), { async: false }) as string
+  const html = marked.parse(embedMedia(normalizePublicAssetPaths(md)), { async: false }) as string
   // 有 alt 文字的图片转成 figure + figcaption，注释显示在图片下方
   const captioned = html.replace(/<img([^>]*?)>/g, (tag, attrs: string) => {
     const alt = attrs.match(/alt="([^"]*)"/)?.[1]
