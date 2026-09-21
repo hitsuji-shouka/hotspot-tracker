@@ -10,10 +10,10 @@ const GITHUB_USER = 'hitsuji-shouka'
 
 /** 个人资料（依据简历整理） */
 const PROFILE = {
-  name: '杨胜翔',
+  name: '羊宇宙',
   tagline: '复旦大学 · AI Agent / 后端开发',
   introPre: '你好，我是 ',
-  introName: '杨胜翔',
+  introName: '羊宇宙',
   introPost: '。',
   introLine2: '喜欢探究技术，也喜欢感受故事。',
   introParagraphs: [
