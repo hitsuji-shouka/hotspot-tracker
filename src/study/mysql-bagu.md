@@ -39,7 +39,7 @@ summary: 记录一下面试需要用到的MySQL相关八股。
 |filtered|按表条件过滤后，留存的记录数的百分比|
 |Extra|额外信息|
 
-select_type
+**select_type**
 
 查询的类型，主要用于区分普通查询、联合查询、子查询等复杂的查询，常见的值有：
 - SIMPLE：简单查询，不包含 UNION 或者子查询。
@@ -49,7 +49,7 @@ select_type
 - DERIVED：在 FROM 中出现的子查询将被标记为 DERIVED。
 - UNION RESULT：UNION 查询的结果。
 
-type
+**type**
 
 查询执行的类型，描述了查询是如何执行的。所有值的顺序从最优到最差排序为：
 
@@ -65,7 +65,7 @@ system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_su
 - index：查询遍历了整棵索引树，与 ALL 类似，只不过扫描的是索引，而索引一般在内存中，速度更快。
 - ALL：全表扫描
 
-Extra
+**Extra**
 
 这列包含了 MySQL 解析查询的额外信息，通过这些信息，可以更准确的理解 MySQL 到底是如何执行查询的。常见的值如下：
 -  Using filesort：MySQL 在排序时无法使用索引来完成排序，因此需要在磁盘上进行，性能较差。
