@@ -82,10 +82,11 @@ html.dark body {
 /* Markdown 正文排版（浅色编辑风） */
 .md-body { font-size: 1rem; line-height: 1.9; color: #3d3830; }
 html { scroll-behavior: smooth; }
-.md-body h1, .md-body h2, .md-body h3 { color: #1d1a15; font-weight: 700; margin: 1.8em 0 0.7em; font-family: ui-serif, Georgia, serif; }
+.md-body h1, .md-body h2, .md-body h3, .md-body h4 { color: #1d1a15; font-weight: 700; margin: 1.8em 0 0.7em; font-family: ui-serif, Georgia, serif; }
 .md-body h1 { font-size: 1.5rem; }
 .md-body h2 { font-size: 1.25rem; border-bottom: 1px solid #e8e4dc; padding-bottom: 0.35em; }
 .md-body h3 { font-size: 1.1rem; }
+.md-body h4 { font-size: 1rem; margin: 1.5em 0 0.55em; }
 .md-body p { margin: 0.9em 0; }
 .md-body a { color: #c2410c; }
 .md-body a:hover { text-decoration: underline; text-underline-offset: 3px; }
