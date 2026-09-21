@@ -2,7 +2,7 @@
 // 浅色暖底 + 大字自我介绍 + 经历时间线 + 精选项目 + 博文
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { fetchUser, fetchUserRepos, formatNumber, type GithubUser, type Repo } from '@/lib/github'
+import { fetchUserRepos, formatNumber, type Repo } from '@/lib/github'
 import SiteNav from '@/components/SiteNav'
 import { ArrowUpRight, Flame, Github, Mail, MapPin, Star } from 'lucide-react'
 
@@ -44,12 +44,10 @@ const ACCENT = '#c2410c'
 const BORDER = '#e8e4dc'
 
 export default function BlogHome() {
-  const [user, setUser] = useState<GithubUser | null>(null)
   const [repos, setRepos] = useState<Repo[]>([])
 
   useEffect(() => {
     document.title = '羊宇宙漫游指南'
-    fetchUser(GITHUB_USER).then(setUser).catch(() => {})
     fetchUserRepos(GITHUB_USER)
       .then((list) => setRepos([...list].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6)))
       .catch(() => {})
@@ -70,9 +68,15 @@ export default function BlogHome() {
         {/* 大字段我介绍 */}
         <section className="pt-14 pb-10">
           <div className="flex items-center gap-4 mb-8">
-            {user?.avatar_url && (
-              <img src={user.avatar_url} alt={PROFILE.name} className="w-14 h-14 rounded-full" />
-            )}
+            <img
+              src="/profile-avatar.png"
+              alt={PROFILE.name}
+              width={56}
+              height={56}
+              loading="eager"
+              fetchPriority="high"
+              className="h-14 w-14 shrink-0 rounded-full"
+            />
             <div className="text-sm text-[#6b655c]">
               <div className="flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5" />
