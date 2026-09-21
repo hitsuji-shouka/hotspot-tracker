@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
-import { getPost, renderMarkdown } from '@/lib/posts'
+import { getPost } from '@/lib/posts'
+import ArticleBody from '@/components/ArticleBody'
 import { ArrowLeft, Calendar, Tag } from 'lucide-react'
 
 const BORDER = '#e8e4dc'
@@ -51,10 +52,7 @@ export default function PostPage() {
           ))}
         </div>
 
-        <article
-          className="md-body mt-8"
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-        />
+        <ArticleBody key={post.slug} content={post.content} />
       </main>
     </div>
   )

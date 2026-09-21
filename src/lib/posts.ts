@@ -99,12 +99,38 @@ function embedMedia(md: string): string {
     .join('\n')
 }
 
-export function renderMarkdown(md: string): string {
+export interface TocItem {
+  id: string
+  text: string
+  level: 2 | 3
+}
+
+/** 在同一份渲染结果上生成锚点和目录，避免两次解析出现偏差。 */
+export function renderMarkdownWithToc(md: string): { html: string; toc: TocItem[] } {
   const html = marked.parse(embedMedia(md), { async: false }) as string
   // 有 alt 文字的图片转成 figure + figcaption，注释显示在图片下方
-  return html.replace(/<img([^>]*?)>/g, (tag, attrs: string) => {
+  const captioned = html.replace(/<img([^>]*?)>/g, (tag, attrs: string) => {
     const alt = attrs.match(/alt="([^"]*)"/)?.[1]
     if (!alt) return tag
     return `<figure><img${attrs}><figcaption>${alt}</figcaption></figure>`
   })
+  const doc = new DOMParser().parseFromString(captioned, 'text/html')
+  const usedIds = new Set(Array.from(doc.querySelectorAll('[id]'), (node) => node.id))
+  const toc: TocItem[] = []
+  for (const heading of doc.querySelectorAll('h2, h3')) {
+    const text = heading.textContent?.trim() ?? ''
+    const slug = text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '')
+    const base = `section-${slug || 'heading'}`
+    let id = base
+    let suffix = 2
+    while (usedIds.has(id)) id = `${base}-${suffix++}`
+    usedIds.add(id)
+    heading.id = id
+    toc.push({ id, text: text || '未命名章节', level: heading.tagName === 'H2' ? 2 : 3 })
+  }
+  return { html: doc.body.innerHTML, toc }
+}
+
+export function renderMarkdown(md: string): string {
+  return renderMarkdownWithToc(md).html
 }

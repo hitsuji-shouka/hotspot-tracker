@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>Markdown 目录自检</title>
+<pre id="result">正在检查…</pre>
+<script type="module">
+  // npm run dev 后访问 /scripts/check-posts.html，无额外测试依赖。
+  import { renderMarkdown, renderMarkdownWithToc, posts, studyPosts } from '/src/lib/posts.ts'
+  const assert = (condition, message) => { if (!condition) throw new Error(message) }
+  try {
+    const md = '# 文档标题\n\n## 中文 **标题** &amp; [链接](https://example.com)\n\n### `代码`\n\n## 重复\n\n## 重复\n\n## 重复-2\n\n## !!!\n\n```md\n## 不进目录\n```\n\n#### 不进目录\n\n![说明](/sheep-planet.png)\n\nhttps://www.bilibili.com/video/BV1Fr421A74L'
+    const { html, toc } = renderMarkdownWithToc(md)
+    const doc = new DOMParser().parseFromString(html, 'text/html')
+    assert(toc.length === 6, '只提取 h2/h3，忽略代码块')
+    assert(toc[0].text === '中文 标题 & 链接' && toc[1].text === '代码', '目录显示纯文本')
+    assert(toc[1].level === 3, '保留 h3 层级')
+    assert(new Set(toc.map(item => item.id)).size === toc.length, '重复标题锚点不冲突')
+    assert(toc.every(item => doc.getElementById(item.id)?.textContent === item.text), '目录与正文一一对应')
+    assert(doc.querySelector('h2 strong') && doc.querySelector('h2 a'), '正文保留行内格式')
+    assert(doc.querySelector('figcaption')?.textContent === '说明', '保留图片说明')
+    assert(doc.querySelector('.video-embed iframe')?.src.includes('BV1Fr421A74L'), '保留视频嵌入')
+    assert(renderMarkdown(md) === html, '原渲染接口保持兼容')
+    assert(JSON.stringify(renderMarkdownWithToc(md).toc) === JSON.stringify(toc), '多次渲染锚点稳定')
+    assert(renderMarkdownWithToc('没有标题').toc.length === 0, '无标题时目录为空')
+    for (const post of [...posts, ...studyPosts]) {
+      const rendered = renderMarkdownWithToc(post.content)
+      const page = new DOMParser().parseFromString(rendered.html, 'text/html')
+      assert(rendered.toc.every(item => page.getElementById(item.id)), `${post.slug} 锚点有效`)
+    }
+    document.getElementById('result').textContent = 'PASS：目录、锚点、中文/重复标题、格式、媒体和所有现有文章检查通过。'
+  } catch (error) {
+    document.getElementById('result').textContent = `FAIL：${error.message}`
+    throw error
+  }
+</script>
+</html>

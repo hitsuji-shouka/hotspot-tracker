@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
-import { getStudyPost, renderMarkdown } from '@/lib/posts'
+import { getStudyPost } from '@/lib/posts'
+import ArticleBody from '@/components/ArticleBody'
 import { ArrowLeft, Calendar, Hash } from 'lucide-react'
 
 const ACCENT = '#c2410c'
@@ -50,10 +51,7 @@ export default function TechPostPage() {
           ))}
         </div>
 
-        <article
-          className="md-body mt-8"
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-        />
+        <ArticleBody key={post.slug} content={post.content} />
       </main>
     </div>
   )
