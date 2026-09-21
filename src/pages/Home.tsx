@@ -46,7 +46,7 @@ export default function Home() {
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const [keyword, setKeyword] = useState('')
   const [view, setView] = useState<View>('hot')
-  const { favorites, toggle, isFavorite } = useFavorites()
+  const { toggle, isFavorite } = useFavorites()
 
   const categories = mode === 'language' ? LANGUAGES : TOPICS
   const category: Category = useMemo(
@@ -185,7 +185,6 @@ export default function Home() {
               }`}
             >
               {n.emoji} {n.label}
-              {n.id === 'fav' && favorites.length > 0 ? ` (${favorites.length})` : ''}
             </button>
           ))}
         </nav>

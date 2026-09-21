@@ -21,20 +21,22 @@ export default function Favorites({ keyword }: { keyword: string }) {
   const [tab, setTab] = useState<SubTab>('links')
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       {/* 子分类 */}
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-4 gap-1 rounded-xl border border-[#30363d] bg-[#161b22] p-1">
         {SUB_TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+            aria-pressed={tab === t.id}
+            className={`min-w-0 rounded-lg px-1 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm ${
               tab === t.id
-                ? 'bg-[#e3b341]/15 text-[#e3b341] border-[#e3b341]/60'
-                : 'bg-[#161b22] text-[#8b949e] border-[#30363d] hover:border-[#8b949e] hover:text-[#c9d1d9]'
+                ? 'bg-[#e3b341]/15 text-[#e3b341] shadow-[inset_0_0_0_1px_rgba(227,179,65,0.45)]'
+                : 'text-[#8b949e] hover:bg-[#21262d] hover:text-[#c9d1d9]'
             }`}
           >
-            {t.emoji} {t.label}收藏
+            <span className="mr-1">{t.emoji}</span>
+            {t.label}
           </button>
         ))}
       </div>
@@ -91,22 +93,22 @@ function SkillFavs({ keyword }: { keyword: string }) {
       {filtered.map((s) => (
         <div
           key={s.url}
-          className="flex items-center gap-3 rounded-lg border border-[#30363d] bg-[#161b22] px-4 py-3 hover:border-[#a371f7]/50 transition-colors"
+          className="flex items-center gap-2.5 rounded-lg border border-[#30363d] bg-[#161b22] px-3 py-3 hover:border-[#a371f7]/50 transition-colors sm:gap-3 sm:px-4"
         >
           <div className="min-w-0 flex-1">
-            <a href={s.url} target="_blank" rel="noreferrer" className="font-semibold text-[#d2a8ff] hover:underline">
+            <a href={s.url} target="_blank" rel="noreferrer" className="block truncate font-semibold text-[#d2a8ff] hover:underline">
               {s.name}
             </a>
             <div className="text-xs text-[#8b949e] truncate">{s.source}</div>
           </div>
           <span className="flex items-center gap-1 text-xs text-[#3fb950] shrink-0">
             <Download className="w-3.5 h-3.5" />
-            {formatNumber(s.installs)} 安装
+            {formatNumber(s.installs)}<span className="hidden sm:inline"> 安装</span>
           </span>
           <button
             onClick={() => toggle(s)}
             title={has(s.url) ? '取消收藏' : '收藏'}
-            className={`p-1.5 rounded-md transition-colors shrink-0 ${
+            className={`p-2 rounded-md transition-colors shrink-0 ${
               has(s.url) ? 'text-[#f85149]' : 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#30363d]'
             }`}
           >
@@ -134,7 +136,7 @@ function PaperFavs({ keyword }: { keyword: string }) {
       {filtered.map((p) => (
         <div
           key={p.id}
-          className="rounded-lg border border-[#30363d] bg-[#161b22] px-4 py-3 hover:border-[#58a6ff]/50 transition-colors"
+          className="rounded-lg border border-[#30363d] bg-[#161b22] px-3 py-3 hover:border-[#58a6ff]/50 transition-colors sm:px-4"
         >
           <div className="flex items-start gap-3">
             <div className="min-w-0 flex-1">
@@ -151,13 +153,13 @@ function PaperFavs({ keyword }: { keyword: string }) {
                   <span className="truncate">· {p.authors.slice(0, 3).join(', ')}{p.authors.length > 3 ? ' 等' : ''}</span>
                 )}
               </div>
-              {p.abstract && <p className="text-sm text-[#8b949e] mt-2 leading-relaxed">{p.abstract}</p>}
+              {p.abstract && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#8b949e] sm:line-clamp-none">{p.abstract}</p>}
             </div>
             <div className="flex flex-col items-center gap-1 shrink-0">
               <button
                 onClick={() => toggle(p)}
                 title={has(p.id) ? '取消收藏' : '收藏'}
-                className={`p-1.5 rounded-md transition-colors ${
+                className={`p-2 rounded-md transition-colors ${
                   has(p.id) ? 'text-[#f85149]' : 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#30363d]'
                 }`}
               >
@@ -168,11 +170,11 @@ function PaperFavs({ keyword }: { keyword: string }) {
                 target="_blank"
                 rel="noreferrer"
                 title="查看 arXiv 原文"
-                className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d]"
+                className="flex items-center gap-1 rounded-md p-2 text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d] sm:px-2 sm:py-1"
               >
                 <FileText className="w-3.5 h-3.5" />
-                arXiv
-                <ArrowUpRight className="w-3 h-3" />
+                <span className="hidden sm:inline">arXiv</span>
+                <ArrowUpRight className="hidden w-3 h-3 sm:block" />
               </a>
             </div>
           </div>

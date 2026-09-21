@@ -88,20 +88,20 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex items-center gap-2 mr-auto">
+      <div className="flex items-start gap-3">
+        <div className="mr-auto flex min-w-0 items-start gap-2">
           <BookmarkIcon className="w-5 h-5 text-[#e3b341]" />
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base font-bold text-white">网址收藏</h2>
-            <p className="text-xs text-[#8b949e]">收集好网站，自动生成网页预览卡片 · 共 {list.length} 个</p>
+            <p className="mt-0.5 text-xs leading-5 text-[#8b949e]">自动生成网页预览 · 共 {list.length} 个</p>
           </div>
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-[#238636] hover:bg-[#2ea043] text-white">
-              <Plus className="w-4 h-4 mr-1.5" />
-              收藏网址
+            <Button aria-label="收藏网址" className="size-10 shrink-0 px-0 bg-[#238636] hover:bg-[#2ea043] text-white sm:h-9 sm:w-auto sm:px-4">
+              <Plus className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">收藏网址</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-[#161b22] border-[#30363d] text-[#c9d1d9]">
@@ -153,10 +153,10 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
       </div>
 
       {/* 分类筛选 */}
-      <div className="flex flex-wrap gap-2">
+      <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0">
         <button
           onClick={() => setCatId('all')}
-          className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+          className={`shrink-0 px-3 py-1.5 rounded-full text-sm border transition-colors ${
             catId === 'all'
               ? 'bg-[#e3b341]/15 text-[#e3b341] border-[#e3b341]/60'
               : 'bg-[#161b22] text-[#8b949e] border-[#30363d] hover:border-[#8b949e]'
@@ -170,7 +170,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
             <button
               key={c.id}
               onClick={() => setCatId(c.id)}
-              className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+              className={`shrink-0 px-3 py-1.5 rounded-full text-sm border transition-colors ${
                 catId === c.id
                   ? 'bg-[#e3b341]/15 text-[#e3b341] border-[#e3b341]/60'
                   : 'bg-[#161b22] text-[#8b949e] border-[#30363d] hover:border-[#8b949e]'
@@ -188,7 +188,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
           <p>{keyword || catId !== 'all' ? '没有匹配的收藏' : '还没有收藏任何网站，点右上角「收藏网址」开始'}</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {filtered.map((b) => (
             <BookmarkCard key={b.id} bookmark={b} onRemove={() => remove(b.id)} />
           ))}
@@ -208,7 +208,7 @@ function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove:
       {/* 预览图 / 渐变兜底 */}
       <a href={b.url} target="_blank" rel="noreferrer" className="block">
         {showImage ? (
-          <div className="h-36 overflow-hidden bg-[#0d1117]">
+          <div className="h-28 overflow-hidden bg-[#0d1117] sm:h-36">
             <img
               src={b.image!}
               alt={b.title}
@@ -219,7 +219,7 @@ function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove:
           </div>
         ) : (
           <div
-            className={`h-36 bg-gradient-to-br ${cat.gradient} flex items-center justify-center gap-3 opacity-90`}
+            className={`h-28 bg-gradient-to-br ${cat.gradient} flex items-center justify-center gap-3 opacity-90 sm:h-36`}
           >
             <img src={b.logo || faviconUrl(b.url)} alt="" className="w-10 h-10 rounded-lg bg-white/90 p-1" />
             <span className="text-white/95 font-bold text-lg drop-shadow">{domainOf(b.url)}</span>
@@ -231,13 +231,14 @@ function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove:
       <button
         onClick={onRemove}
         title="删除"
-        className="absolute top-2 right-2 p-1.5 rounded-md bg-black/50 text-white/70 hover:text-white hover:bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label={`删除 ${b.title}`}
+        className="absolute top-2 right-2 rounded-md bg-black/55 p-2 text-white/80 transition-opacity hover:bg-black/70 hover:text-white sm:opacity-0 sm:group-hover:opacity-100"
       >
         <Trash2 className="w-3.5 h-3.5" />
       </button>
 
       {/* 文本区 */}
-      <div className="p-3.5">
+      <div className="p-3 sm:p-3.5">
         <div className="flex items-center gap-1.5 mb-1.5">
           <span className="text-xs px-1.5 py-0.5 rounded-full bg-white/5 border border-[#30363d]">
             {cat.emoji} {cat.label}
