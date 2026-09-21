@@ -63,15 +63,15 @@ export default function Papers({ keyword }: { keyword: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3 flex-wrap">
-        <p className="text-xs text-[#8b949e] mr-auto">
+      <div className="flex items-start gap-2">
+        <p className="min-w-0 flex-1 text-xs text-[#8b949e]">
           {data
             ? `来自 ${data.source} 每日榜 · 按社区投票排序 · 更新于 ${new Date(data.updatedAt).toLocaleString()}`
             : '加载中…'}
         </p>
-        <Button size="sm" variant="outline" onClick={load} disabled={loading} className="border-[#30363d] text-[#c9d1d9]">
-          <RefreshCw className={`w-4 h-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
-          重新加载
+        <Button size="sm" variant="outline" onClick={load} disabled={loading} aria-label="重新加载" title="重新加载" className="size-8 px-0 border-[#30363d] text-[#c9d1d9] sm:w-auto sm:px-3">
+          <RefreshCw className={`w-4 h-4 sm:mr-1 ${loading ? 'animate-spin' : ''}`} />
+          <span className="hidden sm:inline">重新加载</span>
         </Button>
       </div>
 
@@ -98,10 +98,10 @@ export default function Papers({ keyword }: { keyword: string }) {
           {filtered.map((p, i) => (
             <div
               key={p.id}
-              className="rounded-lg border border-[#30363d] bg-[#161b22] px-4 py-3 hover:border-[#58a6ff]/50 transition-colors"
+              className="rounded-lg border border-[#30363d] bg-[#161b22] px-3 py-3 hover:border-[#58a6ff]/50 transition-colors sm:px-4"
             >
-              <div className="flex items-start gap-3">
-                <span className="w-7 text-center font-mono text-sm text-[#8b949e] shrink-0 pt-0.5">{i + 1}</span>
+              <div className="flex items-start gap-2 sm:gap-3">
+                <span className="w-5 text-center font-mono text-xs text-[#8b949e] shrink-0 pt-0.5 sm:w-7 sm:text-sm">{i + 1}</span>
                 <div className="min-w-0 flex-1">
                   <a
                     href={p.url}
@@ -124,13 +124,13 @@ export default function Papers({ keyword }: { keyword: string }) {
                       </span>
                     )}
                   </div>
-                  {p.abstract && <p className="text-sm text-[#8b949e] mt-2 leading-relaxed">{p.abstract}</p>}
+                  {p.abstract && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#8b949e] sm:line-clamp-none">{p.abstract}</p>}
                 </div>
                 <div className="flex flex-col items-center gap-1 shrink-0">
                   <button
                     onClick={() => toggleFav(p)}
                     title={isFav(p.id) ? '取消收藏' : '收藏这篇论文'}
-                    className={`p-1.5 rounded-md transition-colors ${
+                    className={`p-2 rounded-md transition-colors ${
                       isFav(p.id) ? 'text-[#f85149]' : 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#30363d]'
                     }`}
                   >
@@ -141,11 +141,11 @@ export default function Papers({ keyword }: { keyword: string }) {
                     target="_blank"
                     rel="noreferrer"
                     title="查看 arXiv 原文"
-                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d]"
+                    className="flex items-center gap-1 rounded-md p-2 text-xs text-[#8b949e] hover:text-white hover:bg-[#30363d] sm:px-2 sm:py-1"
                   >
                     <FileText className="w-3.5 h-3.5" />
-                    arXiv
-                    <ArrowUpRight className="w-3 h-3" />
+                    <span className="hidden sm:inline">arXiv</span>
+                    <ArrowUpRight className="hidden w-3 h-3 sm:block" />
                   </a>
                 </div>
               </div>

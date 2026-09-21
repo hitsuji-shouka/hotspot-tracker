@@ -116,29 +116,29 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9]">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 mr-auto">
-            <a href="/" className="group flex items-center gap-2.5" title="返回我的博客" aria-label="返回我的博客">
+      <header className="border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur sm:sticky sm:top-0 sm:z-10">
+        <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 sm:py-4 flex items-center gap-3 flex-wrap">
+          <div className="w-full min-w-0 sm:w-auto sm:mr-auto">
+            <a href="/" className="group flex min-w-0 items-center gap-2.5" title="返回我的博客" aria-label="返回我的博客">
               <img
                 src="/sheep-planet.png"
                 alt="羊宇宙漫游指南"
-                className="w-9 h-9 object-contain transition-transform group-hover:-rotate-12"
+                className="w-8 h-8 sm:w-9 sm:h-9 object-contain transition-transform group-hover:-rotate-12"
               />
-              <div>
-                <h1 className="text-lg font-bold text-white leading-tight transition-colors group-hover:text-[#a371f7]">羊宇宙漫游指南</h1>
-                <p className="text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
+              <div className="min-w-0">
+                <h1 className="text-base sm:text-lg font-bold text-white leading-tight transition-colors group-hover:text-[#a371f7]">羊宇宙漫游指南</h1>
+                <p className="truncate text-[11px] sm:text-xs text-[#8b949e]">热点追踪 · GitHub 项目 · Agent Skills · 热点论文 · AI 新闻 · 财经看点，每日热点一站掌握</p>
               </div>
             </a>
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-0 flex-1 sm:flex-none">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8b949e]" />
             <Input
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="在当前结果中搜索…"
-              className="pl-9 w-56 bg-[#161b22] border-[#30363d] text-sm"
+              className="h-10 w-full pl-9 bg-[#161b22] border-[#30363d] text-sm sm:h-9 sm:w-56"
             />
           </div>
 
@@ -146,37 +146,39 @@ export default function Home() {
           <Button
             onClick={() => load(true)}
             disabled={loading}
-            className="bg-[#238636] hover:bg-[#2ea043] text-white"
+            aria-label="刷新热点"
+            title="刷新热点"
+            className="size-10 px-0 bg-[#238636] hover:bg-[#2ea043] text-white sm:h-9 sm:w-auto sm:px-4"
           >
-            <RefreshCw className={`w-4 h-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
-            刷新热点
+            <RefreshCw className={`w-4 h-4 sm:mr-1.5 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">刷新热点</span>
           </Button>
           )}
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      <main className="max-w-6xl mx-auto px-3 py-4 space-y-4 sm:px-4 sm:py-6 sm:space-y-6">
         {/* 统计条（仅热点视图显示） */}
         {view === 'hot' && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
           <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
           <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
           <StatCard icon={<Flame className="w-4 h-4 text-[#e3b341]" />} label="时间范围" value={rangeLabel(range)} />
           <StatCard
             icon={<RefreshCw className="w-4 h-4 text-[#58a6ff]" />}
             label="上次更新"
-            value={updatedAt ? updatedAt.toLocaleTimeString() : '—'}
+            value={updatedAt ? updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
           />
         </div>
         )}
 
         {/* 主导航 */}
-        <nav className="flex items-center gap-2 flex-wrap border-b border-[#30363d] pb-4">
+        <nav className="-mx-3 flex items-center gap-2 overflow-x-auto border-b border-[#30363d] px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-4">
           {NAV.map((n) => (
             <button
               key={n.id}
               onClick={() => setView(n.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+              className={`shrink-0 px-3 py-2 sm:px-4 rounded-lg text-sm font-medium border transition-colors ${
                 view === n.id
                   ? 'bg-[#58a6ff]/15 text-[#58a6ff] border-[#58a6ff]/60'
                   : 'bg-[#161b22] text-[#8b949e] border-[#30363d] hover:border-[#8b949e] hover:text-[#c9d1d9]'
@@ -190,9 +192,9 @@ export default function Home() {
 
         {/* 时间范围（仅 GitHub 热点视图） */}
         {view === 'hot' && (
-        <div className="flex items-center gap-3 flex-wrap">
-          <Tabs value={range} onValueChange={(v) => setRange(v as TimeRange)}>
-            <TabsList className="bg-[#161b22] border border-[#30363d]">
+        <div>
+          <Tabs value={range} onValueChange={(v) => setRange(v as TimeRange)} className="w-full sm:w-auto">
+            <TabsList className="w-full bg-[#161b22] border border-[#30363d] sm:w-fit">
               <TabsTrigger value="daily">今日热点</TabsTrigger>
               <TabsTrigger value="weekly">本周热点</TabsTrigger>
               <TabsTrigger value="monthly">本月热点</TabsTrigger>
@@ -204,7 +206,7 @@ export default function Home() {
         {/* 分类：语言 / 主题（收藏视图下隐藏） */}
         {view === 'hot' && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
             <Button
               variant={mode === 'language' ? 'default' : 'outline'}
               size="sm"
@@ -212,7 +214,7 @@ export default function Home() {
                 setMode('language')
                 setCatId('all')
               }}
-              className={mode === 'language' ? 'bg-[#1f6feb] hover:bg-[#388bfd] text-white' : 'border-[#30363d] text-[#c9d1d9]'}
+              className={`w-full sm:w-auto ${mode === 'language' ? 'bg-[#1f6feb] hover:bg-[#388bfd] text-white' : 'border-[#30363d] text-[#c9d1d9]'}`}
             >
               按语言分类
             </Button>
@@ -223,18 +225,18 @@ export default function Home() {
                 setMode('topic')
                 setCatId('ai')
               }}
-              className={mode === 'topic' ? 'bg-[#1f6feb] hover:bg-[#388bfd] text-white' : 'border-[#30363d] text-[#c9d1d9]'}
+              className={`w-full sm:w-auto ${mode === 'topic' ? 'bg-[#1f6feb] hover:bg-[#388bfd] text-white' : 'border-[#30363d] text-[#c9d1d9]'}`}
             >
               按主题分类
             </Button>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0">
             {categories.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setCatId(c.id)}
-                className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                className={`shrink-0 px-3 py-1.5 rounded-full text-sm border transition-colors ${
                   catId === c.id
                     ? 'bg-[#58a6ff]/15 text-[#58a6ff] border-[#58a6ff]/60'
                     : 'bg-[#161b22] text-[#8b949e] border-[#30363d] hover:border-[#8b949e]'
@@ -313,12 +315,12 @@ function StatCard({
   value: string
 }) {
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#161b22] px-4 py-3">
-      <div className="flex items-center gap-1.5 text-xs text-[#8b949e]">
-        {icon}
-        {label}
+    <div className="min-w-0 rounded-lg border border-[#30363d] bg-[#161b22] px-2 py-2.5 sm:px-4 sm:py-3">
+      <div className="flex items-center gap-1.5 text-[10px] leading-tight text-[#8b949e] sm:text-xs">
+        <span className="hidden sm:inline-flex">{icon}</span>
+        <span className="truncate">{label}</span>
       </div>
-      <div className="text-xl font-bold text-white mt-1">{value}</div>
+      <div className="mt-1 truncate text-base font-bold text-white sm:text-xl">{value}</div>
     </div>
   )
 }

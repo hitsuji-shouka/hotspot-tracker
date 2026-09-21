@@ -34,14 +34,14 @@ export default function RepoCard({
 }) {
   const langColor = repo.language ? (LANG_COLORS[repo.language] ?? '#8b949e') : null
   return (
-    <a href={repo.html_url} target="_blank" rel="noreferrer" className="block group">
+    <a href={repo.html_url} target="_blank" rel="noreferrer" className="block min-w-0 group">
       <Card className="h-full bg-[#161b22] border-[#30363d] hover:border-[#58a6ff]/60 transition-colors">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-start gap-2.5 sm:gap-3">
             <img
               src={repo.owner.avatar_url}
               alt={repo.owner.login}
-              className="w-9 h-9 rounded-md shrink-0"
+              className="w-8 h-8 rounded-md shrink-0 sm:w-9 sm:h-9"
               loading="lazy"
             />
             <div className="min-w-0 flex-1">
@@ -59,7 +59,7 @@ export default function RepoCard({
                     e.stopPropagation()
                     onToggleFavorite(repo)
                   }}
-                  className="ml-auto shrink-0 p-1 rounded-md hover:bg-[#30363d] transition-colors"
+                  className="-mr-2 -mt-2 ml-auto shrink-0 p-2 rounded-md hover:bg-[#30363d] transition-colors"
                 >
                   <Heart
                     className={`w-4 h-4 transition-colors ${
@@ -70,12 +70,12 @@ export default function RepoCard({
                   />
                 </button>
               </div>
-              <p className="text-sm text-[#c9d1d9]/80 mt-1 line-clamp-2 min-h-[2.5em]">
+              <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#c9d1d9]/80 sm:min-h-[2.5em] sm:text-sm">
                 {repo.description ?? '暂无描述'}
               </p>
 
               {repo.topics.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
+                <div className="hidden flex-wrap gap-1 mt-2 sm:flex">
                   {repo.topics.slice(0, 4).map((t) => (
                     <Badge
                       key={t}
@@ -88,7 +88,7 @@ export default function RepoCard({
                 </div>
               )}
 
-              <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-[#8b949e]">
+              <div className="mt-2.5 flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-[#8b949e] sm:mt-3 sm:gap-x-4">
                 {repo.language && (
                   <span className="flex items-center gap-1.5">
                     <span
@@ -102,11 +102,11 @@ export default function RepoCard({
                   <Star className="w-3.5 h-3.5" />
                   {formatNumber(repo.stargazers_count)}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="hidden items-center gap-1 sm:flex">
                   <GitFork className="w-3.5 h-3.5" />
                   {formatNumber(repo.forks_count)}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="hidden items-center gap-1 sm:flex">
                   <CircleDot className="w-3.5 h-3.5" />
                   {formatNumber(repo.open_issues_count)}
                 </span>
