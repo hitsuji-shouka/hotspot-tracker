@@ -148,11 +148,11 @@ function PaperFavs({ keyword }: { keyword: string }) {
   const { items, toggle, has } = useCollection<PaperItem>('fav_papers', paperId)
   const k = keyword.trim().toLowerCase()
   const filtered = k
-    ? items.filter((p) => `${p.title} ${p.abstract ?? ''} ${p.authors.join(' ')}`.toLowerCase().includes(k))
+    ? items.filter((p) => `${p.title} ${p.abstract ?? ''} ${p.authors.join(' ')} ${(p.tags ?? []).join(' ')}`.toLowerCase().includes(k))
     : items
 
-  const importPaper = async (url: string, title: string) => {
-    const item = paperFromUrl(url, title)
+  const importPaper = async (url: string, title: string, tags: string[]) => {
+    const item = paperFromUrl(url, title, tags)
     if (has(item.id)) throw new Error('这篇论文已经收藏过了')
     toggle(item)
   }
@@ -185,6 +185,15 @@ function PaperFavs({ keyword }: { keyword: string }) {
                     <span className="truncate">· {p.authors.slice(0, 3).join(', ')}{p.authors.length > 3 ? ' 等' : ''}</span>
                   )}
                 </div>
+                {(p.tags?.length ?? 0) > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {(p.tags ?? []).map((tag) => (
+                      <span key={tag} className="rounded-full border border-[#30363d] bg-[#0d1117] px-2 py-0.5 text-[11px] text-[#8b949e]">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {p.abstract && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#8b949e] sm:line-clamp-none">{p.abstract}</p>}
               </div>
               <div className="flex flex-col items-center gap-1 shrink-0">
@@ -219,10 +228,15 @@ function PaperFavs({ keyword }: { keyword: string }) {
 
 type ImportKind = 'repo' | 'skill' | 'paper'
 
-const IMPORT_COPY: Record<ImportKind, { title: string; placeholder: string; namePlaceholder?: string }> = {
+const IMPORT_COPY: Record<ImportKind, { title: string; placeholder: string; namePlaceholder?: string; tagsPlaceholder?: string }> = {
   repo: { title: '导入 GitHub 仓库', placeholder: 'https://github.com/owner/repo' },
   skill: { title: '导入 Skill', placeholder: 'skills.sh 或 GitHub 链接', namePlaceholder: '显示名称（可选）' },
-  paper: { title: '导入论文', placeholder: 'arXiv 或 Hugging Face Papers 链接', namePlaceholder: '论文标题（可选）' },
+  paper: {
+    title: '导入论文',
+    placeholder: 'arXiv 或 Hugging Face Papers 链接',
+    namePlaceholder: '论文标题（可选）',
+    tagsPlaceholder: '标签（可选，用逗号分隔）',
+  },
 }
 
 function FavoriteHeader({
@@ -236,7 +250,7 @@ function FavoriteHeader({
   title: string
   count: number
   kind: ImportKind
-  onImport: (url: string, name: string) => Promise<void>
+  onImport: (url: string, name: string, tags: string[]) => Promise<void>
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -249,11 +263,12 @@ function FavoriteHeader({
   )
 }
 
-function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url: string, name: string) => Promise<void> }) {
+function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url: string, name: string, tags: string[]) => Promise<void> }) {
   const copy = IMPORT_COPY[kind]
   const [open, setOpen] = useState(false)
   const [url, setUrl] = useState('')
   const [name, setName] = useState('')
+  const [tags, setTags] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -262,10 +277,15 @@ function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url
     setLoading(true)
     setError('')
     try {
-      await onImport(url.trim(), name.trim())
+      await onImport(
+        url.trim(),
+        name.trim(),
+        tags.split(/[,，]/).map((tag) => tag.trim()).filter(Boolean),
+      )
       setOpen(false)
       setUrl('')
       setName('')
+      setTags('')
     } catch (e) {
       setError(e instanceof Error ? e.message : '导入失败，请检查链接')
     } finally {
@@ -307,6 +327,14 @@ function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url
               className="border-[#30363d] bg-[#0d1117]"
             />
           )}
+          {copy.tagsPlaceholder && (
+            <Input
+              value={tags}
+              onChange={(event) => setTags(event.target.value)}
+              placeholder={copy.tagsPlaceholder}
+              className="border-[#30363d] bg-[#0d1117]"
+            />
+          )}
           {error && <p className="text-sm text-[#f85149]">{error}</p>}
           <Button type="submit" disabled={loading || !url.trim()} className="w-full bg-[#238636] text-white hover:bg-[#2ea043]">
             {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Link2 className="mr-1.5 h-4 w-4" />}
@@ -334,7 +362,7 @@ function normalizedUrl(value: string): URL {
 
 function githubRepoFromUrl(value: string): string | null {
   const url = normalizedUrl(value)
-  if (url.hostname.toLowerCase() !== 'github.com') return null
+  if (url.hostname.toLowerCase().replace(/^www\./, '') !== 'github.com') return null
   const [owner, rawRepo] = url.pathname.split('/').filter(Boolean)
   const repo = rawRepo?.replace(/\.git$/i, '')
   return owner && repo ? `${owner}/${repo}` : null
@@ -343,7 +371,7 @@ function githubRepoFromUrl(value: string): string | null {
 function skillFromUrl(value: string, customName: string): SkillShItem {
   const url = normalizedUrl(value)
   const parts = url.pathname.split('/').filter(Boolean)
-  if (url.hostname.toLowerCase() === 'skills.sh' && parts.length >= 3) {
+  if (url.hostname.toLowerCase().replace(/^www\./, '') === 'skills.sh' && parts.length >= 3) {
     const [owner, repo] = parts
     return {
       rank: null,
@@ -366,9 +394,9 @@ function skillFromUrl(value: string, customName: string): SkillShItem {
   }
 }
 
-function paperFromUrl(value: string, customTitle: string): PaperItem {
+function paperFromUrl(value: string, customTitle: string, tags: string[]): PaperItem {
   const url = normalizedUrl(value)
-  const host = url.hostname.toLowerCase()
+  const host = url.hostname.toLowerCase().replace(/^www\./, '')
   let id = ''
   if (host === 'arxiv.org') {
     id = url.pathname.replace(/^\/(?:abs|pdf)\//, '').replace(/\.pdf$/i, '').replace(/v\d+$/i, '')
@@ -387,6 +415,7 @@ function paperFromUrl(value: string, customTitle: string): PaperItem {
     publishedAt: '',
     authors: [],
     abstract: null,
+    tags: [...new Set(tags)],
   }
 }
 

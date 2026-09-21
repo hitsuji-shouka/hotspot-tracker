@@ -123,6 +123,7 @@ export const SHELF: ShelfItem[] = [
     title: '赌局 Gamble（2008 现场）',
     creator: '椎名林檎 · UP 主 胡谍ix',
     videoUrl: 'https://www.bilibili.com/video/BV1aq4y1Z7aE',
+    cover: '/shelf/gamble.jpg',
   },
   {
     id: 'music-taozhe-hongloumeng',
@@ -130,6 +131,7 @@ export const SHELF: ShelfItem[] = [
     title: '讨厌红楼梦（Soul Power 2003 现场）',
     creator: '陶喆 · UP 主 The3heep',
     videoUrl: 'https://www.bilibili.com/video/BV1Bt4y1Y71r',
+    cover: '/shelf/taozhe-hongloumeng.jpg',
   },
   {
     id: 'music-marunouchi-live',
@@ -137,6 +139,7 @@ export const SHELF: ShelfItem[] = [
     title: '丸ノ内サディスティック',
     creator: '椎名林檎 · 東京事変 · UP 主 龙舌兰煮面包_Agave',
     videoUrl: 'https://www.bilibili.com/video/BV1RztaeCE5H',
+    cover: '/shelf/marunouchi.jpg',
   },
   {
     id: 'music-usotsuki-live',
@@ -144,6 +147,7 @@ export const SHELF: ShelfItem[] = [
     title: '嘘月（Live 2024「前世」）',
     creator: 'ヨルシカ · UP 主 清秋_Seisyuu',
     videoUrl: 'https://www.bilibili.com/video/BV1oiK6zrEsK',
+    cover: '/shelf/usotsuki.jpg',
   },
   {
     id: 'music-gidle-fate',
@@ -151,6 +155,7 @@ export const SHELF: ShelfItem[] = [
     title: 'Fate（LIVE CLIP）',
     creator: '(G)I-DLE · 官方',
     videoUrl: 'https://www.bilibili.com/video/BV1Zx421k7AZ',
+    cover: '/shelf/gidle-fate.jpg',
   },
   {
     id: 'music-hitsuji-golden',
@@ -158,6 +163,7 @@ export const SHELF: ShelfItem[] = [
     title: '金色（Fuji Rock Festival 2023）',
     creator: '羊文学 · UP 主 炒饭的蜘蛛侠',
     videoUrl: 'https://www.bilibili.com/video/BV1Yx4y1B7om',
+    cover: '/shelf/hitsuji-golden.jpg',
   },
   {
     id: 'music-hitsuji-1999',
@@ -165,5 +171,6 @@ export const SHELF: ShelfItem[] = [
     title: '1999（官方 MV）',
     creator: '羊文学',
     videoUrl: 'https://www.bilibili.com/video/BV1kk4y1E7LW',
+    cover: '/shelf/hitsuji-1999.jpg',
   },
 ]

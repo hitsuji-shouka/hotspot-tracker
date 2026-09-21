@@ -14,6 +14,7 @@ export interface PaperItem {
   authors: string[]
   abstract: string | null
   thumbnail?: string | null
+  tags?: string[]
 }
 
 interface PapersSnapshot {
