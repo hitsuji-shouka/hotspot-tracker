@@ -2,6 +2,11 @@
 // 封面图放到 public/shelf/ 目录（比如 public/shelf/qianshuiting.jpg），cover 写 '/shelf/qianshuiting.jpg'；
 // 不填 cover 会自动生成一个渐变占位封面，也很好看。
 //
+// ⚠️ 替换已有封面时务必换新文件名（如 fire-of-love.jpg → fire-of-love-2.jpg）：
+// 同名文件会被浏览器 / CDN 缓存数小时，换了图也看不到新图。
+// B 站视频封面可用命令行抓取（浏览器端有跨域限制，但 API 可以直接拿）：
+//   curl -s "https://api.bilibili.com/x/web-interface/view?bvid=BV号" → 取 data.pic 下载即可。
+//
 // 视频：任何分类（影视 / 书籍 / 音乐）的作品都可以配 videoUrl，配上后卡片会带「▶ 视频」标签，
 // 点击卡片在当前页弹窗播放——
 //   · 直链视频（mp4/webm 等）：不填 cover 时会自动截取首帧当封面；
