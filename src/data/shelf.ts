@@ -101,4 +101,20 @@ export const SHELF: ShelfItem[] = [
     musicUrl: 'https://open.spotify.com/album/6gApmv7Klo2uuyTxWkPzXb',
     note: '云层深处的黑暗啊 淹没心底的景观',
   },
+  {
+    id: 'movie-kaze',
+    category: 'movie',
+    title: '强风吹拂',
+    creator: '三浦紫苑 · Production I.G',
+    cover: '/shelf/kaze.jpg',
+    note: '箱根の山は天下の険',
+  },
+  {
+    id: 'book-woyuditan',
+    category: 'book',
+    title: '我与地坛',
+    creator: '史铁生',
+    cover: '/shelf/woyuditan.jpg',
+    note: '死是一件不必急于求成的事，死是一个终将会到来的节日',
+  },
 ]
