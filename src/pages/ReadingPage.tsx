@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { ArrowDown, ArrowUpRight, BookOpen, Check, Edit3, Loader2, Plus, Search, Trash2 } from 'lucide-react'
 import SiteNav from '@/components/SiteNav'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { fetchLinkPreview } from '@/lib/bookmarks'
+import { fetchLinkPreview, faviconUrl } from '@/lib/bookmarks'
 import { pullKey, pushSync } from '@/lib/sync'
 import { articleIdentity, articleSource, articleUrl, INITIAL_READING, isReadingList, previewImage, restoreArticle, READING_KEY, READING_TOPICS, type ReadingArticle } from '@/lib/reading'
 import './reading.css'
@@ -88,22 +88,45 @@ function ArticleEditor({ article, onSave, onClose }: { article: ReadingArticle |
 
 function ReadingCard({ article, onRead, onEdit, onRemove }: { article: ReadingArticle; onRead: () => void; onEdit: () => void; onRemove: () => void }) {
   const [failed, setFailed] = useState<string | null>(null)
-  const [loaded, setLoaded] = useState<string | null>(null)
   const source = articleSource(article.url)
   const hasImage = article.image && failed !== article.image
+  const [from, to] = SOURCE_GRADIENTS[source] ?? FALLBACK_GRADIENT
   return (
     <article className="reading-card">
-      <div className="reading-card-top"><span className="reading-accession">{source}</span><button className={`reading-status ${article.read ? 'is-read' : ''}`} onClick={onRead} aria-label={`${article.read ? '标记待读' : '标记已读'}：${article.title}`} aria-pressed={article.read}>{article.read ? <Check size={12} /> : <span className="reading-dot" />} {article.read ? '已读' : '待读'}</button></div>
-      <a href={article.url} target="_blank" rel="noreferrer" className="reading-card-link" aria-label={`${article.title}（在新标签页打开原文）`}>
-        <div className="reading-cover"><div className="reading-type-cover" aria-hidden="true"><BookOpen size={28} strokeWidth={1.25} /><span>{source}</span></div>{hasImage && <img className={loaded === article.image ? 'is-loaded' : ''} src={article.image!} alt="" loading="lazy" referrerPolicy="no-referrer" onLoad={() => setLoaded(article.image)} onError={() => setFailed(article.image)} />}</div>
-        <h2>{article.title}<ArrowUpRight size={17} /></h2>
+      <a href={article.url} target="_blank" rel="noreferrer" className="reading-cover" aria-label={`${article.title}（在新标签页打开原文）`}>
+        {hasImage ? (
+          <img className="reading-cover-img" src={article.image!} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(article.image)} />
+        ) : (
+          <div className="reading-cover-fallback" style={{ background: `linear-gradient(135deg, ${from}, ${to})` }} aria-hidden="true">
+            <img src={faviconUrl(article.url)} alt="" />
+            <span>{source}</span>
+          </div>
+        )}
       </a>
-      {article.description && <p className="reading-description">{article.description}</p>}
-      {article.note && <p className="reading-note">{article.note}</p>}
-      <div className="reading-card-bottom"><div className="reading-tags">{article.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="reading-card-tools"><button onClick={onEdit} aria-label={`编辑：${article.title}`} title="编辑"><Edit3 size={15} /></button><button onClick={onRemove} aria-label={`移除：${article.title}`} title="移除"><Trash2 size={15} /></button></div></div>
+      <button className={`reading-status ${article.read ? 'is-read' : ''}`} onClick={onRead} aria-label={`${article.read ? '标记待读' : '标记已读'}：${article.title}`} aria-pressed={article.read}>{article.read ? <Check size={12} /> : <span className="reading-dot" />} {article.read ? '已读' : '待读'}</button>
+      <div className="reading-card-tools">
+        <button onClick={onEdit} aria-label={`编辑：${article.title}`} title="编辑"><Edit3 size={14} /></button>
+        <button onClick={onRemove} aria-label={`移除：${article.title}`} title="移除"><Trash2 size={14} /></button>
+      </div>
+      <div className="reading-body">
+        {article.tags.length > 0 && <div className="reading-tags">{article.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div>}
+        <a href={article.url} target="_blank" rel="noreferrer" className="reading-card-link">
+          <h2>{article.title}<ArrowUpRight size={15} /></h2>
+        </a>
+        {article.description && <p className="reading-description">{article.description}</p>}
+        {article.note && <p className="reading-note">{article.note}</p>}
+      </div>
     </article>
   )
 }
+
+const SOURCE_GRADIENTS: Record<string, [string, string]> = {
+  知乎: ['#5b9dff', '#1f6feb'],
+  小红书: ['#f78166', '#da3633'],
+  微信公众号: ['#4cc38a', '#1a7f37'],
+  X: ['#57606a', '#24292f'],
+}
+const FALLBACK_GRADIENT: [string, string] = ['#e8a54b', '#c2410c']
 
 export default function ReadingPage() {
   const [articles, setArticles] = useState<ReadingArticle[]>(localArticles)
@@ -155,7 +178,7 @@ export default function ReadingPage() {
         </section>
         <div className="reading-catalog-head"><div className="reading-status-tabs" aria-label="阅读状态">{[{ key: 'all', label: '全部收藏', count: articles.length }, { key: 'unread', label: '待读', count: unread }, { key: 'read', label: '已读', count: articles.length - unread }].map(item => <button key={item.key} onClick={() => setStatus(item.key)} aria-pressed={status === item.key}>{item.label}<span>{item.count}</span></button>)}</div><label className="reading-search"><Search size={16} /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="在收藏中寻一篇文章" aria-label="搜索收藏文章" /></label></div>
         <div className="reading-topics" aria-label="主题筛选">{['全部主题', ...topics].map(item => <button key={item} onClick={() => setTopic(item)} aria-pressed={topic === item}>{item}</button>)}</div>
-        <div className="reading-catalog-caption"><span aria-live="polite">共 {visible.length} 篇文章</span><span>点击标题阅读原文 ↗</span></div>
+        <div className="reading-catalog-caption"><span aria-live="polite">共 {visible.length} 篇文章</span></div>
         {error && <p className="reading-error" role="alert">{error}</p>}
         {removed && <div className="reading-undo" role="status">已移除《{removed.title}》<button onClick={() => { if (persist(restoreArticle(articles, removed))) setRemoved(null) }}>撤销</button></div>}
         {visible.length ? <div className="reading-grid">{visible.map(article => <ReadingCard key={article.id} article={article} onRead={() => { if (ready) persist(articles.map(item => item.id === article.id ? { ...item, read: !item.read } : item)) }} onEdit={() => { if (ready) setEditor({ article }) }} onRemove={() => { if (ready && persist(articles.filter(item => item.id !== article.id))) setRemoved(article) }} />)}</div> : <div className="reading-empty"><BookOpen size={36} strokeWidth={1} /><h2>{articles.length ? '暂时没有匹配的文章' : '给下一次阅读，留一个位置。'}</h2><p>{articles.length ? '试试其他主题，或者换个关键词。' : '从一篇让你停下来的文章开始。'}</p>{articles.length > 0 && <button className="reading-button" onClick={() => { setQuery(''); setTopic('全部主题'); setStatus('all') }}>查看全部收藏</button>}</div>}
