@@ -85,7 +85,7 @@ function ShelfCard({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem
   const coverAspect = item.category === 'music'
     ? isVideo
       ? 'aspect-video'
-      : 'aspect-square sm:aspect-video'
+      : 'aspect-square'
     : 'aspect-[2/3]'
 
   return (
