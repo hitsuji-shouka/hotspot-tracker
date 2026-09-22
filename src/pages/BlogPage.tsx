@@ -22,7 +22,7 @@ export default function BlogPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 pb-16">
-        <section className="pt-10 pb-6">
+        <section className="pt-6 pb-6 sm:pt-8">
           <h1 className="font-serif text-2xl font-bold">博客</h1>
           <p className="text-sm text-[#6b655c] mt-2">随手记录，慢慢来。</p>
         </section>

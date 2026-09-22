@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -45,8 +46,29 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const [keyword, setKeyword] = useState('')
-  const [view, setView] = useState<View>('hot')
+  const [params, setParams] = useSearchParams()
+  const view = NAV.find(item => item.id === params.get('view'))?.id ?? 'hot'
+  const setView = (next: View) => setParams(previous => {
+    const updated = new URLSearchParams(previous)
+    updated.set('view', next)
+    return updated
+  })
   const { toggle, isFavorite } = useFavorites()
+  const navRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const revealActive = () => {
+      const nav = navRef.current
+      const active = nav?.querySelector('[aria-current="page"]')
+      if (!nav || !active) return
+      const outer = nav.getBoundingClientRect()
+      const inner = active.getBoundingClientRect()
+      nav.scrollLeft += Math.max(0, inner.right - outer.right) + Math.min(0, inner.left - outer.left)
+    }
+    revealActive()
+    window.addEventListener('resize', revealActive)
+    return () => window.removeEventListener('resize', revealActive)
+  }, [view])
 
   const categories = mode === 'language' ? LANGUAGES : TOPICS
   const category: Category = useMemo(
@@ -173,11 +195,12 @@ export default function Home() {
         )}
 
         {/* 主导航 */}
-        <nav className="-mx-3 flex items-center gap-2 overflow-x-auto border-b border-[#30363d] px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-4">
+        <nav ref={navRef} aria-label="热点导航" className="-mx-3 flex items-center gap-2 overflow-x-auto border-b border-[#30363d] px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-4">
           {NAV.map((n) => (
             <button
               key={n.id}
               onClick={() => setView(n.id)}
+              aria-current={view === n.id ? 'page' : undefined}
               className={`shrink-0 px-3 py-2 sm:px-4 rounded-lg text-sm font-medium border transition-colors ${
                 view === n.id
                   ? 'bg-[#58a6ff]/15 text-[#58a6ff] border-[#58a6ff]/60'

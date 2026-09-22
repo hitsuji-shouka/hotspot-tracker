@@ -216,7 +216,7 @@ export default function ShelfPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 pb-16">
-        <section className="pb-6 pt-10">
+        <section className="pb-6 pt-6 sm:pt-8">
           <h1 className="font-serif text-2xl font-bold">漫游</h1>
           <p className="mt-2 text-sm text-[#6b655c]">在文学、电影和音乐里漫游——这个书架会慢慢填满。</p>
         </section>

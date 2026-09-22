@@ -36,7 +36,7 @@ export default function TechPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 pb-16">
-        <section className="pt-10 pb-6">
+        <section className="pt-6 pb-6 sm:pt-8">
           <h1 className="font-serif text-2xl font-bold">学习</h1>
           <p className="text-sm text-[#6b655c] mt-2">
             技术、语言、经济——学会一样东西的最好方式，是把它讲清楚。

@@ -1,4 +1,6 @@
 import { useState, type ReactNode } from 'react'
+import { useSearchParams } from 'react-router'
+import Articles from '@/sections/Articles'
 import RepoCard from '@/components/RepoCard'
 import Bookmarks from '@/sections/Bookmarks'
 import { useFavorites } from '@/hooks/use-favorites'
@@ -11,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { ArrowUpRight, Download, FileText, Heart, Link2, Loader2, Plus, ThumbsUp } from 'lucide-react'
 
-type SubTab = 'links' | 'repos' | 'skills' | 'papers'
+type SubTab = 'links' | 'repos' | 'skills' | 'papers' | 'articles'
 
 interface FavoriteCategory {
   id: string
@@ -50,15 +52,23 @@ const SUB_TABS: { id: SubTab; label: string; emoji: string }[] = [
   { id: 'repos', label: '仓库', emoji: '❤️' },
   { id: 'skills', label: 'Skill', emoji: '🧩' },
   { id: 'papers', label: '论文', emoji: '📄' },
+  { id: 'articles', label: '文章', emoji: '📝' },
 ]
 
 export default function Favorites({ keyword }: { keyword: string }) {
-  const [tab, setTab] = useState<SubTab>('links')
+  const [params, setParams] = useSearchParams()
+  const tab = SUB_TABS.find(item => item.id === params.get('tab'))?.id ?? 'links'
+  const setTab = (next: SubTab) => setParams(previous => {
+    const updated = new URLSearchParams(previous)
+    updated.set('view', 'fav')
+    updated.set('tab', next)
+    return updated
+  })
 
   return (
     <div className="space-y-4 sm:space-y-5">
       {/* 子分类 */}
-      <div className="grid grid-cols-4 gap-1 rounded-xl border border-[#30363d] bg-[#161b22] p-1">
+      <div className="grid grid-cols-5 gap-1 rounded-xl border border-[#30363d] bg-[#161b22] p-1">
         {SUB_TABS.map((t) => (
           <button
             key={t.id}
@@ -70,7 +80,7 @@ export default function Favorites({ keyword }: { keyword: string }) {
                 : 'text-[#8b949e] hover:bg-[#21262d] hover:text-[#c9d1d9]'
             }`}
           >
-            <span className="mr-1">{t.emoji}</span>
+            <span className="mb-1 block sm:mb-0 sm:mr-1 sm:inline">{t.emoji}</span>
             {t.label}
           </button>
         ))}
@@ -82,8 +92,10 @@ export default function Favorites({ keyword }: { keyword: string }) {
         <RepoFavs keyword={keyword} />
       ) : tab === 'skills' ? (
         <SkillFavs keyword={keyword} />
-      ) : (
+      ) : tab === 'papers' ? (
         <PaperFavs keyword={keyword} />
+      ) : (
+        <Articles keyword={keyword} />
       )}
     </div>
   )
