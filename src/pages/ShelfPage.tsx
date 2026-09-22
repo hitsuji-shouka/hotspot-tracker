@@ -5,7 +5,6 @@ import SiteNav from '@/components/SiteNav'
 import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfFilter, type ShelfItem } from '@/data/shelf'
 
 const ACCENT = '#c2410c'
-const BORDER = '#e8e4dc'
 
 const GRADIENTS: Record<ShelfCategory, string> = {
   movie: 'from-[#1f2937] to-[#0f172a]',
@@ -13,10 +12,18 @@ const GRADIENTS: Record<ShelfCategory, string> = {
   music: 'from-[#8b7bd8] to-[#5b4fb8]',
 }
 
-const ASPECT: Record<ShelfCategory, string> = {
-  movie: 'aspect-[2/3]',
-  book: 'aspect-[2/3]',
-  music: 'aspect-square',
+const SHELF_ORDER: ShelfCategory[] = ['book', 'movie', 'music']
+
+const SECTION_COPY: Record<ShelfCategory, { title: string; description: string }> = {
+  book: { title: '书页', description: '在文字里抵达更远的地方' },
+  movie: { title: '银幕', description: '一些值得反复回看的故事' },
+  music: { title: '声场', description: '最近循环播放的声音与现场' },
+}
+
+const GRID_CLASS: Record<ShelfCategory, string> = {
+  book: 'grid-cols-2 gap-4 sm:mx-auto sm:w-full sm:max-w-2xl sm:gap-6',
+  movie: 'grid-cols-2 gap-4 sm:mx-auto sm:w-full sm:max-w-4xl sm:grid-cols-3 sm:gap-6',
+  music: 'grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3',
 }
 
 /** 从 B 站链接里提取 BV 号，非 B 站链接返回 null */
@@ -78,6 +85,70 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
         </span>
       </span>
     </button>
+  )
+}
+
+function ShelfCard({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
+  const isVideo = !!item.videoUrl
+  const coverAspect = item.category === 'music'
+    ? isVideo
+      ? 'aspect-video sm:aspect-[4/3]'
+      : 'aspect-square sm:aspect-[4/3]'
+    : 'aspect-[2/3]'
+
+  return (
+    <article className={`group min-w-0 ${isVideo ? 'col-span-2 sm:col-span-1' : ''}`}>
+      <div className="h-full overflow-hidden rounded-xl border border-[#e8e4dc] bg-white/80 shadow-[0_2px_10px_rgba(80,64,40,0.05)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[#d7cfc1] group-hover:shadow-[0_14px_34px_rgba(80,64,40,0.12)]">
+        <div className={`overflow-hidden bg-[#eeeae2] ${coverAspect}`}>
+          <CoverBox item={item} onPlay={onPlay} />
+        </div>
+        <div className="flex min-h-[118px] flex-col p-3.5 sm:min-h-[132px] sm:p-4">
+          <div className="line-clamp-2 font-serif text-[15px] font-semibold leading-snug text-[#26221c] sm:min-h-[2.75rem] sm:text-[17px]">
+            {item.title}
+          </div>
+          <div className="mt-1 truncate text-xs text-[#9b9388] sm:text-[13px]">{item.creator}</div>
+          {item.note && (
+            <div className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#6b655c] sm:text-[13px]">{item.note}</div>
+          )}
+          {item.rating != null && (
+            <div className="mt-auto flex gap-0.5 pt-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className="h-3 w-3"
+                  fill={i < (item.rating ?? 0) ? ACCENT : 'none'}
+                  stroke={ACCENT}
+                  strokeOpacity={i < (item.rating ?? 0) ? 1 : 0.3}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function ShelfSection({ category, items, onPlay }: { category: ShelfCategory; items: ShelfItem[]; onPlay: (item: ShelfItem) => void }) {
+  const copy = SECTION_COPY[category]
+  const meta = CATEGORY_META[category]
+
+  return (
+    <section>
+      <div className="mb-4 flex items-end gap-3 border-b border-[#e8e4dc] pb-3 sm:mb-6">
+        <div className="min-w-0 flex-1">
+          <h2 className="font-serif text-xl font-bold text-[#26221c]">
+            <span className="mr-2 text-base" aria-hidden="true">{meta.emoji}</span>
+            {copy.title}
+          </h2>
+          <p className="mt-1 text-xs text-[#8f877c] sm:text-sm">{copy.description}</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-[#eee9df] px-2.5 py-1 text-xs text-[#756d62]">{items.length} 件</span>
+      </div>
+      <div className={`grid ${GRID_CLASS[category]}`}>
+        {items.map((item) => <ShelfCard key={item.id} item={item} onPlay={onPlay} />)}
+      </div>
+    </section>
   )
 }
 
@@ -157,14 +228,19 @@ export default function ShelfPage() {
     document.title = '漫游 · 羊宇宙漫游指南'
   }, [])
 
-  const items = useMemo(
-    () => (filter === 'all' ? SHELF : SHELF.filter((i) => i.category === filter)),
+  const sections = useMemo(
+    () => SHELF_ORDER
+      .filter((category) => filter === 'all' || category === filter)
+      .map((category) => ({ category, items: SHELF.filter((item) => item.category === category) }))
+      .filter((section) => section.items.length > 0),
     [filter],
   )
 
+  const visibleCount = sections.reduce((count, section) => count + section.items.length, 0)
+
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
-      <header className="max-w-5xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-5 pt-6 text-sm sm:px-6">
         <Link to="/" className="flex items-center gap-2 font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">
           <img src="/sheep-planet.png" alt="返回首页" className="w-6 h-6 object-contain" />
           羊宇宙漫游指南
@@ -172,66 +248,38 @@ export default function ShelfPage() {
         <SiteNav />
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pb-16">
-        <section className="pt-10 pb-6">
-          <h1 className="font-serif text-2xl font-bold">漫游</h1>
-          <p className="text-sm text-[#6b655c] mt-2">在文学、电影和音乐里漫游——这个书架会慢慢填满。</p>
+      <main className="mx-auto max-w-6xl px-5 pb-20 sm:px-6">
+        <section className="pb-7 pt-10 sm:pb-8 sm:pt-14">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-[#c2410c]">Wandering Shelf</p>
+          <h1 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl">漫游</h1>
+          <p className="mt-3 max-w-xl text-sm leading-7 text-[#6b655c] sm:text-base">在文学、电影和音乐里漫游。这里不追求完整，只留下值得再次遇见的作品。</p>
         </section>
 
-        <div className="flex gap-2 mb-8 flex-wrap">
+        <div className="mb-10 flex w-full gap-1.5 overflow-x-auto rounded-2xl border border-[#e8e4dc] bg-white/60 p-2 shadow-[0_2px_12px_rgba(80,64,40,0.04)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mb-12 sm:w-fit sm:gap-2">
           {(Object.keys(CATEGORY_META) as ShelfFilter[]).map((k) => (
             <button
               key={k}
               onClick={() => setFilter(k)}
-              className={`px-3.5 py-1.5 rounded-full text-sm border transition-colors ${
+              className={`shrink-0 rounded-xl border px-3 py-2 text-sm transition-colors sm:px-3.5 ${
                 filter === k
-                  ? 'text-white border-transparent'
-                  : 'text-[#6b655c] bg-white hover:border-[#a39e93]'
+                  ? 'border-transparent text-white shadow-sm'
+                  : 'border-transparent bg-transparent text-[#6b655c] hover:border-[#ddd6ca] hover:bg-white'
               }`}
-              style={filter === k ? { background: ACCENT } : { borderColor: BORDER }}
+              style={filter === k ? { background: ACCENT } : undefined}
             >
               {CATEGORY_META[k].emoji} {CATEGORY_META[k].label}
             </button>
           ))}
         </div>
 
-        {items.length === 0 ? (
+        {visibleCount === 0 ? (
           <p className="text-sm text-[#a39e93] py-16 text-center">
             这一类还空着，去 src/data/shelf.ts 添一件喜欢的作品吧。
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8">
-            {items.map((item) => (
-              <div key={item.id} className={`group ${item.videoUrl ? 'col-span-2 sm:col-span-1' : ''}`}>
-                <div
-                  className={`overflow-hidden rounded-lg border bg-white shadow-sm transition-all group-hover:shadow-md group-hover:-translate-y-1 ${item.videoUrl ? 'aspect-video' : ASPECT[item.category]}`}
-                  style={{ borderColor: BORDER }}
-                >
-                  <CoverBox item={item} onPlay={setPlaying} />
-                </div>
-                {/* 木隔板 */}
-                <div className="h-1.5 mt-1 rounded-sm bg-gradient-to-b from-[#c9a06b] to-[#9c7748] shadow-[0_2px_3px_rgba(0,0,0,0.12)]" />
-                <div className="mt-2.5">
-                  <div className="font-medium text-[15px] truncate">{item.title}</div>
-                  <div className="text-xs text-[#a39e93] mt-0.5 truncate">{item.creator}</div>
-                  {item.note && (
-                    <div className="text-xs text-[#6b655c] mt-1 line-clamp-2 leading-relaxed">{item.note}</div>
-                  )}
-                  {item.rating != null && (
-                    <div className="flex gap-0.5 mt-1.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-3 h-3"
-                          fill={i < (item.rating ?? 0) ? ACCENT : 'none'}
-                          stroke={ACCENT}
-                          strokeOpacity={i < (item.rating ?? 0) ? 1 : 0.3}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+          <div className="space-y-12 sm:space-y-16">
+            {sections.map((section) => (
+              <ShelfSection key={section.category} category={section.category} items={section.items} onPlay={setPlaying} />
             ))}
           </div>
         )}
