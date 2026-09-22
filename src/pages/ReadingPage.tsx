@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { ArrowDown, ArrowUpRight, BookOpen, Check, Edit3, Loader2, Plus, Search, Trash2 } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, BookOpen, Edit3, Loader2, Plus, Search, Trash2 } from 'lucide-react'
 import SiteNav from '@/components/SiteNav'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { fetchLinkPreview, faviconUrl } from '@/lib/bookmarks'
 import { pullKey, pushSync } from '@/lib/sync'
-import { articleIdentity, articleSource, articleUrl, INITIAL_READING, isReadingList, previewImage, restoreArticle, READING_KEY, READING_TOPICS, type ReadingArticle } from '@/lib/reading'
+import { articleIdentity, articleSource, articleUrl, INITIAL_READING, isReadingList, previewImage, READING_KEY, READING_TOPICS, restoreArticle, type ReadingArticle } from '@/lib/reading'
 import './reading.css'
 
 function localArticles() {
@@ -14,6 +14,16 @@ function localArticles() {
     return isReadingList(value) ? value : INITIAL_READING
   } catch { return INITIAL_READING }
 }
+
+const TOPIC_EMOJI: Record<string, string> = {
+  大模型: '🤖',
+  Agent: '🧠',
+  'AI 编程': '💻',
+  后端: '🛠️',
+  数据库: '🗄️',
+  工程实践: '📐',
+}
+const topicEmoji = (topic: string) => TOPIC_EMOJI[topic] ?? '📦'
 
 function ArticleEditor({ article, onSave, onClose }: { article: ReadingArticle | null; onSave: (article: ReadingArticle) => string | null; onClose: () => void }) {
   const [input, setInput] = useState(article?.url ?? '')
@@ -66,12 +76,12 @@ function ArticleEditor({ article, onSave, onClose }: { article: ReadingArticle |
   return (
     <DialogContent className="reading-editor">
       <DialogHeader>
-        <DialogTitle>{article ? '整理这篇文章' : '收藏一篇好文章'}</DialogTitle>
+        <DialogTitle className="reading-editor-title">{article ? '整理这篇文章' : '收藏一篇好文章'}</DialogTitle>
         <DialogDescription>留下链接，也留下你想读它的理由。</DialogDescription>
       </DialogHeader>
       <form onSubmit={save} className="reading-form">
         <label>文章链接或分享文案<textarea required rows={2} value={input} onChange={event => { generation.current++; setLoading(false); setInput(event.target.value); setMessage('') }} placeholder="粘贴知乎、公众号、小红书、X 或其他文章链接" /></label>
-        <button type="button" className="reading-button" disabled={!input.trim() || loading} onClick={preview}>{loading ? <Loader2 size={15} className="animate-spin" /> : <ArrowDown size={15} />} {loading ? '正在获取预览' : '获取标题和封面'}</button>
+        <button type="button" className="reading-fetch" disabled={!input.trim() || loading} onClick={preview}>{loading ? <Loader2 size={15} className="animate-spin" /> : <ArrowDown size={15} />} {loading ? '正在获取预览' : '获取标题和封面'}</button>
         <p className="reading-message" role="status">{message}</p>
         <fieldset disabled={loading}>
           <label>标题<input value={title} onChange={event => setTitle(event.target.value)} placeholder="未获取到时可以自己填写" maxLength={300} /></label>
@@ -80,13 +90,13 @@ function ArticleEditor({ article, onSave, onClose }: { article: ReadingArticle |
           <label>主题标签<input value={tags} onChange={event => setTags(event.target.value)} placeholder="Agent、大模型、后端（用逗号分隔）" maxLength={200} /></label>
           <label>我的推荐语（可选）<textarea rows={2} value={note} onChange={event => setNote(event.target.value)} placeholder="为什么想读这篇文章？" maxLength={1000} /></label>
         </fieldset>
-        <div className="reading-form-actions"><button type="button" className="reading-button" onClick={onClose}>取消</button><button type="submit" className="reading-button reading-primary" disabled={loading || !input.trim()}>保存收藏</button></div>
+        <div className="reading-form-actions"><button type="button" className="reading-btn-ghost" onClick={onClose}>取消</button><button type="submit" className="reading-btn-primary" disabled={loading || !input.trim()}>保存收藏</button></div>
       </form>
     </DialogContent>
   )
 }
 
-function ReadingCard({ article, onRead, onEdit, onRemove }: { article: ReadingArticle; onRead: () => void; onEdit: () => void; onRemove: () => void }) {
+function ReadingCard({ article, onEdit, onRemove }: { article: ReadingArticle; onEdit: () => void; onRemove: () => void }) {
   const [failed, setFailed] = useState<string | null>(null)
   const source = articleSource(article.url)
   const hasImage = article.image && failed !== article.image
@@ -103,18 +113,17 @@ function ReadingCard({ article, onRead, onEdit, onRemove }: { article: ReadingAr
           </div>
         )}
       </a>
-      <button className={`reading-status ${article.read ? 'is-read' : ''}`} onClick={onRead} aria-label={`${article.read ? '标记待读' : '标记已读'}：${article.title}`} aria-pressed={article.read}>{article.read ? <Check size={12} /> : <span className="reading-dot" />} {article.read ? '已读' : '待读'}</button>
-      <div className="reading-card-tools">
-        <button onClick={onEdit} aria-label={`编辑：${article.title}`} title="编辑"><Edit3 size={14} /></button>
-        <button onClick={onRemove} aria-label={`移除：${article.title}`} title="移除"><Trash2 size={14} /></button>
-      </div>
       <div className="reading-body">
-        {article.tags.length > 0 && <div className="reading-tags">{article.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div>}
+        {article.tags.length > 0 && <div className="reading-tags">{article.tags.slice(0, 3).map(tag => <span key={tag}>{topicEmoji(tag)} {tag}</span>)}</div>}
         <a href={article.url} target="_blank" rel="noreferrer" className="reading-card-link">
           <h2>{article.title}<ArrowUpRight size={15} /></h2>
         </a>
         {article.description && <p className="reading-description">{article.description}</p>}
         {article.note && <p className="reading-note">{article.note}</p>}
+        <div className="reading-card-tools">
+          <button onClick={onEdit} aria-label={`编辑：${article.title}`} title="编辑"><Edit3 size={14} /></button>
+          <button onClick={onRemove} aria-label={`移除：${article.title}`} title="移除"><Trash2 size={14} /></button>
+        </div>
       </div>
     </article>
   )
@@ -132,7 +141,6 @@ export default function ReadingPage() {
   const [articles, setArticles] = useState<ReadingArticle[]>(localArticles)
   const [ready, setReady] = useState(false)
   const [query, setQuery] = useState('')
-  const [status, setStatus] = useState('all')
   const [topic, setTopic] = useState('全部主题')
   const [editor, setEditor] = useState<{ article: ReadingArticle | null } | null>(null)
   const [removed, setRemoved] = useState<ReadingArticle | null>(null)
@@ -162,11 +170,9 @@ export default function ReadingPage() {
 
   const topics = [...new Set([...READING_TOPICS, ...articles.flatMap(article => article.tags)])]
   const visible = useMemo(() => articles.filter(article => {
-    if (status === 'unread' && article.read || status === 'read' && !article.read) return false
     if (topic !== '全部主题' && !article.tags.includes(topic)) return false
     return `${article.title} ${article.description} ${article.note} ${article.tags.join(' ')} ${articleSource(article.url)}`.toLowerCase().includes(query.trim().toLowerCase())
-  }), [articles, query, status, topic])
-  const unread = articles.filter(article => !article.read).length
+  }), [articles, query, topic])
 
   return (
     <div className="reading-page">
@@ -174,14 +180,16 @@ export default function ReadingPage() {
       <main className="reading-main">
         <section className="reading-hero">
           <div className="reading-intro"><h1 className="font-serif text-2xl font-bold">阅读</h1><p className="reading-lead">把散落各处的好文章收起来，慢慢读，让知识彼此相连。</p></div>
-          <button className="reading-button reading-primary" disabled={!ready} onClick={() => setEditor({ article: null })}><Plus size={16} /> 收藏文章</button>
+          <button className="reading-btn-primary" disabled={!ready} onClick={() => setEditor({ article: null })}><Plus size={16} /> 收藏文章</button>
         </section>
-        <div className="reading-catalog-head"><div className="reading-status-tabs" aria-label="阅读状态">{[{ key: 'all', label: '全部收藏', count: articles.length }, { key: 'unread', label: '待读', count: unread }, { key: 'read', label: '已读', count: articles.length - unread }].map(item => <button key={item.key} onClick={() => setStatus(item.key)} aria-pressed={status === item.key}>{item.label}<span>{item.count}</span></button>)}</div><label className="reading-search"><Search size={16} /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="在收藏中寻一篇文章" aria-label="搜索收藏文章" /></label></div>
-        <div className="reading-topics" aria-label="主题筛选">{['全部主题', ...topics].map(item => <button key={item} onClick={() => setTopic(item)} aria-pressed={topic === item}>{item}</button>)}</div>
+        <div className="reading-toolbar">
+          <div className="reading-topics" aria-label="主题筛选">{['全部主题', ...topics].map(item => <button key={item} onClick={() => setTopic(item)} aria-pressed={topic === item}>{item === '全部主题' ? '✨ ' : `${topicEmoji(item)} `}{item}</button>)}</div>
+          <label className="reading-search"><Search size={16} /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="寻一篇文章" aria-label="搜索收藏文章" /></label>
+        </div>
         <div className="reading-catalog-caption"><span aria-live="polite">共 {visible.length} 篇文章</span></div>
         {error && <p className="reading-error" role="alert">{error}</p>}
         {removed && <div className="reading-undo" role="status">已移除《{removed.title}》<button onClick={() => { if (persist(restoreArticle(articles, removed))) setRemoved(null) }}>撤销</button></div>}
-        {visible.length ? <div className="reading-grid">{visible.map(article => <ReadingCard key={article.id} article={article} onRead={() => { if (ready) persist(articles.map(item => item.id === article.id ? { ...item, read: !item.read } : item)) }} onEdit={() => { if (ready) setEditor({ article }) }} onRemove={() => { if (ready && persist(articles.filter(item => item.id !== article.id))) setRemoved(article) }} />)}</div> : <div className="reading-empty"><BookOpen size={36} strokeWidth={1} /><h2>{articles.length ? '暂时没有匹配的文章' : '给下一次阅读，留一个位置。'}</h2><p>{articles.length ? '试试其他主题，或者换个关键词。' : '从一篇让你停下来的文章开始。'}</p>{articles.length > 0 && <button className="reading-button" onClick={() => { setQuery(''); setTopic('全部主题'); setStatus('all') }}>查看全部收藏</button>}</div>}
+        {visible.length ? <div className="reading-grid">{visible.map(article => <ReadingCard key={article.id} article={article} onEdit={() => { if (ready) setEditor({ article }) }} onRemove={() => { if (ready && persist(articles.filter(item => item.id !== article.id))) setRemoved(article) }} />)}</div> : <div className="reading-empty"><BookOpen size={36} strokeWidth={1} /><h2>{articles.length ? '暂时没有匹配的文章' : '给下一次阅读，留一个位置。'}</h2><p>{articles.length ? '试试其他主题，或者换个关键词。' : '从一篇让你停下来的文章开始。'}</p>{articles.length > 0 && <button className="reading-btn-ghost" onClick={() => { setQuery(''); setTopic('全部主题') }}>查看全部收藏</button>}</div>}
         <footer className="reading-footer"><span>羊宇宙 · 阅读收藏</span><span>一篇一篇，读出自己的世界。</span></footer>
       </main>
       <Dialog open={!!editor} onOpenChange={open => { if (!open) setEditor(null) }}>{editor && <ArticleEditor article={editor.article} onClose={() => setEditor(null)} onSave={article => {
