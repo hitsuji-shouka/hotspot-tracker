@@ -66,7 +66,7 @@ export default function BlogHome() {
 
       <main className="max-w-3xl mx-auto px-6 pb-16">
         {/* 大字段我介绍 */}
-        <section className="pt-14 pb-10">
+        <section className="pt-6 pb-10 sm:pt-14">
           <div className="flex items-center gap-4 mb-8">
             <img
               src="/profile-avatar.png"

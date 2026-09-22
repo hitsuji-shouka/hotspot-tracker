@@ -1,343 +1,326 @@
 {
- "updatedAt": "2026-09-21T08:10:23+08:00",
+ "updatedAt": "2026-09-22T08:10:17+08:00",
  "source": "Hugging Face Papers",
  "count": 20,
  "items": [
   {
-   "id": "2609.19969",
-   "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
-   "url": "https://huggingface.co/papers/2609.19969",
-   "arxiv": "https://arxiv.org/abs/2609.19969",
-   "upvotes": 135,
-   "publishedAt": "2026-09-17",
+   "id": "2609.21346",
+   "title": "IntBMoE: Integrating Block-Level Conditioning into Expert Composition for Full-Participation Mixture-of-Experts",
+   "url": "https://huggingface.co/papers/2609.21346",
+   "arxiv": "https://arxiv.org/abs/2609.21346",
+   "upvotes": 90,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "DeepSeek-AI",
-    "Anyi Xu",
-    "B. Li",
-    "Bangcai Lin",
-    "Bing Xue"
+    "Ran Cheng",
+    "Longfei Xu",
+    "Zheng Liu",
+    "Kaikui Liu",
+    "Xiangxiang Chu"
    ],
-   "abstract": "The widespread adoption of long-horizon agents has made model workloads increasingly input-heavy. Although prior work has substantially reduced the cost of long-context computation, prefill remains co…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19969.png"
+   "abstract": "Mixture-of-Experts (MoE) scales capacity, but existing designs cannot set three quantities independently. For a single token, participation is how many experts contribute knowledge to its output, exec…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21346.png"
   },
   {
-   "id": "2609.20519",
-   "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness",
-   "url": "https://huggingface.co/papers/2609.20519",
-   "arxiv": "https://arxiv.org/abs/2609.20519",
-   "upvotes": 94,
-   "publishedAt": "2026-09-17",
+   "id": "2609.22068",
+   "title": "CodeMidas: Scaling Agentic Coding RL Environments from Code Itself",
+   "url": "https://huggingface.co/papers/2609.22068",
+   "arxiv": "https://arxiv.org/abs/2609.22068",
+   "upvotes": 87,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Haozhe Liu",
-    "Tian Ye",
-    "Sensen Gao",
-    "Qihang Cao",
-    "Yitong Li"
+    "Bowen Ye",
+    "Lei Li",
+    "Shicheng Li",
+    "Zihao Yue",
+    "Linghao Zhang"
    ],
-   "abstract": "As coding agents move from supervised code completion to unattended, around-the-clock exploration, their work expands from isolated predictions into long trajectories of reasoning, tool use, and feedb…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20519.png"
+   "abstract": "Training capable coding agents via reinforcement learning (RL) requires diverse tasks with reliable verifiers. Open-source codebases offer a rich source of such tasks, while existing methods typically…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22068.png"
   },
   {
-   "id": "2609.20511",
-   "title": "When EOS Tokens Disagree: Understanding Length Inflation in On-Policy Distillation",
-   "url": "https://huggingface.co/papers/2609.20511",
-   "arxiv": "https://arxiv.org/abs/2609.20511",
-   "upvotes": 94,
-   "publishedAt": "2026-09-17",
+   "id": "2609.22000",
+   "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents",
+   "url": "https://huggingface.co/papers/2609.22000",
+   "arxiv": "https://arxiv.org/abs/2609.22000",
+   "upvotes": 60,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Yuxiao Yang",
-    "Tianrun Yu",
-    "Shangzhe Li",
-    "Kaixiang Zhao",
-    "Xuchao Zhang"
+    "Shuai Bai",
+    "Jiayong Deng",
+    "Yikun Fu",
+    "Chang Gao",
+    "Xuhao Hu"
    ],
-   "abstract": "We study length inflation in on-policy distillation (OPD), where student responses can become excessively long and even exhaust the generation budget. We identify termination-token mismatch between ba…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20511.png"
+   "abstract": "Computer-use agents (CUAs) have advanced along two separate lines: graphical interaction and software development through code and the command line. Real digital work requires both, interleaved rather…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22000.png"
   },
   {
-   "id": "2609.20804",
-   "title": "An Empirical Study of Harness Design for Coding Agents",
-   "url": "https://huggingface.co/papers/2609.20804",
-   "arxiv": "https://arxiv.org/abs/2609.20804",
-   "upvotes": 71,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Run-Ze Fan",
-    "Zihao Zhang",
-    "Simin Ma",
-    "Yebowen Hu",
-    "Shouju Wang"
-   ],
-   "abstract": "Coding harnesses shape how autonomous coding agents translate model capabilities into long-horizon software-engineering performance, yet existing work typically evaluates harnesses as monolithic syste…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20804.png"
-  },
-  {
-   "id": "2609.20800",
-   "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
-   "url": "https://huggingface.co/papers/2609.20800",
-   "arxiv": "https://arxiv.org/abs/2609.20800",
-   "upvotes": 56,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Taoyong Cui",
-    "Zhongyao Wang",
-    "Xinyue Xu",
-    "Weiyang Liu",
-    "Zhaochen Yu"
-   ],
-   "abstract": "World modeling enables intelligence to anticipate consequences, guide interventions, and learn from interaction. Yet predictive models remain domain-specific: can a common learning principle support w…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20800.png"
-  },
-  {
-   "id": "2609.20784",
-   "title": "RetireOPD: Self-Retiring On-Policy Distillation for Agentic Reinforcement Learning",
-   "url": "https://huggingface.co/papers/2609.20784",
-   "arxiv": "https://arxiv.org/abs/2609.20784",
-   "upvotes": 39,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Yan Yu",
-    "Zhengxi Lu",
-    "Yizhou Liu",
-    "Yichen Pan",
-    "Aozhe Wang"
-   ],
-   "abstract": "Multi-turn agents trained with reinforcement learning (RL) receive a single scalar reward per trajectory, which motivates self on-policy distillation (OPD) to supply dense token-level supervision from…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20784.png"
-  },
-  {
-   "id": "2609.20423",
-   "title": "WeVisDoc: From Coverage to Capability for Robust End-to-End Document Parsing",
-   "url": "https://huggingface.co/papers/2609.20423",
-   "arxiv": "https://arxiv.org/abs/2609.20423",
-   "upvotes": 35,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Hao Yu",
-    "Kang Liu",
-    "Linnan Zhao",
-    "Jiabo Zhan",
-    "Chong Sun"
-   ],
-   "abstract": "Document parsing converts document images into structured content and requires reliable performance across diverse layouts and acquisition conditions. Yet training corpora are biased toward common doc…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20423.png"
-  },
-  {
-   "id": "2609.20744",
-   "title": "Video DeltaNet: A Video-Native Hybrid Attention for Livestream Video Generation",
-   "url": "https://huggingface.co/papers/2609.20744",
-   "arxiv": "https://arxiv.org/abs/2609.20744",
-   "upvotes": 34,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Haocheng Xi",
-    "Yiming Xie",
-    "Hexu Zhao",
-    "Yiwen Zhang",
-    "Michael Liu"
-   ],
-   "abstract": "Video diffusion models repeatedly process long spatiotemporal token sequences during denoising, making attention a major computational bottleneck. Linear attention offers an appealing alternative and …",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20744.png"
-  },
-  {
-   "id": "2609.20612",
-   "title": "What Does Privileged Information Add to On-Policy Self-Distillation?",
-   "url": "https://huggingface.co/papers/2609.20612",
-   "arxiv": "https://arxiv.org/abs/2609.20612",
+   "id": "2609.21465",
+   "title": "OmniVChat: Synthesizing, Benchmarking, and Training for Native Audio-Visual Dialogue",
+   "url": "https://huggingface.co/papers/2609.21465",
+   "arxiv": "https://arxiv.org/abs/2609.21465",
    "upvotes": 30,
-   "publishedAt": "2026-09-17",
+   "publishedAt": "2026-09-18",
    "authors": [
-    "XiuYu Zhang",
-    "Wei Chow",
-    "Junfeng Fang",
-    "Zhenkai Liang",
-    "Tat-Seng Chua"
+    "Haolin He",
+    "Yunfei Chu",
+    "Qi Chen",
+    "Wen Huang",
+    "Yuan Feng"
    ],
-   "abstract": "On-policy self-distillation (OPSD) lets a language model learn from a frozen copy of itself that sees an answer or a worked solution. Giving the teacher this extra information seems to offer the stude…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20612.png"
+   "abstract": "We define OmniVChat (Omni Video Chat) as the task of native audio-visual dialogue between a user and an omni model. In OmniVChat, omni models directly and simultaneously receive audio and video from a…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21465.png"
   },
   {
-   "id": "2609.20817",
-   "title": "FAMOS: Feed-Forward 3D Articulation Modeling from Sparse Observations",
-   "url": "https://huggingface.co/papers/2609.20817",
-   "arxiv": "https://arxiv.org/abs/2609.20817",
-   "upvotes": 29,
-   "publishedAt": "2026-09-17",
+   "id": "2609.22086",
+   "title": "Designer-RSI: Evolving Procedural Memory from User Traffic for Agentic Graphic Design",
+   "url": "https://huggingface.co/papers/2609.22086",
+   "arxiv": "https://arxiv.org/abs/2609.22086",
+   "upvotes": 22,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Kevin Qu",
-    "Tao Sun",
-    "Massimiliano Viola",
-    "Liyuan Zhu",
-    "Zhizhuo Zhou"
+    "Hongyang Du",
+    "Lan Yan",
+    "Christian Flores",
+    "Asim Kadav"
    ],
-   "abstract": "Modeling articulated objects from sparse monocular views is challenging because each observation reveals only partial geometry and motion evidence. Most feed-forward methods infer articulation from a …",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20817.png"
+   "abstract": "Professional graphic design is a long-horizon agentic task in which structured, editable artifacts emerge from many interdependent actions, yet outcomes admit no reliable programmatic oracle. We intro…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22086.png"
   },
   {
-   "id": "2609.20715",
-   "title": "Don't Mask the Environment: Observation Supervision Changes How Agents Explore Under RL",
-   "url": "https://huggingface.co/papers/2609.20715",
-   "arxiv": "https://arxiv.org/abs/2609.20715",
-   "upvotes": 28,
-   "publishedAt": "2026-09-17",
+   "id": "2609.22069",
+   "title": "OmniVBench: A Benchmark and Large-Scale Dataset for Omni Reference-to-Video Generation",
+   "url": "https://huggingface.co/papers/2609.22069",
+   "arxiv": "https://arxiv.org/abs/2609.22069",
+   "upvotes": 19,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Juzheng Zhang",
-    "Disha Makhija",
-    "Manoj Ghuhan Arivazhagan",
-    "Vinayshekhar Bannihatti Kumar",
-    "Rashmi Gangadharaiah"
+    "Wenxue Li",
+    "Peiyan Guan",
+    "Haoyang Jiang",
+    "Junxian Cai",
+    "Hualuo Liu"
    ],
-   "abstract": "Agent trajectories record what an agent does and what happens next. Yet standard supervised fine-tuning (SFT) applies loss only to agent-authored action tokens, using environment observations as conte…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20715.png"
+   "abstract": "Reference-to-video (R2V) generation is evolving toward increasingly general and versatile reference control, giving rise to the emerging paradigm of omni R2V generation. However, existing benchmarks f…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22069.png"
   },
   {
-   "id": "2609.19745",
-   "title": "Region-Level Policy Optimization for Fine-grained MLLM Perception",
-   "url": "https://huggingface.co/papers/2609.19745",
-   "arxiv": "https://arxiv.org/abs/2609.19745",
-   "upvotes": 27,
-   "publishedAt": "2026-09-17",
+   "id": "2609.22083",
+   "title": "MintAct: A Unified Visual Agent for Digital Environments",
+   "url": "https://huggingface.co/papers/2609.22083",
+   "arxiv": "https://arxiv.org/abs/2609.22083",
+   "upvotes": 12,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Yuheng Shi",
-    "Xiaohuan Pei",
-    "Minjing Dong",
-    "Chang Xu"
+    "Mingfei Gao",
+    "Rui Tian",
+    "Haiming Gang",
+    "Bohan Zhai",
+    "Le Zhang"
    ],
-   "abstract": "Fine-grained visual perception in MLLMs is commonly improved by raising the resolution, but the added visual tokens inflate vision-encoding and language-model prefilling costs. We show that the two op…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19745.png"
+   "abstract": "We present MintAct, a family of vision-language models that unifies UI grounding, multi-step navigation across mobile, desktop, and web, and visual tool use, trained at 2B, 4B, and 8B scales. Through …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22083.png"
   },
   {
-   "id": "2609.19879",
-   "title": "VākQA: A Benchmark and Evaluation Study for Telugu Spoken Factoid Question Answering",
-   "url": "https://huggingface.co/papers/2609.19879",
-   "arxiv": "https://arxiv.org/abs/2609.19879",
-   "upvotes": 23,
-   "publishedAt": "2026-09-17",
+   "id": "2609.21749",
+   "title": "GraphSkillEvo: Evolutionary Optimization of Graph-Structured Agent Skills",
+   "url": "https://huggingface.co/papers/2609.21749",
+   "arxiv": "https://arxiv.org/abs/2609.21749",
+   "upvotes": 9,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Bhavana Akkiraju",
-    "Ravi Sastry Kolluru",
-    "Sri Charan D",
-    "Srihari Bandarupalli",
-    "Santosh Kesiraju"
+    "Rui Sun",
+    "Zhi Zheng",
+    "Zhenkun Wang",
+    "Zhichao Lu"
    ],
-   "abstract": "Question answering has advanced rapidly with large language models, but predominantly for high-resource languages, in both text and spoken settings. Spoken question answering (SQA) benchmark for Telug…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.19879.png"
+   "abstract": "Skills can improve the performance of Large Language Model (LLM) agents by providing task-specific procedural guidance, while skill optimization further improves their effectiveness through iterative …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21749.png"
   },
   {
-   "id": "2609.20751",
-   "title": "dQwen3.5: Hybrid-Attention Diffusion Language Models",
-   "url": "https://huggingface.co/papers/2609.20751",
-   "arxiv": "https://arxiv.org/abs/2609.20751",
-   "upvotes": 1,
-   "publishedAt": "2026-09-17",
+   "id": "2609.10706",
+   "title": "HuRo: Robotizing Human Videos for Scalable VLA Pretraining",
+   "url": "https://huggingface.co/papers/2609.10706",
+   "arxiv": "https://arxiv.org/abs/2609.10706",
+   "upvotes": 9,
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Anton Xue",
-    "Litu Rout",
-    "Aditya Akella",
-    "Adam Klivans",
-    "Sujay Sanghavi"
+    "Jinho Jeong",
+    "Se June Joo",
+    "Jaehyun Kang",
+    "Dongyun Kim",
+    "Yena Kim"
    ],
-   "abstract": "Adapting a pretrained autoregressive (AR) model is a cost-efficient route to a diffusion language model (DLM). While nearly all such adaptations start from a full-attention transformer, AR modeling ha…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20751.png"
+   "abstract": "Human video datasets offer an abundant and diverse source of interaction data that can complement expensive real-robot data. To bridge the human-to-robot embodiment gap, existing approaches either rob…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.10706.png"
   },
   {
-   "id": "2609.20818",
-   "title": "SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos",
-   "url": "https://huggingface.co/papers/2609.20818",
-   "arxiv": "https://arxiv.org/abs/2609.20818",
+   "id": "2609.22039",
+   "title": "Gricea: An Open Science Platform for Conversational AI Research",
+   "url": "https://huggingface.co/papers/2609.22039",
+   "arxiv": "https://arxiv.org/abs/2609.22039",
+   "upvotes": 7,
+   "publishedAt": "2026-09-18",
+   "authors": [
+    "Nikhil Sharma",
+    "Yunlin Gong",
+    "Xinyang Cheng",
+    "Ziang Xiao"
+   ],
+   "abstract": "We need studies on conversational AI (CAI) at scale to understand human behavior and shape CAI design. However, fragmented reporting of systems and study configurations hinders replication, extension,…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22039.png"
+  },
+  {
+   "id": "2609.21619",
+   "title": "Calibrating Teacher--Student Discrepancy for On-Policy Distillation",
+   "url": "https://huggingface.co/papers/2609.21619",
+   "arxiv": "https://arxiv.org/abs/2609.21619",
+   "upvotes": 7,
+   "publishedAt": "2026-09-18",
+   "authors": [
+    "Qiangqiang He",
+    "Jin Li",
+    "MingCai Chen"
+   ],
+   "abstract": "On-policy distillation (OPD) improves reasoning models by learning the token-level discrepancy between a stronger teacher and an on-policy student. However, this discrepancy does not purely reflect th…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21619.png"
+  },
+  {
+   "id": "2609.20942",
+   "title": "When AI Reviews Train AI Reviewers: Scientific-Judgment Collapse and Mitigation",
+   "url": "https://huggingface.co/papers/2609.20942",
+   "arxiv": "https://arxiv.org/abs/2609.20942",
+   "upvotes": 5,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Sy-Tuyen Ho",
+    "Minghui Liu",
+    "Furong Huang"
+   ],
+   "abstract": "Large language models (LLMs) increasingly participate in scientific evaluation, both as automated reviewers and as assistants to human reviewers. As model-generated reviews enter public data and futur…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20942.png"
+  },
+  {
+   "id": "2609.21788",
+   "title": "From Pretraining to Proficiency: Real-World Subtask RL for Long-Horizon Manipulation with Minimal Human Intervention",
+   "url": "https://huggingface.co/papers/2609.21788",
+   "arxiv": "https://arxiv.org/abs/2609.21788",
+   "upvotes": 4,
+   "publishedAt": "2026-09-18",
+   "authors": [
+    "Sichang Su",
+    "Benjamin Yang",
+    "Zhiyun Deng",
+    "Boyuan Liang",
+    "Yip Fun Yeung"
+   ],
+   "abstract": "A pretrained robot foundation policy may execute most of a long-horizon task yet repeatedly fail at a few critical subtasks. Collecting additional full-task demonstrations for supervised fine-tuning (…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21788.png"
+  },
+  {
+   "id": "2609.21094",
+   "title": "Geometry of Values: Task Vector Composition for Ethical Preference Alignment in Language Models",
+   "url": "https://huggingface.co/papers/2609.21094",
+   "arxiv": "https://arxiv.org/abs/2609.21094",
+   "upvotes": 3,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Utkarsh Agarwal",
+    "Monojit Choudhury"
+   ],
+   "abstract": "Large Language Models (LLMs) are increasingly deployed in applications that must weigh clashing moral values, yet even strong models exhibit hidden biases and brittle instruction-following across lang…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21094.png"
+  },
+  {
+   "id": "2609.21038",
+   "title": "Retention-Constrained Post-Training Quantization of Cellpose-SAM for Stem Cell Microscopy",
+   "url": "https://huggingface.co/papers/2609.21038",
+   "arxiv": "https://arxiv.org/abs/2609.21038",
+   "upvotes": 3,
+   "publishedAt": "2026-09-17",
+   "authors": [
+    "Sebastián A. Cruz Romero"
+   ],
+   "abstract": "Induced pluripotent stem cell (iPSC) culture increasingly relies on segmentation foundation models, yet deployment on laboratory CPUs and edge hardware requires compression schemes that are both effic…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21038.png"
+  },
+  {
+   "id": "2609.22076",
+   "title": "APort Vault: Benchmarking AI Agent Payment Authorization with the Open Agent Passport",
+   "url": "https://huggingface.co/papers/2609.22076",
+   "arxiv": "https://arxiv.org/abs/2609.22076",
+   "upvotes": 2,
+   "publishedAt": "2026-09-18",
+   "authors": [
+    "Uchi Uchibeke"
+   ],
+   "abstract": "APort Vault is a benchmark for payment authorization in tool-using AI agents. It replays 4,371 attacks written by humans against a live payment agent during a public capture-the-flag event, across 14 …",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22076.png"
+  },
+  {
+   "id": "2609.15991",
+   "title": "The Functionalizer: Lossless Functional Decomposition for Subword Tokenization",
+   "url": "https://huggingface.co/papers/2609.15991",
+   "arxiv": "https://arxiv.org/abs/2609.15991",
+   "upvotes": 2,
+   "publishedAt": "2026-09-18",
+   "authors": [
+    "Connor Makowski",
+    "Willem Guter"
+   ],
+   "abstract": "Standard subword tokenizers either treat every orthographic variation of a word (such as hello, Hello, HELLO, and Héllo) as unrelated vocabulary entries, which fragments the embedding space, or discar…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.15991.png"
+  },
+  {
+   "id": "2609.22085",
+   "title": "SeeQ: Training Generalist Value Functions for Long-Horizon Robotic Manipulation",
+   "url": "https://huggingface.co/papers/2609.22085",
+   "arxiv": "https://arxiv.org/abs/2609.22085",
    "upvotes": 0,
-   "publishedAt": "2026-09-17",
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Peiyu Liu",
-    "Dingxi Zhang",
-    "Federico Tombari",
-    "Marc Pollefeys",
-    "Christina Tsalicoglou"
+    "Saksham Singh",
+    "Zheyuan Hu",
+    "Max Sobol Mark",
+    "Jeffrey Yu",
+    "Zackory Erickson"
    ],
-   "abstract": "A splash lives for a fraction of a second: sheets tear into ligaments and droplets, appearance is view-dependent and nearly textureless, and little persists long enough to track. Reconstruction resear…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20818.png"
+   "abstract": "Despite rapid progress, generalist robot policies remain brittle on complex, long-horizon tasks that comprise multiple stages or require repeated attempts and deliberation on the same underlying stage…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22085.png"
   },
   {
-   "id": "2609.20807",
-   "title": "Score Centering Stabilizes Off-policy Reinforcement Learning",
-   "url": "https://huggingface.co/papers/2609.20807",
-   "arxiv": "https://arxiv.org/abs/2609.20807",
+   "id": "2609.22064",
+   "title": "BrainWideBench: Benchmarking large-scale pretraining and across-animal transfer in multi-region neural recordings",
+   "url": "https://huggingface.co/papers/2609.22064",
+   "arxiv": "https://arxiv.org/abs/2609.22064",
    "upvotes": 0,
-   "publishedAt": "2026-09-17",
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Martin Marek",
-    "Max Ryabinin"
+    "Alexandre Andre",
+    "Shivashriganesh P. Mahato",
+    "Vinam Arora",
+    "Keshav Balaji",
+    "Divyansha Lachi"
    ],
-   "abstract": "Reinforcement learning (RL) of large language models is notoriously sensitive to small differences between training and inference engines, often referred to as the training-inference mismatch (TIM). H…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20807.png"
+   "abstract": "Advances in large-scale neural recording have made it possible to collect data across many animals and distributed brain regions, raising the question of whether this scale can be exploited to learn g…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.22064.png"
   },
   {
-   "id": "2609.20756",
-   "title": "OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher",
-   "url": "https://huggingface.co/papers/2609.20756",
-   "arxiv": "https://arxiv.org/abs/2609.20756",
+   "id": "2609.21948",
+   "title": "GALA: Geometry-Aware Latent Action Modeling for Vision-Language-Action Model Pretraining across Embodiments",
+   "url": "https://huggingface.co/papers/2609.21948",
+   "arxiv": "https://arxiv.org/abs/2609.21948",
    "upvotes": 0,
-   "publishedAt": "2026-09-17",
+   "publishedAt": "2026-09-18",
    "authors": [
-    "Damiano Da Col",
-    "Maximilian Igl",
-    "Peter Karkus",
-    "Kashyap Chitta",
-    "Boris Ivanovic"
+    "Yichen Liu",
+    "Puzhen Yuan",
+    "Xiang Zhu",
+    "Yanjiang Guo",
+    "Jianyu Chen"
    ],
-   "abstract": "As scaling pre-training data alone yields diminishing returns, post-training is becoming increasingly important across physical AI domains such as autonomous driving. End-to-end driving policies are p…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20756.png"
-  },
-  {
-   "id": "2609.20659",
-   "title": "HIL-UMI: Bringing Human-in-the-Loop Post-Training of Vision-Language-Action Models to Universal Manipulation Interface",
-   "url": "https://huggingface.co/papers/2609.20659",
-   "arxiv": "https://arxiv.org/abs/2609.20659",
-   "upvotes": 0,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Zimu Han",
-    "Yiming Zeng",
-    "Jiyao Zhang",
-    "Zihao Zhao",
-    "Yuanfei Wang"
-   ],
-   "abstract": "Large-scale vision-language-action (VLA) models provide powerful priors for robot manipulation, yet adapting them to a specific deployment remains challenging. Supervised fine-tuning (SFT) on task-spe…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20659.png"
-  },
-  {
-   "id": "2609.20593",
-   "title": "WiC is Not WSD: A Study on LLMs and Lexical Ambiguity Resolution",
-   "url": "https://huggingface.co/papers/2609.20593",
-   "arxiv": "https://arxiv.org/abs/2609.20593",
-   "upvotes": 0,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Yi Zhou",
-    "Kiamehr Rezaee",
-    "Danushka Bollegala",
-    "Mohammad Taher Pilehvar",
-    "Jose Camacho-Collados"
-   ],
-   "abstract": "Word-in-Context (WiC) remains challenging for language models, despite recent progress on lexical-semantic tasks. We hypothesise that this difficulty arises not only from comparing two contextual uses…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20593.png"
-  },
-  {
-   "id": "2609.20504",
-   "title": "Model-Agnostic and Language-Agnostic Voice Pipeline Improvement for the Agriculture Domain",
-   "url": "https://huggingface.co/papers/2609.20504",
-   "arxiv": "https://arxiv.org/abs/2609.20504",
-   "upvotes": 0,
-   "publishedAt": "2026-09-17",
-   "authors": [
-    "Aakash Singh",
-    "Lakshmi Pedapudi",
-    "Chandrashekar M S",
-    "Sanyam Singh",
-    "Naga Ganesh"
-   ],
-   "abstract": "FarmerChat is Digital Green's AI-powered agricultural advisory assistant for smallholder farmers, who access it in their own language through text, voice, or photographs. Voice is a critical channel f…",
-   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.20504.png"
+   "abstract": "Learning large-scale vision-language-action (VLA) models from multi-embodiment datasets remains challenging due to heterogeneous action spaces across end effectors. Although latent action models (LAMs…",
+   "thumbnail": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2609.21948.png"
   }
  ]
 }
