@@ -2,11 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 导航增加「阅读」后，窄屏将品牌和导航分行，保持各入口完整可见。 */
-@media (max-width: 640px) {
-  header:has(> .site-nav) { flex-wrap: wrap; row-gap: 14px; }
-  header > .site-nav { width: 100%; justify-content: space-between; gap: 10px; font-size: 14px; }
-}
+/* 手机目录：与主站一致的整页菜单，焦点与滚动锁定由 Dialog 管理。 */
+.site-menu-toggle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-right: -10px; border-radius: 6px; color: #6b655c; }
+.site-menu-toggle:focus-visible, .site-menu-panel a:focus-visible { outline: 2px solid #c2410c; outline-offset: 3px; }
+.site-menu-overlay { position: fixed; inset: 0; z-index: 60; background: #faf9f6; }
+.site-menu-panel { position: fixed; inset: 0; z-index: 61; overflow-y: auto; overscroll-behavior: contain; background: #faf9f6; color: #26221c; }
+.site-menu-header { display: flex; align-items: center; justify-content: space-between; padding: max(24px, env(safe-area-inset-top)) 24px 0; }
+.site-menu-links { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 42px 28px max(32px, env(safe-area-inset-bottom)); }
+.site-menu-links a { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 3px 0; font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; font-size: 28px; line-height: 1.5; color: #6b655c; }
+.site-menu-links a[aria-current="page"] { color: #c2410c; }
+.site-menu-links a:hover { color: #26221c; }
+@media (min-width: 640px) { .site-menu-toggle { display: none; } }
 
 @layer base {
   :root {
