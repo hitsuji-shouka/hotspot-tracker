@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 导航增加「阅读」后，窄屏将品牌和导航分行，保持各入口完整可见。 */
+@media (max-width: 640px) {
+  header:has(> .site-nav) { flex-wrap: wrap; row-gap: 14px; }
+  header > .site-nav { width: 100%; justify-content: space-between; gap: 10px; font-size: 14px; }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

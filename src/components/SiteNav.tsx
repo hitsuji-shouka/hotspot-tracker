@@ -6,12 +6,13 @@ const GITHUB_USER = 'hitsuji-shouka'
 const ITEMS: { to: string; label: string; end?: boolean }[] = [
   { to: '/shelf', label: '漫游' },
   { to: '/study', label: '学习' },
+  { to: '/reading', label: '阅读' },
   { to: '/blog', label: '博客' },
 ]
 
 export default function SiteNav() {
   return (
-    <nav className="flex items-center gap-5 pt-1 text-[#6b655c]">
+    <nav aria-label="主导航" className="site-nav flex shrink-0 items-center gap-4 whitespace-nowrap text-[#6b655c] sm:gap-5">
       {ITEMS.map((it) => (
         <NavLink
           key={it.to}
