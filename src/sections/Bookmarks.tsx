@@ -93,7 +93,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
           <BookmarkIcon className="w-5 h-5 text-[#e3b341]" />
           <div className="min-w-0">
             <h2 className="text-base font-bold text-white">网址收藏</h2>
-            <p className="mt-0.5 text-xs leading-5 text-[#8b949e]">自动生成网页预览 · 共 {list.length} 个</p>
+            <p className="mt-0.5 text-xs leading-5 text-[#8b949e]">共 {list.length} 个</p>
           </div>
         </div>
 

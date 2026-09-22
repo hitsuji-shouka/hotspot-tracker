@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
-import { ArrowDown, ArrowUpRight, Edit3, Heart, Loader2, Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Edit3, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { fetchLinkPreview } from '@/lib/bookmarks'
 import { pullKey, pushSync } from '@/lib/sync'
-import { articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, articleUrl, INITIAL_READING, isReadingList, normalizeArticles, previewImage, READING_KEY, READING_TOPICS, restoreArticle, type ReadingArticle } from '@/lib/reading'
+import { articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, articleUrl, INITIAL_READING, isReadingList, normalizeArticles, READING_KEY, READING_TOPICS, restoreArticle, type ReadingArticle } from '@/lib/reading'
 
 const fieldClass = 'w-full rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2 text-base sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#58a6ff]'
 const chipClass = 'max-w-full break-words rounded-full border px-3 py-1.5 text-sm transition-colors '
@@ -19,53 +18,32 @@ function localArticles() {
   } catch { return INITIAL_READING }
 }
 
-function ArticleEditor({ article, topics, onSave, onClose }: {
+function ArticleEditor({ article, topics, ready, syncError, onSave, onClose }: {
   article: ReadingArticle | null
   topics: string[]
+  ready: boolean
+  syncError: string
   onSave: (article: ReadingArticle) => string | null
   onClose: () => void
 }) {
   const [input, setInput] = useState(article?.url ?? '')
   const [title, setTitle] = useState(article?.title ?? '')
   const [description, setDescription] = useState(article?.description ?? '')
-  const [image, setImage] = useState(article?.image ?? null)
   const [tags, setTags] = useState(article?.tags.join('、') ?? '')
-  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [createdAt] = useState(Date.now)
-  const generation = useRef(0)
-  useEffect(() => () => { generation.current++ }, [])
   const selectedTags = articleTags(tags)
   const suggestions = articleTags([...topics, ...READING_TOPICS].join('、'))
-
-  async function preview() {
-    let url: string
-    try { url = articleUrl(input) } catch { setMessage('未识别到有效链接，请检查地址'); return }
-    const request = ++generation.current
-    setInput(url)
-    setLoading(true)
-    setMessage('')
-    const data = await fetchLinkPreview(url)
-    if (request !== generation.current) return
-    if (data?.title) {
-      setTitle(data.title)
-      setDescription(data.description ?? '')
-      setImage(previewImage(data.image))
-      setMessage('已获取预览，可以修改后保存。')
-    } else {
-      setMessage('暂未获取到预览，仍可保存链接或手动填写标题和简介。')
-    }
-    setLoading(false)
-  }
 
   function save(event: React.FormEvent) {
     event.preventDefault()
     let url: string
     try { url = articleUrl(input) } catch { setMessage('未识别到有效链接，请检查地址'); return }
+    if (!title.trim()) { setMessage('请填写文章标题'); return }
     const error = onSave({
       id: article?.id ?? crypto.randomUUID(), url,
-      title: title.trim() || `${articleSource(url)} · 文章`,
-      description: description.trim(), image, tags: selectedTags,
+      title: title.trim(),
+      description: description.trim(), image: article?.image ?? null, tags: selectedTags,
       addedAt: article?.addedAt ?? createdAt,
     })
     if (error) setMessage(error)
@@ -76,17 +54,17 @@ function ArticleEditor({ article, topics, onSave, onClose }: {
     <DialogContent className="max-h-[88dvh] overflow-y-auto border-[#30363d] bg-[#161b22] text-[#c9d1d9]">
       <DialogHeader>
         <DialogTitle className="text-white">{article ? '编辑文章收藏' : '导入文章'}</DialogTitle>
-        <DialogDescription className="text-[#8b949e]">粘贴链接获取预览，按具体主题整理收藏。</DialogDescription>
+        <DialogDescription className="text-[#8b949e]">填写链接和标题即可收藏，简介和标签选填。</DialogDescription>
       </DialogHeader>
       <form onSubmit={save} className="space-y-4 pt-2">
-        <div className="space-y-2 text-sm"><label htmlFor="article-url" className="block">文章链接或分享文案</label><textarea id="article-url" required rows={2} className={fieldClass} value={input} onChange={event => { generation.current++; setLoading(false); setInput(event.target.value); setMessage('') }} placeholder="知乎、公众号、小红书、X 或其他文章链接" /></div>
-        <Button type="button" variant="outline" className="w-full border-[#30363d] bg-[#0d1117] text-[#58a6ff] hover:bg-[#21262d] hover:text-[#58a6ff]" disabled={!input.trim() || loading} onClick={preview}>{loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <ArrowDown className="mr-1.5 h-4 w-4" />}{loading ? '正在获取预览' : '获取文章预览'}</Button>
+        {!ready && <p className="text-sm text-[#8b949e]" role={syncError ? 'alert' : 'status'}>{syncError || '正在同步已有收藏，你可以先填写文章信息。'}</p>}
+        <div className="space-y-2 text-sm"><label htmlFor="article-url" className="block">文章链接或分享文案</label><textarea id="article-url" required rows={2} className={fieldClass} value={input} onChange={event => { setInput(event.target.value); setMessage('') }} placeholder="知乎、公众号、小红书、X 或其他文章链接" /></div>
         {message && <p className="text-sm text-[#8b949e]" role="status">{message}</p>}
-        <fieldset disabled={loading} className="space-y-4">
-          <div className="space-y-2 text-sm"><label htmlFor="article-title" className="block">标题</label><Input id="article-title" className={fieldClass} value={title} onChange={event => setTitle(event.target.value)} placeholder="未获取到时可以自己填写" maxLength={300} /></div>
-          <div className="space-y-2 text-sm"><label htmlFor="article-description" className="block">简介</label><textarea id="article-description" className={fieldClass} rows={2} value={description} onChange={event => setDescription(event.target.value)} maxLength={2000} /></div>
+        <div className="space-y-4">
+          <div className="space-y-2 text-sm"><label htmlFor="article-title" className="block">标题</label><Input id="article-title" required className={fieldClass} value={title} onChange={event => setTitle(event.target.value)} placeholder="复制原标题，或写一个方便自己查找的标题" maxLength={300} /></div>
+          <div className="space-y-2 text-sm"><label htmlFor="article-description" className="block">简介（选填）</label><textarea id="article-description" className={fieldClass} rows={2} value={description} onChange={event => setDescription(event.target.value)} placeholder="一句话记下这篇文章值得看什么" maxLength={2000} /></div>
           <div className="space-y-2">
-            <label htmlFor="article-tags" className="block text-sm">主题标签</label><Input id="article-tags" className={fieldClass} value={tags} onChange={event => setTags(event.target.value)} placeholder="例如：上下文工程、Runtime" maxLength={200} aria-describedby="article-tag-help" />
+            <label htmlFor="article-tags" className="block text-sm">主题标签（选填）</label><Input id="article-tags" className={fieldClass} value={tags} onChange={event => setTags(event.target.value)} placeholder="例如：上下文工程、Runtime" maxLength={200} aria-describedby="article-tag-help" />
             <p id="article-tag-help" className="text-xs text-[#8b949e]">建议每篇 1～3 个，用逗号分隔；新标签可自带图标，如「🔒 安全」。留空为未分类。</p>
             <details>
               <summary className="cursor-pointer py-1 text-xs text-[#58a6ff]">选择已有或推荐标签</summary>
@@ -98,10 +76,10 @@ function ArticleEditor({ article, topics, onSave, onClose }: {
               </div>
             </details>
           </div>
-        </fieldset>
+        </div>
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onClose}>取消</Button>
-          <Button type="submit" disabled={loading || !input.trim()} className="bg-[#238636] text-white hover:bg-[#2ea043]">保存收藏</Button>
+          <Button type="submit" disabled={!ready || !input.trim() || !title.trim()} className="bg-[#238636] text-white hover:bg-[#2ea043]">保存收藏</Button>
         </div>
       </form>
     </DialogContent>
@@ -153,7 +131,7 @@ export default function Articles({ keyword }: { keyword: string }) {
       <section className="space-y-3" aria-label="文章收藏">
         <div className="flex items-center gap-3">
           <div className="mr-auto min-w-0"><h2 className="font-bold text-white">📝 文章收藏</h2><p className="mt-0.5 text-xs text-[#8b949e]">共 {articles.length} 篇</p></div>
-          <DialogTrigger asChild><Button disabled={!ready} className="shrink-0 bg-[#238636] text-white hover:bg-[#2ea043]" onClick={() => setEditor({ article: null })}><Plus className="mr-1.5 h-4 w-4" />导入链接</Button></DialogTrigger>
+          <DialogTrigger asChild><Button className="shrink-0 bg-[#238636] text-white hover:bg-[#2ea043]" onClick={() => setEditor({ article: null })}><Plus className="mr-1.5 h-4 w-4" />导入链接</Button></DialogTrigger>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>button]:shrink-0 [&>button]:max-w-none [&>button]:whitespace-nowrap sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[&>button]:max-w-full sm:[&>button]:whitespace-normal" aria-label="文章主题筛选">
           <button className={chipClass + (activeTopic === null ? activeChip : idleChip)} aria-pressed={activeTopic === null} onClick={() => setTopic(null)}>📚 全部 ({articles.length})</button>
@@ -175,15 +153,15 @@ export default function Articles({ keyword }: { keyword: string }) {
                 </div>
               </div>
               <div className="flex shrink-0 flex-col items-center gap-1">
-                <button disabled={!ready} onClick={() => { if (persist(articles.filter(item => item.id !== article.id))) setRemoved(article) }} title="取消收藏" aria-label={`取消收藏：${article.title}`} className="rounded-md p-2 text-[#f85149] hover:bg-[#30363d] disabled:opacity-50"><Heart className="h-4 w-4" fill="currentColor" /></button>
                 <button disabled={!ready} onClick={() => setEditor({ article })} title="编辑" aria-label={`编辑：${article.title}`} className="rounded-md p-2 text-[#8b949e] hover:bg-[#30363d] hover:text-white disabled:opacity-50"><Edit3 className="h-4 w-4" /></button>
-                <a href={article.url} target="_blank" rel="noreferrer" title="查看原文" aria-label={`查看原文：${article.title}`} className="rounded-md p-2 text-[#8b949e] hover:bg-[#30363d] hover:text-white"><ArrowUpRight className="h-4 w-4" /></a>
+                <button disabled={!ready} onClick={() => { if (persist(articles.filter(item => item.id !== article.id))) setRemoved(article) }} title="删除收藏" aria-label={`删除收藏：${article.title}`} className="rounded-md p-2 text-[#8b949e] hover:bg-[#30363d] hover:text-[#f85149] disabled:opacity-50"><Trash2 className="h-4 w-4" /></button>
               </div>
             </div>
           </article>
         )) : <div className="py-20 text-center text-[#8b949e]"><p className="mb-3 text-4xl">📝</p><p>{query || activeTopic !== null ? '没有匹配的收藏文章，试试其他标签或关键词' : '还没有收藏文章，可以导入链接'}</p></div>}
       </section>
-      {editor && <ArticleEditor article={editor.article} topics={topics.map(item => item.tag)} onClose={() => setEditor(null)} onSave={article => {
+      {editor && <ArticleEditor article={editor.article} topics={topics.map(item => item.tag)} ready={ready} syncError={error} onClose={() => setEditor(null)} onSave={article => {
+        if (!ready) return error || '正在同步已有收藏，请稍后保存。'
         if (articles.some(item => item.id !== article.id && articleIdentity(item.url) === articleIdentity(article.url))) return '这篇文章已经在收藏里了。'
         const next = articles.some(item => item.id === article.id) ? articles.map(item => item.id === article.id ? article : item) : [article, ...articles]
         if (!persist(next)) return '保存失败，请检查浏览器存储空间后重试。'

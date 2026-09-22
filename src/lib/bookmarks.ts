@@ -76,6 +76,7 @@ export function faviconUrl(url: string): string {
 
 interface MicrolinkResponse {
   status: string
+  statusCode?: number
   data?: {
     title?: string | null
     description?: string | null
@@ -85,18 +86,22 @@ interface MicrolinkResponse {
   }
 }
 
-/** 抓取网页预览元数据（8 秒超时，失败时返回 null，调用方降级展示） */
-export async function fetchLinkPreview(url: string): Promise<Partial<Bookmark> | null> {
+/** 抓取网页预览元数据，失败返回 null，可选回调说明原因。 */
+export async function fetchLinkPreview(url: string, onError?: (message: string) => void): Promise<Partial<Bookmark> | null> {
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 20000)
+  const fail = (message: string) => { onError?.(message); return null }
   try {
-    const ctrl = new AbortController()
-    const timer = setTimeout(() => ctrl.abort(), 8000)
     const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
       signal: ctrl.signal,
     })
-    clearTimeout(timer)
-    if (!res.ok) return null
+    if (res.status === 429) return fail('预览服务请求额度已用完或请求过于频繁，请稍后再试。')
+    if (!res.ok) return fail(`预览服务暂不可用（HTTP ${res.status}）。`)
     const json = (await res.json()) as MicrolinkResponse
-    if (json.status !== 'success' || !json.data) return null
+    // Microlink 外层成功不代表原网站可访问；403 也可能返回编号等占位标题。
+    if (json.statusCode === 401 || json.statusCode === 403) return fail('原网站拒绝了预览服务的访问，暂时无法自动获取标题和简介。')
+    if (json.statusCode && json.statusCode >= 400) return fail(`原网页暂时无法获取（HTTP ${json.statusCode}）。`)
+    if (json.status !== 'success' || !json.data?.title?.trim()) return fail('预览服务未获取到网页标题。')
     return {
       title: json.data.title ?? undefined,
       description: json.data.description ?? undefined,
@@ -105,6 +110,8 @@ export async function fetchLinkPreview(url: string): Promise<Partial<Bookmark> |
       siteName: json.data.publisher ?? null,
     }
   } catch {
-    return null
+    return fail(ctrl.signal.aborted ? '获取预览超时，请稍后重试。' : '无法连接预览服务，请检查网络后重试。')
+  } finally {
+    clearTimeout(timer)
   }
 }
