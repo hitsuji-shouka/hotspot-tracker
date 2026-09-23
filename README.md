@@ -31,6 +31,7 @@
 - **统一收藏**：网址、仓库、Skill、论文、文章收藏集中在一个 Tab，通过 `/api/sync` 在服务器端持久化，手机与电脑数据一致。旧 `/reading` 地址跳转至 `/hotspot?view=fav&tab=articles`，文章继续使用 `readingArticles` 同步键。
 - **文章标签**：支持自定义主题与图标；同名标签忽略大小写合并计数和筛选。手机端标签为单行横向滑动，桌面端常用标签优先，其余可展开。
 - **文章导入**：手动填写链接和标题，简介与标签选填，不依赖外部预览服务；来源按链接自动识别，点击标题打开原文，删除收藏后可撤销。
+- **管理口令**：访客只读，页脚「管理」解锁后可操作所有收藏及热点爱心。浏览器凭证有效期 30 天，过期后重新输入同一口令。部署配置见 [管理口令](docs/admin.md)。
 
 ## 技术栈
 
@@ -45,11 +46,14 @@ npm install
 npm run dev
 ```
 
+本地 API 代理指向 `127.0.0.1:8080`，需要另外启动 `server.mjs`。口令不配置时为只读；本地启用方法见上面的管理口令文档。
+
 ## 部署
 
 - **日常**：`git push origin main` 即可——GitHub Actions 会自动构建并发布到 ECS（commit message 加 `[skip ci]` 可跳过）。
 - **手动**：`npm run build && DEPLOY_PASS='服务器密码' npm run deploy`（也支持 `DEPLOY_KEY` 私钥）。
-- 部署只替换服务器上的 `index.html` 与 `assets/`，不影响 `dist/data` 榜单数据与 `sync-data.json` 收藏数据。
+- 前端部署只替换服务器上的 `index.html` 与 `assets/`，不影响 `dist/data` 榜单数据与 `sync-data.json` 收藏数据。
+- Actions 同时部署 `server.mjs`、`server-auth.mjs` 并重启 `hotspot-tracker.service`，先验证未解锁的写入被拒绝，再发布前端；服务器口令配置独立保存在 `/etc/hotspot-tracker.env`。手动 `deploy.py` 仍只发布前端。
 
 ## 目录结构
 

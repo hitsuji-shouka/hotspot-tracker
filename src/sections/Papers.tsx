@@ -31,7 +31,7 @@ export default function Papers({ keyword }: { keyword: string }) {
   const [data, setData] = useState<PapersSnapshot | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { toggle: toggleFav, has: isFav } = useCollection<PaperItem>('fav_papers', paperId)
+  const { toggle: toggleFav, has: isFav, canEdit } = useCollection<PaperItem>('fav_papers', paperId)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -129,7 +129,7 @@ export default function Papers({ keyword }: { keyword: string }) {
                   {p.abstract && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#8b949e] sm:line-clamp-none">{p.abstract}</p>}
                 </div>
                 <div className="flex flex-col items-center gap-1 shrink-0">
-                  <button
+                  {canEdit && <button
                     onClick={() => toggleFav(p)}
                     title={isFav(p.id) ? '取消收藏' : '收藏这篇论文'}
                     className={`p-2 rounded-md transition-colors ${
@@ -137,7 +137,7 @@ export default function Papers({ keyword }: { keyword: string }) {
                     }`}
                   >
                     <Heart className="w-4 h-4" fill={isFav(p.id) ? 'currentColor' : 'none'} />
-                  </button>
+                  </button>}
                   <a
                     href={p.arxiv}
                     target="_blank"

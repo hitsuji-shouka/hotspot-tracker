@@ -1,3 +1,4 @@
+import AdminControl from '@/components/AdminControl'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { Button } from '@/components/ui/button'
@@ -321,6 +322,7 @@ export default function Home() {
 
         <footer className="text-center text-xs text-[#8b949e] pt-4 pb-8 border-t border-[#30363d]">
           数据来自 GitHub Search API · skills.sh · Hugging Face Papers · 量子位 · Hacker News · 新浪财经 · 热点每 10 分钟缓存 · 榜单每日早间自动更新
+          <div className="mt-3"><AdminControl dark /></div>
         </footer>
       </main>
     </div>

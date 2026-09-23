@@ -96,7 +96,7 @@ function SkillShBoard({ keyword }: { keyword: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [catId, setCatId] = useState('all')
-  const { toggle: toggleFav, has: isFav } = useCollection<SkillShItem>('fav_skills', skillShId)
+  const { toggle: toggleFav, has: isFav, canEdit } = useCollection<SkillShItem>('fav_skills', skillShId)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -196,7 +196,7 @@ function SkillShBoard({ keyword }: { keyword: string }) {
                 <Download className="w-3.5 h-3.5" />
                 {formatNumber(s.installs)} 安装
               </span>
-              <button
+              {canEdit && <button
                 onClick={() => toggleFav(s)}
                 title={isFav(s.url) ? '取消收藏' : '收藏这个 Skill'}
                 className={`p-2 rounded-md transition-colors shrink-0 ${
@@ -204,7 +204,7 @@ function SkillShBoard({ keyword }: { keyword: string }) {
                 }`}
               >
                 <Heart className="w-4 h-4" fill={isFav(s.url) ? 'currentColor' : 'none'} />
-              </button>
+              </button>}
               <a
                 href={s.github}
                 target="_blank"

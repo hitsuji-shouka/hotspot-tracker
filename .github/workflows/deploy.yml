@@ -25,8 +25,16 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check admin API and state
+        run: |
+          node scripts/admin-check.mjs
+          node scripts/admin-state-check.mjs
+          node scripts/sync-auth-check.mjs
+
       - name: Package dist
-        run: tar -czf dist.tgz -C dist --exclude='./data' .
+        run: |
+          tar -czf dist.tgz -C dist --exclude='./data' .
+          tar -czf server.tgz server.mjs server-auth.mjs
 
       - name: Upload package
         uses: appleboy/scp-action@v0.1.7
@@ -34,7 +42,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          source: "dist.tgz"
+          source: "dist.tgz,server.tgz"
           target: "/tmp/"
 
       - name: Deploy on server
@@ -45,10 +53,33 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             set -e
+            cd /opt/hotspot-tracker
+            test -r /etc/hotspot-tracker.env
+            test -f /etc/systemd/system/hotspot-tracker.service.d/admin.conf
+            # Keep the previous server files and collection data before upgrading.
+            backup="/opt/hotspot-tracker/backups/$(date +%Y%m%d-%H%M%S)"
+            mkdir -p "$backup"
+            chmod 700 "$backup"
+            for file in server.mjs server-auth.mjs sync-data.json; do
+              if test -f "$file"; then cp -p "$file" "$backup/"; fi
+            done
+            tar -xzf /tmp/server.tgz -C /opt/hotspot-tracker
+            node --check server.mjs
+            node --check server-auth.mjs
+            systemctl daemon-reload
+            systemctl restart hotspot-tracker.service
+            for attempt in 1 2 3 4 5; do
+              if curl -fsS http://127.0.0.1/api/admin | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{try{process.exit(JSON.parse(s).configured===true?0:1)}catch{process.exit(1)}})'; then break; fi
+              sleep 1
+            done
+            curl -fsS http://127.0.0.1/api/admin | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{try{const d=JSON.parse(s);process.exit(d.configured===true&&d.authenticated===false?0:1)}catch{process.exit(1)}})'
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Origin: https://hitsuji-shouka.com' -H 'Content-Type: application/json' --data '{}' http://127.0.0.1/api/sync)
+            test "$code" = "401"
             cd /opt/hotspot-tracker/dist
             rm -rf assets
             tar -xzf /tmp/dist.tgz
             rm -f /tmp/dist.tgz
+            rm -f /tmp/server.tgz
             code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/)
             echo "local http code: $code"
             test "$code" = "200"

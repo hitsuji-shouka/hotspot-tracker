@@ -1,3 +1,4 @@
+import { useAdmin } from '@/lib/admin'
 import { useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router'
 import Articles from '@/sections/Articles'
@@ -118,7 +119,7 @@ function RepoFavs({ keyword }: { keyword: string }) {
     if (!fullName) throw new Error('请输入 GitHub 仓库链接，如 github.com/owner/repo')
     const repo = await fetchRepo(fullName)
     if (isFavorite(repo.id)) throw new Error('这个仓库已经收藏过了')
-    toggle({ ...repo, favoriteCategory: category })
+    if (!await toggle({ ...repo, favoriteCategory: category })) throw new Error('保存失败，请检查网络或编辑权限')
   }
 
   return (
@@ -147,7 +148,7 @@ function RepoFavs({ keyword }: { keyword: string }) {
 
 /* ─── Skill 收藏 ─── */
 function SkillFavs({ keyword }: { keyword: string }) {
-  const { items, toggle, has } = useCollection<SkillShItem>('fav_skills', skillShId)
+  const { items, toggle, has, canEdit } = useCollection<SkillShItem>('fav_skills', skillShId)
   const [catId, setCatId] = useState('all')
   const k = keyword.trim().toLowerCase()
   const filtered = items.filter((s) => {
@@ -158,7 +159,7 @@ function SkillFavs({ keyword }: { keyword: string }) {
   const importSkill = async (url: string, name: string, category: string) => {
     const item = skillFromUrl(url, name, category)
     if (has(item.url)) throw new Error('这个 Skill 已经收藏过了')
-    toggle(item)
+    if (!await toggle(item)) throw new Error('保存失败，请检查网络或编辑权限')
   }
 
   return (
@@ -189,7 +190,7 @@ function SkillFavs({ keyword }: { keyword: string }) {
               {s.installs > 0 ? <Download className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
               {s.installs > 0 ? <>{formatNumber(s.installs)}<span className="hidden sm:inline"> 安装</span></> : '手动导入'}
             </span>
-            <button
+            {canEdit && <button
               onClick={() => toggle(s)}
               title={has(s.url) ? '取消收藏' : '收藏'}
               className={`p-2 rounded-md transition-colors shrink-0 ${
@@ -197,7 +198,7 @@ function SkillFavs({ keyword }: { keyword: string }) {
               }`}
             >
               <Heart className="w-4 h-4" fill={has(s.url) ? 'currentColor' : 'none'} />
-            </button>
+            </button>}
           </div>
             )
           })}
@@ -209,7 +210,7 @@ function SkillFavs({ keyword }: { keyword: string }) {
 
 /* ─── 论文收藏 ─── */
 function PaperFavs({ keyword }: { keyword: string }) {
-  const { items, toggle, has } = useCollection<PaperItem>('fav_papers', paperId)
+  const { items, toggle, has, canEdit } = useCollection<PaperItem>('fav_papers', paperId)
   const [catId, setCatId] = useState('all')
   const k = keyword.trim().toLowerCase()
   const filtered = items.filter((p) => {
@@ -220,7 +221,7 @@ function PaperFavs({ keyword }: { keyword: string }) {
   const importPaper = async (url: string, title: string, category: string) => {
     const item = paperFromUrl(url, title, category)
     if (has(item.id)) throw new Error('这篇论文已经收藏过了')
-    toggle(item)
+    if (!await toggle(item)) throw new Error('保存失败，请检查网络或编辑权限')
   }
 
   return (
@@ -260,7 +261,7 @@ function PaperFavs({ keyword }: { keyword: string }) {
                 {p.abstract && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#8b949e] sm:line-clamp-none">{p.abstract}</p>}
               </div>
               <div className="flex flex-col items-center gap-1 shrink-0">
-                <button
+                {canEdit && <button
                   onClick={() => toggle(p)}
                   title={has(p.id) ? '取消收藏' : '收藏'}
                   className={`p-2 rounded-md transition-colors ${
@@ -268,7 +269,7 @@ function PaperFavs({ keyword }: { keyword: string }) {
                   }`}
                 >
                   <Heart className="w-4 h-4" fill={has(p.id) ? 'currentColor' : 'none'} />
-                </button>
+                </button>}
                 <a
                   href={p.arxiv}
                   target="_blank"
@@ -333,6 +334,7 @@ function FavoriteHeader({
 }
 
 function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url: string, name: string, category: string) => Promise<void> }) {
+  const { canEdit } = useAdmin()
   const copy = IMPORT_COPY[kind]
   const categories = IMPORT_CATEGORIES[kind]
   const [open, setOpen] = useState(false)
@@ -360,13 +362,13 @@ function ImportLinkDialog({ kind, onImport }: { kind: ImportKind; onImport: (url
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Dialog open={open && canEdit} onOpenChange={setOpen}>
+      {canEdit && <DialogTrigger asChild>
         <Button className="shrink-0 bg-[#238636] text-white hover:bg-[#2ea043]">
           <Plus className="mr-1.5 h-4 w-4" />
           导入链接
         </Button>
-      </DialogTrigger>
+      </DialogTrigger>}
       <DialogContent className="border-[#30363d] bg-[#161b22] text-[#c9d1d9]">
         <DialogHeader>
           <DialogTitle className="text-white">{copy.title}</DialogTitle>

@@ -6,10 +6,11 @@ import ShelfPage from './pages/ShelfPage'
 import BlogPage from './pages/BlogPage'
 import StudyPage from './pages/StudyPage'
 import StudyPostPage from './pages/StudyPostPage'
+import { AdminSession } from './components/AdminControl'
 
 export default function App() {
   return (
-    <Routes>
+    <><AdminSession /><Routes>
       <Route path="/" element={<BlogHome />} />
       <Route path="/shelf" element={<ShelfPage />} />
       <Route path="/reading" element={<Navigate to="/hotspot?view=fav&tab=articles" replace />} />
@@ -18,6 +19,6 @@ export default function App() {
       <Route path="/study/:slug" element={<StudyPostPage />} />
       <Route path="/post/:slug" element={<PostPage />} />
       <Route path="/hotspot" element={<Home />} />
-    </Routes>
+    </Routes></>
   )
 }

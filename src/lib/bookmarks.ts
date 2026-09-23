@@ -41,7 +41,7 @@ export function loadBookmarks(): Bookmark[] {
 }
 
 export function saveBookmarks(list: Bookmark[]) {
-  pushSync('bookmarks', list)
+  return pushSync('bookmarks', list)
 }
 
 export function normalizeUrl(input: string): string {

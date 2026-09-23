@@ -1,3 +1,4 @@
+import { useAdmin } from '@/lib/admin'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Star, GitFork, CircleDot, Clock, Heart } from 'lucide-react'
@@ -34,6 +35,7 @@ export default function RepoCard({
   onToggleFavorite: (repo: Repo) => void
   categoryBadge?: { emoji: string; label: string }
 }) {
+  const { canEdit } = useAdmin()
   const langColor = repo.language ? (LANG_COLORS[repo.language] ?? '#8b949e') : null
   return (
     <a href={repo.html_url} target="_blank" rel="noreferrer" className="block min-w-0 group">
@@ -52,7 +54,7 @@ export default function RepoCard({
                 <span className="font-semibold text-[#58a6ff] truncate group-hover:underline">
                   {repo.full_name}
                 </span>
-                <button
+                {canEdit && <button
                   type="button"
                   aria-label={favorite ? '取消收藏' : '收藏'}
                   title={favorite ? '取消收藏' : '收藏'}
@@ -70,7 +72,7 @@ export default function RepoCard({
                         : 'text-[#8b949e] hover:text-[#f78166]'
                     }`}
                   />
-                </button>
+                </button>}
               </div>
               <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#c9d1d9]/80 sm:min-h-[2.5em] sm:text-sm">
                 {repo.description ?? '暂无描述'}

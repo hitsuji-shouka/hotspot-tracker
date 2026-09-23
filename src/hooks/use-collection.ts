@@ -1,7 +1,8 @@
 // 通用收藏集合 hook：服务器多端同步 + localStorage 本地缓存
 // 用于 Skill 收藏、论文收藏等非仓库类条目
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { pullKey, pushSync } from '@/lib/sync'
+import { adminMessage, canEdit as mayEdit, useAdmin } from '@/lib/admin'
 
 function loadLocal<T>(key: string): T[] {
   try {
@@ -18,27 +19,35 @@ function loadLocal<T>(key: string): T[] {
  */
 export function useCollection<T>(key: string, idOf: (item: T) => string) {
   const [items, setItems] = useState<T[]>(() => loadLocal<T>(key))
+  const [ready, setReady] = useState(false)
+  const busy = useRef(false)
+  const { canEdit } = useAdmin()
 
   useEffect(() => {
     pullKey<T[]>(key).then((v) => {
       if (v) setItems(v)
+      setReady(true)
     })
   }, [key])
 
   const toggle = useCallback(
-    (item: T) => {
-      setItems((prev) => {
+    async (item: T) => {
+      if (!mayEdit() || busy.current) return false
+      if (!ready) { adminMessage('正在同步已有收藏，请稍后再试。'); return false }
+      busy.current = true
+      try {
         const id = idOf(item)
-        const exists = prev.some((x) => idOf(x) === id)
-        const next = exists ? prev.filter((x) => idOf(x) !== id) : [item, ...prev]
-        pushSync(key, next)
-        return next
-      })
+        const exists = items.some((x) => idOf(x) === id)
+        const next = exists ? items.filter((x) => idOf(x) !== id) : [item, ...items]
+        if (!await pushSync(key, next)) return false
+        setItems(next)
+        return true
+      } finally { busy.current = false }
     },
-    [idOf],
+    [idOf, items, key, ready],
   )
 
   const has = useCallback((id: string) => items.some((x) => idOf(x) === id), [items, idOf])
 
-  return { items, toggle, has }
+  return { items, toggle, has, canEdit }
 }

@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
-import { pullKey, pushSync } from '@/lib/sync'
+import { useCallback, useState } from 'react'
 
 export interface GithubAccount {
   username: string
@@ -15,23 +14,16 @@ function loadLocal(): GithubAccount | null {
   }
 }
 
-/** GitHub 账号信息：服务器多端同步 + localStorage 本地缓存 */
+/** GitHub 账号与 token 仅保存在当前浏览器，不能进入公开收藏接口。 */
 export function useGithubAccount() {
   const [account, setAccount] = useState<GithubAccount | null>(loadLocal)
 
-  useEffect(() => {
-    pullKey<GithubAccount>('account').then((v) => {
-      if (v) setAccount(v)
-    })
-  }, [])
-
   const save = useCallback((acc: GithubAccount) => {
-    pushSync('account', acc)
+    localStorage.setItem('ghhot:account', JSON.stringify(acc))
     setAccount(acc)
   }, [])
 
   const clear = useCallback(() => {
-    pushSync('account', null)
     localStorage.removeItem('ghhot:account')
     setAccount(null)
   }, [])

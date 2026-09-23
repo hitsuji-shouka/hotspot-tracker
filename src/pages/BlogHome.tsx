@@ -1,3 +1,4 @@
+import AdminControl from '@/components/AdminControl'
 // 博客首页 v2：极简编辑风（灵感：addyosmani.com）
 // 浅色暖底 + 大字自我介绍 + 经历时间线 + 精选项目 + 博文
 import { useEffect, useState } from 'react'
@@ -188,6 +189,7 @@ export default function BlogHome() {
               <Mail className="w-3.5 h-3.5" /> {PROFILE.email}
             </span>
           </div>
+          <div className="mt-3"><AdminControl /></div>
         </footer>
       </main>
     </div>

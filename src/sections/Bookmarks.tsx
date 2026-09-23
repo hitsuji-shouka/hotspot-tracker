@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useAdmin } from '@/lib/admin'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -23,6 +24,9 @@ import { pullKey } from '@/lib/sync'
 import { Bookmark as BookmarkIcon, ExternalLink, Loader2, Plus, Trash2 } from 'lucide-react'
 
 export default function Bookmarks({ keyword }: { keyword: string }) {
+  const { canEdit } = useAdmin()
+  const [ready, setReady] = useState(false)
+  const busy = useRef(false)
   const [list, setList] = useState<Bookmark[]>(loadBookmarks)
   const [catId, setCatId] = useState('all')
   const [open, setOpen] = useState(false)
@@ -35,12 +39,18 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
   useEffect(() => {
     pullKey<Bookmark[]>('bookmarks').then((v) => {
       if (v) setList(v)
+      setReady(true)
     })
   }, [])
 
-  const persist = (next: Bookmark[]) => {
-    setList(next)
-    saveBookmarks(next)
+  const persist = async (next: Bookmark[]) => {
+    if (!canEdit || !ready || busy.current) return false
+    busy.current = true
+    try {
+      if (!await saveBookmarks(next)) return false
+      setList(next)
+      return true
+    } finally { busy.current = false }
   }
 
   const add = async () => {
@@ -69,8 +79,9 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
       category,
       addedAt: Date.now(),
     }
-    persist([bm, ...list])
+    const saved = await persist([bm, ...list])
     setAdding(false)
+    if (!saved) { setAddError('保存失败，请检查网络或编辑权限后重试'); return }
     setOpen(false)
     setUrl('')
   }
@@ -97,13 +108,13 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
           </div>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
+        <Dialog open={open && canEdit} onOpenChange={setOpen}>
+          {canEdit && <DialogTrigger asChild>
             <Button aria-label="收藏网址" className="size-10 shrink-0 px-0 bg-[#238636] hover:bg-[#2ea043] text-white sm:h-9 sm:w-auto sm:px-4">
               <Plus className="w-4 h-4 sm:mr-1.5" />
               <span className="hidden sm:inline">收藏网址</span>
             </Button>
-          </DialogTrigger>
+          </DialogTrigger>}
           <DialogContent className="bg-[#161b22] border-[#30363d] text-[#c9d1d9]">
             <DialogHeader>
               <DialogTitle className="text-white">收藏一个新网站</DialogTitle>
@@ -135,7 +146,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
               {addError && <p className="text-sm text-[#f85149]">{addError}</p>}
               <Button
                 onClick={add}
-                disabled={adding || !url.trim()}
+                disabled={!ready || adding || !url.trim()}
                 className="w-full bg-[#238636] hover:bg-[#2ea043] text-white"
               >
                 {adding ? (
@@ -185,7 +196,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
       {filtered.length === 0 ? (
         <div className="text-center py-20 text-[#8b949e]">
           <p className="text-4xl mb-3">🔖</p>
-          <p>{keyword || catId !== 'all' ? '没有匹配的收藏' : '还没有收藏任何网站，点右上角「收藏网址」开始'}</p>
+          <p>{keyword || catId !== 'all' ? '没有匹配的收藏' : '还没有收藏任何网站'}</p>
         </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
@@ -199,6 +210,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
 }
 
 function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove: () => void }) {
+  const { canEdit } = useAdmin()
   const cat = BOOKMARK_CATEGORIES.find((c) => c.id === b.category) ?? BOOKMARK_CATEGORIES[4]
   const [imgFailed, setImgFailed] = useState(false)
   const showImage = b.image && !imgFailed
@@ -228,14 +240,14 @@ function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove:
       </a>
 
       {/* 删除按钮 */}
-      <button
+      {canEdit && <button
         onClick={onRemove}
         title="删除"
         aria-label={`删除 ${b.title}`}
         className="absolute top-2 right-2 rounded-md bg-black/55 p-2 text-white/80 transition-opacity hover:bg-black/70 hover:text-white sm:opacity-0 sm:group-hover:opacity-100"
       >
         <Trash2 className="w-3.5 h-3.5" />
-      </button>
+      </button>}
 
       {/* 文本区 */}
       <div className="p-3 sm:p-3.5">
