@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { pullKey, pushSync } from '@/lib/sync'
-import { articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, articleUrl, INITIAL_READING, isReadingList, normalizeArticles, READING_KEY, READING_TOPICS, restoreArticle, type ReadingArticle } from '@/lib/reading'
+import { articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, articleUrl, INITIAL_READING, isReadingList, normalizeArticles, READING_KEY, READING_TOPICS, renameArticleTag, restoreArticle, type ReadingArticle } from '@/lib/reading'
 
 const fieldClass = 'w-full rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2 text-base sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#58a6ff]'
 const chipClass = 'max-w-full break-words rounded-full border px-3 py-1.5 text-sm transition-colors '
@@ -91,6 +91,58 @@ function ArticleEditor({ article, topics, ready, syncError, onSave, onClose }: {
   )
 }
 
+function TagEditor({ topics, initialTag, onSave, onClose }: {
+  topics: { tag: string; count: number }[]
+  initialTag: string
+  onSave: (from: string, name: string) => Promise<string | null>
+  onClose: () => void
+}) {
+  const [from, setFrom] = useState(initialTag)
+  const [name, setName] = useState(initialTag)
+  const [message, setMessage] = useState('')
+  const [saving, setSaving] = useState(false)
+  const target = articleTags(name)[0]
+  const merges = topics.some(({ tag }) => tag.toLowerCase() !== from.toLowerCase() && tag.toLowerCase() === target?.toLowerCase())
+  return (
+    <DialogContent className="border-[#30363d] bg-[#161b22] text-[#c9d1d9]" showCloseButton={!saving}
+      onEscapeKeyDown={event => { if (saving) event.preventDefault() }}
+      onInteractOutside={event => { if (saving) event.preventDefault() }}>
+      <DialogHeader>
+        <DialogTitle className="text-white">编辑标签</DialogTitle>
+        <DialogDescription className="text-[#8b949e]">同步更新所有使用此标签的文章。</DialogDescription>
+      </DialogHeader>
+      <form className="space-y-4 pt-2" onSubmit={async event => {
+        event.preventDefault()
+        if (saving) return
+        setSaving(true)
+        const error = await onSave(from, name)
+        setSaving(false)
+        if (error) setMessage(error)
+        else onClose()
+      }}>
+        <div className="space-y-2 text-sm">
+          <label htmlFor="article-existing-tag" className="block">已有标签</label>
+          <select id="article-existing-tag" className={fieldClass} value={from} disabled={saving} onChange={event => { setFrom(event.target.value); setName(event.target.value); setMessage('') }}>
+            {topics.map(({ tag, count }) => <option key={tag} value={tag}>{articleTagLabel(tag)} ({count})</option>)}
+          </select>
+        </div>
+        <div className="space-y-2 text-sm">
+          <label htmlFor="article-tag-name" className="block">标签名称</label>
+          <Input id="article-tag-name" className={fieldClass} value={name} required maxLength={200} disabled={saving} onChange={event => { setName(event.target.value); setMessage('') }} placeholder="如：🧭 上下文工程" aria-describedby="article-tag-edit-help" />
+          <p id="article-tag-edit-help" className="text-xs text-[#8b949e]">可在名称前添加图标。</p>
+          {target && <span className={chipClass + activeChip + ' inline-block'}>{articleTagLabel(target)}</span>}
+          {merges && <p className="text-xs text-[#e3b341]">将合并到已有标签。</p>}
+        </div>
+        {message && <p className="text-sm text-[#f85149]" role="alert">{message}</p>}
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="ghost" onClick={onClose} disabled={saving}>取消</Button>
+          <Button type="submit" disabled={saving || !name.trim()} className="bg-[#238636] text-white hover:bg-[#2ea043]">{saving ? '保存中…' : '保存'}</Button>
+        </div>
+      </form>
+    </DialogContent>
+  )
+}
+
 export default function Articles({ keyword }: { keyword: string }) {
   const { canEdit } = useAdmin()
   const busy = useRef(false)
@@ -100,6 +152,7 @@ export default function Articles({ keyword }: { keyword: string }) {
   const [topic, setTopic] = useState<string | null>(null)
   const [expanded, setExpanded] = useState(false)
   const [editor, setEditor] = useState<{ article: ReadingArticle | null } | null>(null)
+  const [tagEditor, setTagEditor] = useState<string | null>(null)
   const [removed, setRemoved] = useState<ReadingArticle | null>(null)
   const [error, setError] = useState('')
 
@@ -136,10 +189,11 @@ export default function Articles({ keyword }: { keyword: string }) {
   })
 
   return (
-    <Dialog open={!!editor && canEdit} onOpenChange={open => { if (!open) setEditor(null) }}>
+    <Dialog open={(!!editor || tagEditor !== null) && canEdit} onOpenChange={open => { if (!open) { setEditor(null); setTagEditor(null) } }}>
       <section className="space-y-3" aria-label="文章收藏">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="mr-auto min-w-0"><h2 className="font-bold text-white">📝 文章收藏</h2><p className="mt-0.5 text-xs text-[#8b949e]">共 {articles.length} 篇</p></div>
+          {canEdit && topics.length > 0 && <DialogTrigger asChild><Button variant="ghost" className="shrink-0 px-2 text-[#8b949e] hover:bg-[#30363d] hover:text-white" disabled={!ready} onClick={() => setTagEditor(activeTopic || topics[0].tag)}><Edit3 className="h-4 w-4" /><span>编辑标签</span></Button></DialogTrigger>}
           {canEdit && <DialogTrigger asChild><Button className="shrink-0 bg-[#238636] text-white hover:bg-[#2ea043]" onClick={() => setEditor({ article: null })}><Plus className="mr-1.5 h-4 w-4" />导入链接</Button></DialogTrigger>}
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>button]:shrink-0 [&>button]:max-w-none [&>button]:whitespace-nowrap sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[&>button]:max-w-full sm:[&>button]:whitespace-normal" aria-label="文章主题筛选">
@@ -169,6 +223,15 @@ export default function Articles({ keyword }: { keyword: string }) {
           </article>
         )) : <div className="py-20 text-center text-[#8b949e]"><p className="mb-3 text-4xl">📝</p><p>{query || activeTopic !== null ? '没有匹配的收藏文章，试试其他标签或关键词' : '还没有收藏文章，可以导入链接'}</p></div>}
       </section>
+      {tagEditor !== null && <TagEditor initialTag={tagEditor} topics={topics} onClose={() => setTagEditor(null)} onSave={async (from, name) => {
+        let next: ReadingArticle[]
+        try { next = renameArticleTag(articles, from, name) } catch (error) { return (error as Error).message }
+        if (!await persist(next)) return '保存失败，请检查网络或编辑权限后重试。'
+        if (topic?.toLowerCase() === from.toLowerCase()) setTopic(articleTags(name)[0])
+        // 撤销此前删除的文章时，也使用新的标签名称。
+        if (removed) setRemoved(renameArticleTag([removed], from, name)[0])
+        return null
+      }} />}
       {editor && <ArticleEditor article={editor.article} topics={topics.map(item => item.tag)} ready={ready} syncError={error} onClose={() => setEditor(null)} onSave={async article => {
         if (!ready) return error || '正在同步已有收藏，请稍后保存。'
         if (articles.some(item => item.id !== article.id && articleIdentity(item.url) === articleIdentity(article.url))) return '这篇文章已经在收藏里了。'

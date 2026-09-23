@@ -1,6 +1,6 @@
 // Run with Node 24+: node scripts/reading-check.mjs
 import assert from 'node:assert/strict'
-import { articleUrl, articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, normalizeArticles, INITIAL_READING, READING_TOPICS, isReadingList, previewImage, restoreArticle } from '../src/lib/reading.ts'
+import { articleUrl, articleIdentity, articleSource, articleTagLabel, articleTags, articleTopics, normalizeArticles, INITIAL_READING, READING_TOPICS, isReadingList, previewImage, renameArticleTag, restoreArticle } from '../src/lib/reading.ts'
 
 assert.equal(articleUrl('AI 写完的代码 https://xhslink.cn/o/1Imk7wI8ik6 复制一下，打开小红书。'), 'https://xhslink.cn/o/1Imk7wI8ik6')
 assert.equal(articleUrl('[文章](https://example.com/a(b))'), 'https://example.com/a(b)')
@@ -43,3 +43,13 @@ assert.equal(articleTagLabel('🔒 安全'), '🔒 安全')
 assert.equal(articleTagLabel('🧠 记忆机制'), '🧠 记忆机制')
 assert.deepEqual(articleTags('🔒 安全、🔒 安全、🧰 工具链'), ['🔒 安全', '🧰 工具链'])
 console.log('Article favorites checks passed: legacy data, custom tags, deduplication and topic frequency.')
+
+const tagged = [{ ...deleted, tags: ['Runtime', '缓存'] }, { ...readded, tags: ['runtime'] }, { ...custom, tags: [] }]
+const renamed = renameArticleTag(tagged, 'Runtime', '⚙️ 执行环境')
+assert.deepEqual(renamed.map(a => a.tags), [['⚙️ 执行环境', '缓存'], ['⚙️ 执行环境'], []])
+assert.deepEqual(renameArticleTag(tagged, 'Runtime', '缓存').map(a => a.tags), [['缓存'], ['缓存'], []])
+assert.deepEqual(renameArticleTag(tagged, 'runtime', 'RUNTIME').map(a => a.tags), [['RUNTIME', '缓存'], ['RUNTIME'], []])
+assert.deepEqual(renamed.map(({ tags, ...article }) => article), tagged.map(({ tags, ...article }) => article))
+assert.deepEqual(tagged[0].tags, ['Runtime', '缓存'])
+for (const invalid of ['', ' ', '缓存、数据库', '缓存,缓存']) assert.throws(() => renameArticleTag(tagged, 'Runtime', invalid))
+console.log('Tag editing checks passed: bulk rename, icons, merge, case-insensitive matching, input validation and unchanged article content.')

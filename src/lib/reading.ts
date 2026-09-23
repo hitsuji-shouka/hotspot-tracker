@@ -76,6 +76,19 @@ export function articleTopics(articles: ReadingArticle[]): { tag: string; count:
   return [...counts.values()].sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, 'zh-CN'))
 }
 
+/** 批量重命名标签；改成已有名称时合并，保留文章和其他标签。 */
+export function renameArticleTag(articles: ReadingArticle[], from: string, input: string): ReadingArticle[] {
+  const names = articleTags(input)
+  if (names.length !== 1 || /[,，、\n]/.test(input)) throw new Error('请填写一个标签名称')
+  const name = names[0]
+  const source = from.toLowerCase()
+  const target = name.toLowerCase()
+  return articles.map(article => ({
+    ...article,
+    tags: articleTags(article.tags.map(tag => [source, target].includes(tag.toLowerCase()) ? name : tag).join('、')),
+  }))
+}
+
 /** 分享文案中只取第一个 http(s) 链接；保留平台分享所需的签名参数。 */
 export function articleUrl(input: string): string {
   const raw = input.trim()
