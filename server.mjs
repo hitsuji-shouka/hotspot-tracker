@@ -8,12 +8,14 @@ import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { createAdmin } from './server-auth.mjs'
 import { createRoomService } from './server-room.mjs'
+import { createCafeService, serveAudio } from './server-cafe.mjs'
 
 const root = fileURLToPath(new URL('./dist', import.meta.url))
 const syncFile = process.env.SYNC_FILE || fileURLToPath(new URL('./sync-data.json', import.meta.url))
 const port = Number(process.argv[2] || 8080)
 const admin = createAdmin(process.env.ADMIN_PASSWORD, process.env.SITE_ORIGIN)
 const roomService = createRoomService()
+const cafeService = createCafeService(process.env.CAFE_DATA_DIR || fileURLToPath(new URL('./state/central-perk', import.meta.url)), admin, jsonBody)
 const publicKeys = ['favorites', 'bookmarks', 'fav_skills', 'fav_papers', 'readingArticles']
 let writes = Promise.resolve()
 
@@ -55,8 +57,10 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://x')
     const json = (status, value) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(value)) }
+    if (await cafeService(req, res, url.pathname, json)) return
+    if (url.pathname === '/lab/central-perk/with-or-without-you.mp3' && ['GET', 'HEAD'].includes(req.method)) return await serveAudio(req, res, join(root, 'lab/central-perk/with-or-without-you.mp3'))
     if (url.pathname.startsWith('/api/')) {
-      if (url.pathname === '/api/room/status' && req.method === 'GET') return json(200, { available: roomService.browserReady })
+      if (url.pathname === '/api/room/status' && req.method === 'GET') return json(200, { available: roomService.browserReady, provider: roomService.provider, renderAvailable: roomService.renderAvailable })
       if (url.pathname === '/api/room/play' && req.method === 'POST') {
         if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
         const ip = req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'

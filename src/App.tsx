@@ -9,6 +9,8 @@ import StudyPostPage from './pages/StudyPostPage'
 import LabPage from './pages/LabPage'
 import SheepRoomPage from './pages/SheepRoomPage'
 import { AdminSession } from './components/AdminControl'
+import { lazy, Suspense } from 'react'
+const CentralPerkPage = lazy(() => import('./pages/CentralPerkPage'))
 
 export default function App() {
   return (
@@ -20,6 +22,7 @@ export default function App() {
       <Route path="/study" element={<StudyPage />} />
       <Route path="/lab" element={<LabPage />} />
       <Route path="/lab/sheep-room" element={<SheepRoomPage />} />
+      <Route path="/lab/central-perk" element={<Suspense fallback={<div style={{ padding: 40, background: '#eee3d0', minHeight: '100vh' }}>Opening Central Perk…</div>}><CentralPerkPage /></Suspense>} />
       <Route path="/study/:slug" element={<StudyPostPage />} />
       <Route path="/post/:slug" element={<PostPage />} />
       <Route path="/hotspot" element={<Home />} />

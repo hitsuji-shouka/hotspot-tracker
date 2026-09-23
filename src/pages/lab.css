@@ -210,3 +210,4 @@
   .lab-room-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .lab-room-options button { min-width: 0; padding-inline: 0; }
 }
+.lab-cover-central-perk{background:#eee2cf url('/lab/central-perk/cover.png') center/cover no-repeat}

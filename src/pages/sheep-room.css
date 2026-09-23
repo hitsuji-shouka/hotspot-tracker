@@ -92,6 +92,12 @@
 .room-receipt-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; }
 .room-render-action { display: flex; align-items: center; flex-direction: column; gap: 12px; margin-top: 30px; }
 .room-render-action small { font-size: 12px; color: #7e8b73; }
+.room-render-unavailable { margin-top: 20px; padding: 16px 18px; border: 1px solid #d8dfcc; border-radius: 14px; text-align: left; background: #eef1e4; font-size: 13px; line-height: 1.8; }
+.room-render-unavailable strong { font-weight: 600; }
+.room-render-unavailable p { margin: 4px 0 0; color: #596e54; }
+.room-live-detail { overflow: auto; max-height: 65svh; border-radius: 12px; background: #fff; overscroll-behavior: contain; }
+.room-live-detail img { display: block; width: 1180px; max-width: none; height: auto; }
+.room-swipe-hint { color: #607256; font-size: 12px; text-align: center; margin: 6px 0; }
 .room-final-image { width: 100%; border-radius: 15px; margin-bottom: 15px; }
 .room-dialog-error { color: #975638; background: #faedde; padding: 13px 18px; border-radius: 12px; font-size: 13px; margin-top: 20px; }
 @media (min-width: 641px) and (max-height: 800px) {
@@ -103,32 +109,76 @@
   .room-thumbnails { margin-top: 12px; }
 }
 @media (max-width: 640px) {
-  .room-stage { height: calc(100svh - 76px); min-height: 530px; }
+  .room-stage { height: calc(100svh - 76px); min-height: 470px; }
+  .room-stage[data-live="true"] { height: auto; min-height: calc(100svh - 76px); overflow: visible; }
+  .room-stage[data-live="true"] .lab-room-scene { visibility: hidden; pointer-events: none; }
+  .room-stage[data-live="true"] > .room-status, .room-stage[data-live="true"] > .room-added { display: none; }
+  .room-stage[data-live="true"] > .room-error { position: relative; bottom: auto; left: auto; transform: none; margin: 0 16px 150px; max-width: none; }
+  .room-mobile-live { padding: 72px 16px 150px; }
+  .room-live-heading { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .room-live-heading h1 { font-size: 24px; line-height: 1.5; margin-top: 4px; font-weight: 600; }
+  .room-live-heading .lab-action { flex-shrink: 0; padding: 12px; }
+  .room-live-preview { display: grid; width: 100%; aspect-ratio: 1180 / 760; border: 1px solid #d8dfcc; border-radius: 16px; overflow: hidden; background: #eef1e4; place-items: center; }
+  .room-live-preview img { width: 100%; display: block; height: auto; }
+  .room-live-preview span { padding: 24px; font-size: 14px; line-height: 1.8; }
+  .sheep-room .room-live-preview:disabled { opacity: 1; }
+  .room-live-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .room-live-message { margin: 8px 0 24px; color: #586e51; font-size: 13px; line-height: 1.8; min-height: 1.8em; }
+  .room-live-bag-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .room-live-bag-heading h2 { font-size: 17px; font-weight: 600; }
+  .room-live-bag-heading button { display: flex; align-items: center; gap: 4px; min-height: 44px; font-size: 13px; }
+  .room-live-products { display: flex; overflow-x: auto; gap: 12px; padding: 8px 0 12px; scroll-snap-type: x proximity; }
+  .room-live-products > button { display: grid; gap: 6px; text-align: left; flex: 0 0 128px; min-width: 0; scroll-snap-align: start; font-size: 13px; }
+  .room-live-products .room-product-photo { width: 128px; height: 108px; border-radius: 12px; }
+  .room-live-products strong { font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+  .room-live-products span { font-variant-numeric: tabular-nums; }
+  .room-live-empty { margin-top: 8px; color: #607256; padding: 20px 0; border-top: 1px solid #d8dfcc; font-size: 13px; line-height: 1.8; }
   .room-back { top: 10px; left: 14px; }
   .sheep-room .lab-action { min-height: 44px; padding: 9px 16px; font-size: 13px; }
   .room-welcome { top: 76px; width: 100%; }
   .room-welcome h1 { font-size: 36px; }
   .room-status { top: 70px; right: 14px; left: 14px; max-width: none; justify-content: center; border-radius: 13px; font-size: 12px; }
-  .room-controls { bottom: max(18px, env(safe-area-inset-bottom)); width: calc(100% - 28px); flex-wrap: wrap; gap: 8px; justify-content: center; }
-  .room-views button { min-height: 33px; padding: 6px 14px; font-size: 12px; }
-  .room-dialog { width: calc(100vw - 24px); max-height: calc(100svh - 28px); padding: 48px 20px 25px; border-radius: 20px; }
-  .room-dialog h2 { font-size: 29px; }
+  .room-controls { position: fixed; bottom: 0; width: 100%; padding: 12px 14px max(12px, env(safe-area-inset-bottom)); flex-wrap: wrap; gap: 8px; justify-content: center; background: #f6f3e9f5; border-top: 1px solid #d8dfcc; backdrop-filter: blur(12px); }
+  .room-views button { min-height: 44px; padding: 8px 14px; font-size: 13px; }
+  .room-dialog { width: 100%; max-width: 100%; max-height: 94svh; margin: auto 0 0; padding: 12px 18px max(20px, env(safe-area-inset-bottom)); border-radius: 22px 22px 0 0; overscroll-behavior: contain; }
+  .room-dialog .room-close { position: sticky; top: 0; margin-left: auto; right: auto; z-index: 5; background: #f7f7e8f5; }
+  .room-dialog .room-eyebrow { display: block; margin-top: -20px; padding-right: 48px; }
+  .room-dialog h2 { font-size: 27px; letter-spacing: 0; line-height: 1.5; }
   .room-dialog-intro { font-size: 13px; }
   .room-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .room-choices button { padding: 16px; min-height: 135px; }
+  .room-choices button { padding: 12px 14px; min-height: 90px; gap: 4px; }
+  .room-choice-shape { display: none; }
   .room-choices strong { font-size: 21px; }
   .room-brief { grid-template-columns: 1fr; gap: 14px; }
   .room-limits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .room-brief textarea { min-height: 104px; }
+  .room-brief input, .room-brief textarea { font-size: 16px; }
   .room-dialog-footer { align-items: flex-start; flex-direction: column; gap: 14px; }
   .room-dialog-footer button { width: 100%; justify-content: center; }
-  .room-haul-view { gap: 9px; }
+  .room-dialog-footer { position: sticky; bottom: 0; background: #f7f7e8; padding-top: 12px; }
+  .room-haul-view { gap: 9px; touch-action: pan-y; }
   .room-haul-view .room-product-photo { width: 100%; max-width: 270px; }
-  .room-gallery-arrow { flex-shrink: 0; width: 32px; height: 44px; border: 0; }
+  .room-gallery-arrow { flex-shrink: 0; width: 44px; height: 44px; border: 0; }
   .room-haul-caption h3 { font-size: 21px; }
   .room-receipt { padding: 20px 13px; }
   .room-receipt h2 { font-size: 25px; }
   .room-receipt li { gap: 9px; font-size: 12px; }
   .room-receipt li > .room-product-photo { width: 48px; height: 48px; }
+  .room-receipt li > div:nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+  .room-receipt li b { font-size: 12px; }
+  .room-receipt .room-eyebrow { margin-top: 0; padding-right: 0; }
+  .room-receipt-total strong { font-size: 24px; }
+  .room-receipt-toolbar { position: sticky; bottom: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 0 max(4px, env(safe-area-inset-bottom)); background: #f7f7e8f5; border-top: 1px solid #d8dfcc; z-index: 4; }
+  .room-receipt-toolbar .lab-action { justify-content: center; min-height: 48px; }
+  .room-receipt-toolbar .room-save-primary { grid-column: 1 / -1; background: #294f39; color: #fffef5; border-color: #294f39; }
+  .room-render-action { align-items: stretch; margin-top: 20px; text-align: left; }
+  .room-render-action .lab-action { justify-content: center; min-height: 48px; }
+  .room-render-action small { color: #596e54; line-height: 1.8; }
+  .room-render-unavailable { font-size: 12px; padding: 12px 14px; }
+  .room-thumbnails { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding: 4px 0 10px; }
+  .room-thumbnails > button { flex-shrink: 0; }
+  .room-dialog-live { height: 94svh; }
+  .room-dialog-live h2 { margin-top: -32px; padding-right: 48px; font-size: 23px; }
+  .room-dialog-live .room-live-detail { max-height: calc(94svh - 150px); margin-top: 16px; }
   .room-added { bottom: 136px; }
 }

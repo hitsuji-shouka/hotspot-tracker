@@ -31,11 +31,13 @@ jobs:
           node scripts/admin-state-check.mjs
           node scripts/sync-auth-check.mjs
           node scripts/room-check.mjs
+          node scripts/room-jev-check.mjs
+          node scripts/cafe-check.mjs
 
       - name: Package dist
         run: |
           tar -czf dist.tgz -C dist --exclude='./data' .
-          tar -czf server.tgz server.mjs server-auth.mjs server-room.mjs server-room-browser.mjs node_modules/playwright-core
+          tar -czf server.tgz server.mjs server-auth.mjs server-room.mjs server-room-browser.mjs server-room-jev.mjs server-cafe.mjs node_modules/playwright-core
 
       - name: Upload package
         uses: appleboy/scp-action@v0.1.7
@@ -61,7 +63,7 @@ jobs:
             backup="/opt/hotspot-tracker/backups/$(date +%Y%m%d-%H%M%S)"
             mkdir -p "$backup"
             chmod 700 "$backup"
-            for file in server.mjs server-auth.mjs server-room.mjs server-room-browser.mjs sync-data.json; do
+            for file in server.mjs server-auth.mjs server-room.mjs server-room-browser.mjs server-room-jev.mjs server-cafe.mjs sync-data.json; do
               if test -f "$file"; then cp -p "$file" "$backup/"; fi
             done
             tar -xzf /tmp/server.tgz -C /opt/hotspot-tracker
@@ -69,6 +71,8 @@ jobs:
             node --check server-auth.mjs
             node --check server-room.mjs
             node --check server-room-browser.mjs
+            node --check server-room-jev.mjs
+            node --check server-cafe.mjs
             systemctl daemon-reload
             systemctl restart hotspot-tracker.service
             for attempt in 1 2 3 4 5; do

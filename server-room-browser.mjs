@@ -40,7 +40,7 @@ export function readIkeaProduct({ url, name, scripts = [], priceText = '', image
 }
 
 async function snapshot(page) {
-  return page.evaluate(() => {
+  const read = () => page.evaluate(() => {
     document.querySelectorAll('[data-room-agent-index]').forEach(element => element.removeAttribute('data-room-agent-index'))
     const controls = [...document.querySelectorAll('a,button,input,textarea,[role="button"],[role="searchbox"]')]
       .filter(element => {
@@ -50,10 +50,17 @@ async function snapshot(page) {
     controls.forEach((element, index) => element.setAttribute('data-room-agent-index', String(index)))
     return {
       title: document.title.slice(0, 140), url: location.href,
+      canScroll: Math.ceil(scrollY + innerHeight) < document.documentElement.scrollHeight - 2,
       text: (document.body?.innerText || '').slice(0, 4500),
       controls: controls.map((element, index) => ({ index, label: (element.innerText || element.getAttribute('aria-label') || element.getAttribute('placeholder') || '').trim().slice(0, 90), href: element.getAttribute('href') || '', tag: element.tagName.toLowerCase() })),
     }
   })
+  try { return await read() }
+  catch (error) {
+    if (!/Execution context was destroyed|Cannot find context/.test(error.message)) throw error
+    await page.waitForLoadState('domcontentloaded', { timeout: 5_000 }).catch(() => {})
+    return read()
+  }
 }
 
 const TOOL = { type: 'function', name: 'browse', description: 'Browse real IKEA pages. Use add only when you deliberately select the CURRENT verified product for the separate 小屋购物袋. Visiting a page does not add it. Never operate merchant checkout or accounts.', strict: true,
@@ -65,13 +72,14 @@ const TOOL = { type: 'function', name: 'browse', description: 'Browse real IKEA 
   } },
 }
 
-export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executablePath, call, onStep = () => {}, cancelled = () => {}, startedAt = Date.now() }) {
+export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executablePath, call, decide, onStep = () => {}, cancelled = () => {}, startedAt = Date.now() }) {
   if (!executablePath) throw new Error('浏览器尚未配置')
   const started = startedAt
   const duration = brief.duration ?? 150
   const deadline = started + duration * 1000
   const controller = new AbortController()
   const products = []
+  const history = []
   let browser, client
   let stopReason = 'step_limit'
   const metrics = { modelCalls: 0, modelMs: 0, modelTimeouts: 0, actionErrors: 0 }
@@ -133,7 +141,7 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
     await streamPage()
     const emit = message => !stopped() && onStep({ type: 'step', message, found: products.length, elapsed: Math.round((Date.now() - started) / 1000) })
     emit('正在打开宜家')
-    try { await page.goto(HOME, { waitUntil: 'domcontentloaded', timeout: 20_000 }) }
+    try { await page.goto(HOME, { waitUntil: decide ? 'commit' : 'domcontentloaded', timeout: 20_000 }) }
     catch (error) {
       // Slow ancillary resources can delay DOMContentLoaded despite usable controls.
       if (error.name !== 'TimeoutError' || !ikeaPage(page.url())) throw error
@@ -178,7 +186,20 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         priceText: document.querySelector('.info .i-product-price, .parent-product__price')?.textContent || '',
         image: image?.currentSrc || image?.src || '' }
     }))
-    try { await page.locator('input[aria-label="search"]').first().waitFor({ state: 'visible', timeout: 15_000 }) }
+    const readyProduct = async () => {
+      if (!new URL(page.url()).pathname.includes('/p/')) return null
+      const until = Math.min(deadline, Date.now() + 10_000)
+      while (!stopped()) {
+        const product = await currentProduct()
+        if (product?.image || Date.now() >= until) return product
+        await page.waitForTimeout(100)
+      }
+      return null
+    }
+    try {
+      if (decide) await page.locator('body').waitFor({ state: 'attached', timeout: 15_000 })
+      else await page.locator('input[aria-label="search"]').first().waitFor({ state: 'visible', timeout: 15_000 })
+    }
     catch { throw Object.assign(new Error('宜家首页暂时没有加载出来，稍后可以再逛'), { status: 502 }) }
     await dismiss()
     let state = await snapshot(page)
@@ -186,16 +207,25 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
     let feedback = ''
     let consecutiveTimeouts = 0
     let finishReminder = false
-    for (let step = 0; step < MAX_STEPS && !stopped(); step++) {
+    for (let step = 0; (decide || step < MAX_STEPS) && !stopped(); step++) {
       const remaining = deadline - Date.now()
       if (remaining < 1_000) { stopReason = 'time_limit'; break }
+      if (decide && products.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) >= Math.round(brief.budget * 100)) {
+        stopReason = 'budget_limit'; break
+      }
       emit('正在看商品，想想怎么搭配')
-      let response
+      let response, action
+      const product = decide ? await readyProduct() : null
+      if (stopped()) break
       const decisionStarted = Date.now()
       metrics.modelCalls++
       try {
-        response = await call('responses', { model, store: false, tools: [TOOL], tool_choice: 'required', parallel_tool_calls: false,
-          input: [{ role: 'system', content: instruction }, { role: 'user', content: JSON.stringify({ secondsLeft: Math.floor(remaining / 1000), previousResult: feedback, page: state, bag: products.map(item => ({ name: item.name, price: item.price, url: item.url })) }) }] }, key, Math.min(30_000, remaining), controller.signal)
+        if (decide) {
+          action = await decide({ brief, page: state, products, currentProduct: product, history, secondsLeft: Math.floor((deadline - Date.now()) / 1000), previousResult: feedback }, Math.max(1, Math.min(30_000, deadline - Date.now())), controller.signal)
+        } else {
+          response = await call('responses', { model, store: false, tools: [TOOL], tool_choice: 'required', parallel_tool_calls: false,
+            input: [{ role: 'system', content: instruction }, { role: 'user', content: JSON.stringify({ secondsLeft: Math.floor(remaining / 1000), previousResult: feedback, page: state, bag: products.map(item => ({ name: item.name, price: item.price, url: item.url })) }) }] }, key, Math.min(30_000, remaining), controller.signal)
+        }
       } catch (error) {
         if (stopped()) break
         if (error.name === 'TimeoutError') {
@@ -209,12 +239,14 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
       } finally { metrics.modelMs += Date.now() - decisionStarted }
       consecutiveTimeouts = 0
       if (stopped()) break
-      const request = response.output?.find(item => item.type === 'function_call' && item.name === 'browse')
-      if (!request) { feedback = '上一步没有返回有效浏览动作，请调用browse继续。'; continue }
-      let action
-      try { action = JSON.parse(request.arguments) } catch { action = {} }
+      if (!decide) {
+        const request = response.output?.find(item => item.type === 'function_call' && item.name === 'browse')
+        if (!request) { feedback = '上一步没有返回有效浏览动作，请调用browse继续。'; continue }
+        try { action = JSON.parse(request.arguments) } catch { action = {} }
+      }
       try {
         if (action.action === 'finish') {
+          if (decide) { feedback = '请在剩余时间和预算内继续寻找合适的新商品，没有目标件数上限。'; continue }
           if (products.length < 3 && remaining > 15_000 && !finishReminder) {
             finishReminder = true
             feedback = `目前只有${products.length}件，剩余预算${brief.budget - products.reduce((sum, item) => sum + item.price * item.quantity, 0)}元。请继续补齐其他类别；如果确实无法继续，请再次finish并在reason说明。`
@@ -232,18 +264,22 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           const previousQuery = new URL(page.url()).searchParams.get('q')
           const previousResults = await page.locator('a[href*="/p/"]').evaluateAll(nodes => nodes.slice(0, 12).map(node => node.getAttribute('href')).join('|'))
           try {
-            // Keep the real input/cursor visible; fall back only if the storefront overlay fails.
-            const field = page.locator('.nav-header-search .input-search:visible').first()
-            if (!await field.isVisible()) {
-              const notice = page.locator('.s-header-notice:visible').first()
-              await click(await notice.isVisible() ? notice : page.locator('input[aria-label="search"]').first())
+            if (decide) {
+              await page.goto(`https://www.ikea.cn/cn/zh/search/products/?q=${encodeURIComponent(query)}&qtype=search_keywords`, { waitUntil: 'commit', timeout: 12_000 })
+            } else {
+              // Keep the real input/cursor visible; fall back only if the storefront overlay fails.
+              const field = page.locator('.nav-header-search .input-search:visible').first()
+              if (!await field.isVisible()) {
+                const notice = page.locator('.s-header-notice:visible').first()
+                await click(await notice.isVisible() ? notice : page.locator('input[aria-label="search"]').first())
+              }
+              await field.waitFor({ state: 'visible', timeout: 2500 })
+              await click(field)
+              await field.fill('')
+              await field.pressSequentially(query, { delay: 40 })
+              await field.press('Enter')
+              await page.waitForURL(url => url.pathname.includes('/search/') && url.searchParams.get('q') === query, { waitUntil: 'domcontentloaded', timeout: 5_000 })
             }
-            await field.waitFor({ state: 'visible', timeout: 2500 })
-            await click(field)
-            await field.fill('')
-            await field.pressSequentially(query, { delay: 40 })
-            await field.press('Enter')
-            await page.waitForURL(url => url.pathname.includes('/search/') && url.searchParams.get('q') === query, { waitUntil: 'domcontentloaded', timeout: 5_000 })
           } catch {
             if (stopped()) break
             emit(`搜索框暂时没响应，直接打开「${query}」的结果`)
@@ -265,24 +301,30 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           if (/\/(checkout|cart|login|shoppingcart)(\/|\?|$)/i.test(target.href)) throw new Error('不操作商家账号或购物袋')
           if (target.href && !ikeaPage(new URL(target.href, page.url()).href)) throw new Error('只能打开宜家页面')
           emit(`正在打开「${target.label.slice(0, 38) || '商品'}」`)
-          const popupPromise = page.waitForEvent('popup', { timeout: 1500 }).catch(() => null)
-          await click(page.locator(`[data-room-agent-index="${index}"]`))
-          const popup = await popupPromise
-          if (popup) {
-            const oldPage = page
-            page = popup; page.setDefaultTimeout(7_000)
-            await streamPage()
-            await oldPage.close()
+          if (decide && productLink) {
+            // Navigate only to a product link observed on the current page; skip popup/animation waits.
+            await page.goto(new URL(target.href, page.url()).href, { waitUntil: 'commit', timeout: 10_000 })
+          } else {
+            const popupPromise = page.waitForEvent('popup', { timeout: 1500 }).catch(() => null)
+            await click(page.locator(`[data-room-agent-index="${index}"]`))
+            const popup = await popupPromise
+            if (popup) {
+              const oldPage = page
+              page = popup; page.setDefaultTimeout(7_000)
+              await streamPage()
+              await oldPage.close()
+            }
+            if (target.href?.includes('/p/')) await page.waitForURL(new URL(target.href, page.url()).href, { waitUntil: 'domcontentloaded', timeout: 10_000 })
           }
-          if (target.href?.includes('/p/')) await page.waitForURL(new URL(target.href, page.url()).href, { waitUntil: 'domcontentloaded', timeout: 10_000 })
           feedback = '已打开，尚未加入小屋购物袋'
         } else if (action.action === 'scroll') {
           emit('往下看看')
+          await page.mouse.move(900, 500)
           await page.mouse.wheel(0, 510)
           await page.waitForTimeout(400)
           feedback = '已向下滚动'
         } else if (action.action === 'add') {
-          await page.locator('.info .name').first().waitFor({ state: 'visible', timeout: 5_000 })
+          if (!decide) await page.locator('.info .name').first().waitFor({ state: 'visible', timeout: 5_000 })
           await page.waitForFunction(() => [...document.querySelectorAll('img[alt="gallery-image"], img[alt="gallery-img"]')]
             .some(image => image.complete && image.naturalWidth > 0 && image.currentSrc.startsWith('https://')), null, { timeout: 10_000 })
           const product = await currentProduct()
@@ -291,14 +333,15 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           const sum = products.reduce((total, item) => total + Math.round(item.price * 100) * item.quantity, Math.round(product.price * 100))
           if (sum > Math.round(brief.budget * 100)) throw new Error('这件会超出总预算，请挑更便宜的商品')
           product.reason = String(action.reason || '适合这间小屋').slice(0, 160)
+          if (action.category) product.type = String(action.category).slice(0, 30)
           if (stopped()) break
           products.push(product)
           onStep({ type: 'bag', products: [...products], added: product })
           feedback = `已把${product.name}放入小屋购物袋`
           emit(feedback)
         } else throw new Error('这个操作暂时不支持')
-        await page.waitForLoadState('domcontentloaded', { timeout: 5_000 }).catch(() => {})
-        if (new URL(page.url()).pathname.includes('/p/')) await page.locator('.info .i-product-price, .parent-product__price').first().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {})
+        if (!decide) await page.waitForLoadState('domcontentloaded', { timeout: 5_000 }).catch(() => {})
+        if (!decide && new URL(page.url()).pathname.includes('/p/')) await page.locator('.info .i-product-price, .parent-product__price').first().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {})
       } catch (error) {
         if (stopped()) break
         metrics.actionErrors++
@@ -307,6 +350,7 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         emit('这一步没完成，正在重新看页面')
       }
       if (stopped()) break
+      history.push({ action: action.action, query: action.query, url: page.url(), result: feedback })
       state = await snapshot(page)
     }
     emit('正在整理小屋购物袋')

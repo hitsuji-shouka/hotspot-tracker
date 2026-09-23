@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { shopWithLuna, productImage } from './server-room-browser.mjs'
+import { decideWithJev } from './server-room-jev.mjs'
 
 const STORES = ['ikea.cn', 'yeswood.com', 'item.jd.com']
 const DAY = 24 * 60 * 60 * 1000
@@ -132,7 +133,10 @@ export async function openai(path, body, key, timeout = 90_000, baseUrl = 'https
 
 export function createRoomService(env = process.env, call = openai) {
   const apiKey = env.ROOM_API_KEY || env.OPENAI_API_KEY
-  const configured = env.ROOM_ENABLED === '1' && !!apiKey
+  const jevKey = env.JEV_API_KEY || env.TYPESAFE_API_KEY
+  const provider = jevKey ? 'jev' : 'luna'
+  const configured = env.ROOM_ENABLED === '1' && !!(apiKey || jevKey)
+  const renderAvailable = env.ROOM_ENABLED === '1' && !!apiKey
   const request = (path, body, key, timeout, signal) => call(path, body, key, timeout, env.ROOM_API_BASE_URL || 'https://api.openai.com/v1', signal)
   const browserReady = configured && !!env.ROOM_BROWSER_EXECUTABLE && existsSync(env.ROOM_BROWSER_EXECUTABLE)
   const quotas = new Map()
@@ -166,6 +170,8 @@ export function createRoomService(env = process.env, call = openai) {
   return {
     configured,
     browserReady,
+    provider,
+    renderAvailable,
     async play(ip, body, onStep, cancelled) {
       const brief = validateBrief(body)
       if (!brief) throw Object.assign(new Error('请填写布置想法、有效预算和 0.5–10 分钟的购物时间'), { status: 400 })
@@ -180,14 +186,16 @@ export function createRoomService(env = process.env, call = openai) {
         const result = await shopWithLuna(brief, {
           key: apiKey, model: env.ROOM_TEXT_MODEL || 'gpt-6-luna',
           executablePath: env.ROOM_BROWSER_EXECUTABLE, call: request, startedAt: record.created,
+          decide: jevKey ? (state, timeout, signal) => decideWithJev(state, { key: jevKey, model: env.JEV_MODEL || 'jev-latest', timeout, signal }) : undefined,
           onStep: event => { if (event.type === 'bag') record.products = event.products; onStep(event) }, cancelled,
         })
         record.products = result.products
         record.completed = !cancelled()
-        return { ...result, runId }
+        return { ...result, runId, provider }
       })
     },
     async plan(ip, body) {
+      if (!renderAvailable) throw Object.assign(new Error('文字搜索服务尚未配置，请使用浏览器逛店'), { status: 503 })
       const brief = validateBrief(body)
       if (!brief) throw Object.assign(new Error('请填写房间、风格、需求和有效预算'), { status: 400 })
       return run(ip, 'plan', async () => {
@@ -207,6 +215,7 @@ export function createRoomService(env = process.env, call = openai) {
       })
     },
     async render(ip, body) {
+      if (!renderAvailable) throw Object.assign(new Error('效果图服务尚未配置，选品清单仍然保留'), { status: 503, retryable: true })
       const record = sessions.get(body?.runId)
       if (!record || Date.now() - record.created > 60 * 60 * 1000 || !record.completed || !record.products.length) throw Object.assign(new Error('本轮逛店记录未完成或已失效；请先保存当前清单，再重新逛店'), { status: 400, retryable: true })
       if (record.image) return record.image

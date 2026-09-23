@@ -53,9 +53,15 @@ npm run dev
 
 ### 羊的小屋服务
 
+Jev 选品：服务端设置 `JEV_API_KEY`（也支持 `TYPESAFE_API_KEY`）、`ROOM_ENABLED=1`、`ROOM_BROWSER_EXECUTABLE` 和 `SITE_ORIGIN`，即可通过现有 Playwright 浏览器选品；有 Jev 密钥时优先使用 Jev，不依赖 OpenAI 文本模型。`JEV_MODEL` 默认 `jev-latest`。按 [TypeSafe 官方 API](https://docs.typesafe.ai/api) 调用 `https://api.typesafe.ai/v1/systemone`，由 Choice 从真实页面商品链接、搜索类别、入袋、滚动和结束动作中选择，再由浏览器执行并核实。Jev 模式在设定时间内尽量多找符合需求的商品，不设件数和 20 步上限；时间到、预算用完或用户停止时结束，连续模型超时/服务失败仍会中断。保留去重和整袋总预算校验，也可选择同类别的不同商品。搜索和打开已观察到的商品链接直接导航，省去输入动画及弹窗等待。搜索类别使用常见家具词表，Jev 不生成自由文本；这里复用项目浏览器执行器，没有额外安装 Python browser-use。网页内容作为非可信商品资料处理；模型响应只接受本次提供的动作，价格、照片、重复商品与总预算仍由程序校验。
+
+本地密钥放入 Git 忽略的 `.env.jev`，运行 `node --env-file=.env.jev server.mjs 4192`，对应 `SITE_ORIGIN=http://127.0.0.1:4192`。`GET /api/room/status` 返回 `available`、`provider` 和 `renderAvailable`，不返回密钥。Jev 只负责选品；效果图仍需另外配置下述 `ROOM_API_KEY`/`OPENAI_API_KEY`，未配置时页面禁用生图，选品与保存清单可正常使用。`node scripts/room-jev-check.mjs` 可免费验证 Jev 协议、动作边界、预算、异常和取消。
+
+以下为原有 Luna 选品及效果图配置（没有 Jev 密钥时使用 Luna）：
+
 `server.mjs` 需要设置 `SITE_ORIGIN`、`ROOM_API_KEY`（或官方 OpenAI 用的 `OPENAI_API_KEY`）、`ROOM_BROWSER_EXECUTABLE`（服务器上的 Chromium/Chrome 可执行文件绝对路径）和 `ROOM_ENABLED=1` 才会开放逛店。密钥只放在服务器环境变量，不写入前端或仓库；默认不开通。`SITE_ORIGIN` 必须与用户浏览器访问站点时的 Origin 完全一致，本地例如 `http://127.0.0.1:4186`。官方接口默认使用 `https://api.openai.com/v1`、`gpt-6-luna` 和 `gpt-image-2`；使用 AICode007 时设置 `ROOM_API_BASE_URL=https://api.aicode007.com`、`ROOM_TEXT_MODEL=gpt-5.6-luna`、`ROOM_IMAGE_MODEL=gpt-image-2`。如果本机 Node 24 需要通过 `HTTP_PROXY`/`HTTPS_PROXY` 出网，再设置 `NODE_USE_ENV_PROXY=1`。效果图只在选完商品后手动生成，每轮服务端只接受一次生图提交，失败不自动重试。为控制费用，服务端目前每天全站最多 30 次逛店、10 次效果图；每个来源地址每天最多 2 次逛店、1 次效果图，同时只运行一个逛店浏览器，重启服务后计数清零。图片只返回给当前页面，不会保存到服务器；本轮商品记录在服务端内存中保留一小时。
 
-逛店通过兼容 OpenAI Responses API 的函数调用驱动 Playwright 浏览器，Luna 只读取网页文字，选择搜索、点击、滚动、明确加入小屋购物袋或结束。仅浏览商品不会入袋；名称、规格、照片和人民币价格从当前详情页核实，重复或超预算商品不能加入。用户选择使用独立的「小屋购物袋」，不调用商家加购，也不需要登录。Chrome CDP 连续画面和真实鼠标事件同步至 3D 电脑屏幕，入袋事件驱动黑板、照片提示、图册和完整清单。单轮最多 20 次决策；购物时间以分钟输入，默认 2.5 分钟，可在目标面板设为 0.5–10 分钟。镜头推进完成、服务端接受本轮后开始计时，包含浏览器启动和网页等待；到时中止模型请求并关闭逛店浏览器，保留已选商品与完整清单，不再接受入袋。也可以随时手动停止。
+逛店通过兼容 OpenAI Responses API 的函数调用驱动 Playwright 浏览器，Luna 只读取网页文字，选择搜索、点击、滚动、明确加入小屋购物袋或结束。仅浏览商品不会入袋；名称、规格、照片和人民币价格从当前详情页核实，重复或超预算商品不能加入。用户选择使用独立的「小屋购物袋」，不调用商家加购，也不需要登录。Chrome CDP 连续画面和真实鼠标事件同步至 3D 电脑屏幕，入袋事件驱动黑板、照片提示、图册和完整清单。Luna 模式单轮最多 20 次决策，Jev 模式以时间为限；购物时间以分钟输入，默认 2.5 分钟，可在目标面板设为 0.5–10 分钟。镜头推进完成、服务端接受本轮后开始计时，包含浏览器启动和网页等待；到时中止模型请求并关闭逛店浏览器，保留已选商品与完整清单，不再接受入袋。也可以随时手动停止。
 
 最后手动生成一次效果图：前端仅提交本轮 runId，服务端使用已核实清单和商品参考照片调用 `images/edits`；接口兼容性尚未实际生图验收，不会自动退回纯文字生图。效果图是搭配概念图，不保证实物外观或尺寸完全一致。`node scripts/room-check.mjs` 检查输入、图片来源和配额；`node scripts/room-stream-check.mjs` 验证本地浏览器连续帧；`node scripts/room-browser-check.mjs` 使用确定动作验证真实宜家搜索与入袋，后两项需要本机 Chrome，均不调用收费模型。详细流程和验收记录见 [体验改造与调研](design/sheep-room-experience.md)。部署前需配置服务端密钥、浏览器及长连接转发，并验收生图接口。
 

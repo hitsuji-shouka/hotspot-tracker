@@ -12,7 +12,7 @@ export type Experiment = {
   title: string
   description: string
   category: Exclude<LabCategory, 'all'>
-  cover: 'room' | 'garden' | 'collage' | 'network' | 'sound'
+  cover: 'room' | 'garden' | 'collage' | 'network' | 'sound' | 'central-perk'
   status: 'preparing' | 'concept' | 'ready'
   path?: string
 }
@@ -21,6 +21,9 @@ export const EXPERIMENTS: Experiment[] = [{
   id: 'sheep-room', title: '羊的小屋',
   description: '看 AI 逛家具店，把喜欢的家具布置成家。',
   category: 'create', cover: 'room', status: 'preparing', path: '/lab/sheep-room',
+}, {
+  id: 'central-perk', title: 'Central Perk', description: 'AND I JUST WANT A MILLION DOLLARS',
+  category: 'create', cover: 'central-perk', status: 'ready', path: '/lab/central-perk',
 }]
 
 // These are design fixtures, not published experiments. Only used by the dev preview.

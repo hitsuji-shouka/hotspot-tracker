@@ -7,7 +7,7 @@ import { createRoomService, openai } from '../server-room.mjs'
 const executablePath = process.env.ROOM_BROWSER_EXECUTABLE || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const brief = { room: '客厅', style: '原木', needs: '收纳', budget: 8000, duration: 30 }
 const launch = chromium.launch.bind(chromium)
-let browser, stallPage = false, navigationStarted = false
+let browser, stallPage = false, navigationStarted = false, interruptedSnapshot = false
 chromium.launch = async options => {
   browser = await launch(options)
   const newContext = browser.newContext.bind(browser)
@@ -16,12 +16,20 @@ chromium.launch = async options => {
     const newPage = context.newPage.bind(context)
     context.newPage = async () => {
       const page = await newPage()
+      const evaluate = page.evaluate.bind(page)
+      page.evaluate = async (fn, arg) => {
+        if (!interruptedSnapshot && String(fn).includes('data-room-agent-index')) {
+          interruptedSnapshot = true
+          throw new Error('Execution context was destroyed, most likely because of a navigation')
+        }
+        return evaluate(fn, arg)
+      }
       // Page routes take precedence over the runner's context allowlist.
       await page.route('**/*', async route => {
         navigationStarted = true
         if (stallPage) return // Keep navigation pending until the deadline closes the browser.
         if (route.request().url().endsWith('.png')) return route.fulfill({ contentType: 'image/png', body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aJVkAAAAASUVORK5CYII=', 'base64') })
-        return route.fulfill({ contentType: 'text/html; charset=utf-8', body: `<input aria-label="search"><a href="/cn/zh/p/test-chair/">测试椅</a><a href="/cn/zh/p/test-lamp/">测试灯</a><a href="/cn/zh/p/test-shelf/">测试柜</a><div class="info"><h1 class="name">测试椅</h1><p class="des">原木</p><p class="i-product-price">¥199</p></div><img alt="gallery-image" src="https://file.app.ikea.cn/fixture.png" width="100" height="100">` })
+        return route.fulfill({ contentType: 'text/html; charset=utf-8', body: `<input aria-label="search"><a href="/cn/zh/p/test-chair/">测试椅</a><a href="/cn/zh/p/test-lamp/">测试灯</a><a href="/cn/zh/p/test-shelf/">测试柜</a>${Array.from({ length: 4 }, (_, i) => `<a href="/cn/zh/p/extra-${i}/">其他商品${i}</a>`).join('')}<div class="info"><h1 class="name">测试椅</h1><p class="des">原木</p><p class="i-product-price">¥199</p></div><img alt="gallery-image" src="https://file.app.ikea.cn/fixture.png" width="100" height="100">` })
       })
       return page
     }
@@ -51,6 +59,7 @@ try {
     },
   })
   assert.equal(calls, 3)
+  assert.equal(interruptedSnapshot, true, 'A navigation during observation must be retried')
   assert.equal(signalAborted, true, 'Deadline must abort the in-flight model request')
   assert.equal(result.timedOut, true)
   assert.equal(result.elapsed, 30)
@@ -81,6 +90,33 @@ try {
   assert.equal(recovered.metrics.modelTimeouts, 1)
   assert.equal(recovered.metrics.actionErrors, 0)
   assert.equal(recovered.metrics.modelCalls, recoveryCalls)
+
+  let jevCalls = 0
+  const many = await shopWithLuna({ ...brief, budget: 199 * 7 }, {
+    executablePath,
+    decide: async ({ page, products }) => {
+      // Eight premature finish attempts plus 14 real actions exceed the old 20-step ceiling.
+      if (++jevCalls <= 8) return { action: 'finish' }
+      if (page.url.includes('/p/') && !products.some(item => item.url === page.url)) return { action: 'add' }
+      return { action: 'click', index: page.controls.find(item => item.href.includes('/p/') && !products.some(product => product.url.endsWith(item.href))).index }
+    },
+  })
+  assert.equal(many.products.length, 7, 'Jev must continue beyond six products')
+  assert.equal(many.metrics.modelCalls, 22, 'Jev must continue beyond 20 decisions')
+  assert.equal(many.stopReason, 'budget_limit', 'Stop when the actual verified total exhausts the budget')
+  assert.equal(many.metrics.actionErrors, 0)
+  let jevAborted = false
+  const jevDeadline = await shopWithLuna(brief, {
+    executablePath, startedAt: Date.now() - 24_000,
+    decide: async (_state, _timeout, signal) => {
+      await new Promise(resolve => signal.aborted ? resolve() : signal.addEventListener('abort', resolve, { once: true }))
+      jevAborted = signal.aborted
+      return { action: 'add' }
+    },
+  })
+  assert.equal(jevAborted, true)
+  assert.equal(jevDeadline.timedOut, true)
+  assert.equal(jevDeadline.products.length, 0, 'Never execute a late Jev action')
 
   // Exercise render state with a trusted shopping session; all model/image traffic is stubbed.
   const originalFetch = globalThis.fetch

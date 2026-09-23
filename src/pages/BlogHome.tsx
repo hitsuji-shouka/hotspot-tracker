@@ -1,6 +1,6 @@
 import AdminControl from '@/components/AdminControl'
 // 博客首页 v2：极简编辑风（灵感：addyosmani.com）
-// 浅色暖底 + 大字自我介绍 + 经历时间线 + 精选项目 + 博文
+// 浅色暖底 + 自我介绍 + 精选项目
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { fetchUserRepos, formatNumber, type Repo } from '@/lib/github'
@@ -9,7 +9,7 @@ import { ArrowUpRight, Flame, Github, Mail, MapPin, Star } from 'lucide-react'
 
 const GITHUB_USER = 'hitsuji-shouka'
 
-/** 个人资料（依据简历整理） */
+/** 首页公开介绍 */
 const PROFILE = {
   name: '羊宇宙',
   tagline: '复旦大学 · AI Agent / 后端开发',
@@ -26,19 +26,9 @@ const PROFILE = {
   email: '2483346490@qq.com',
 }
 
-const EDUCATION = [
-  { period: '2024 – 2027', title: '复旦大学 · 电子信息 · 硕士' },
-  { period: '2019 – 2023', title: '上海大学 · 通信工程 · 本科' },
-]
-
 const EXPERIENCE = [
   { period: '2026.05 – 2026.08', title: '蚂蚁 · 财富 AI Lab · 智能体与大模型应用开发' },
   { period: '2025.11 – 2026.04', title: '蔚来 · 能源数智化 · Java 后端开发' },
-]
-
-const PUBLICATIONS = [
-  'BCGFMamba: Boundary-Context Guided Feature Fusion Mamba for Postoperative Glioma Residual Tumor Segmentation — ICBIP 2026（已录用）',
-  'Latent Domain-Specific Prompt-Driven SAM via Conditional Diffusion Refinement for Postoperative Glioma Segmentation — IEEE TII 2026（已录用）',
 ]
 
 const ACCENT = '#c2410c'
@@ -116,27 +106,6 @@ export default function BlogHome() {
             ))}
           </div>
 
-          <h3 className="text-xs font-semibold tracking-widest text-[#a39e93] mb-3">教育经历</h3>
-          <div className="space-y-4">
-            {EDUCATION.map((e) => (
-              <div key={e.title} className="flex gap-4">
-                <div className="w-28 shrink-0 text-xs text-[#a39e93] pt-1 font-mono">{e.period}</div>
-                <div>
-                  <div className="font-semibold text-[15px]">{e.title}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <h3 className="text-xs font-semibold tracking-widest text-[#a39e93] mt-8 mb-3">科研论文</h3>
-          <ul className="space-y-2.5">
-            {PUBLICATIONS.map((p) => (
-              <li key={p} className="flex gap-2.5 text-sm text-[#6b655c] leading-relaxed">
-                <span style={{ color: ACCENT }} className="shrink-0">▪</span>
-                <span>{p}</span>
-              </li>
-            ))}
-          </ul>
         </section>
 
         {/* 项目 */}
