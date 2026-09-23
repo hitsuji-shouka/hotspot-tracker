@@ -211,7 +211,7 @@ export default function Bookmarks({ keyword }: { keyword: string }) {
 
 function BookmarkCard({ bookmark: b, onRemove }: { bookmark: Bookmark; onRemove: () => void }) {
   const { canEdit } = useAdmin()
-  const cat = BOOKMARK_CATEGORIES.find((c) => c.id === b.category) ?? BOOKMARK_CATEGORIES[4]
+  const cat = BOOKMARK_CATEGORIES.find((c) => c.id === b.category) ?? BOOKMARK_CATEGORIES.at(-1)!
   const [imgFailed, setImgFailed] = useState(false)
   const showImage = b.image && !imgFailed
 
