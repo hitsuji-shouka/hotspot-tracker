@@ -7,11 +7,13 @@ import { extname, join, resolve, relative, isAbsolute } from 'node:path'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { createAdmin } from './server-auth.mjs'
+import { createRoomService } from './server-room.mjs'
 
 const root = fileURLToPath(new URL('./dist', import.meta.url))
 const syncFile = process.env.SYNC_FILE || fileURLToPath(new URL('./sync-data.json', import.meta.url))
 const port = Number(process.argv[2] || 8080)
 const admin = createAdmin(process.env.ADMIN_PASSWORD, process.env.SITE_ORIGIN)
+const roomService = createRoomService()
 const publicKeys = ['favorites', 'bookmarks', 'fav_skills', 'fav_papers', 'readingArticles']
 let writes = Promise.resolve()
 
@@ -54,6 +56,37 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://x')
     const json = (status, value) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(value)) }
     if (url.pathname.startsWith('/api/')) {
+      if (url.pathname === '/api/room/status' && req.method === 'GET') return json(200, { available: roomService.browserReady })
+      if (url.pathname === '/api/room/play' && req.method === 'POST') {
+        if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
+        const ip = req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
+          ? String(req.headers['cf-connecting-ip'] || req.socket.remoteAddress)
+          : req.socket.remoteAddress || 'unknown'
+        const body = await jsonBody(req, 16 * 1024)
+        res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', Connection: 'keep-alive' })
+        let closed = false
+        res.on('close', () => { closed = true })
+        // Stale video frames may be dropped; bag/session/result events must survive.
+        const send = value => { if (!closed && !(value.type === 'frame' && res.writableLength > 256_000)) res.write(`data: ${JSON.stringify(value)}\n\n`) }
+        try {
+          const result = await roomService.play(ip, body, send, () => closed)
+          send({ type: 'done', result })
+        } catch (error) {
+          if (process.env.ROOM_DEBUG === '1') console.error('Room browsing failed:', error)
+          send({ type: 'error', message: error.status ? error.message : '逛店暂时失败，请稍后重试' })
+        }
+        res.end()
+        return
+      }
+      if (url.pathname === '/api/room/plan' || url.pathname === '/api/room/render') {
+        if (req.method !== 'POST') return json(405, { error: 'Method Not Allowed' })
+        if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
+        const ip = req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
+          ? String(req.headers['cf-connecting-ip'] || req.socket.remoteAddress)
+          : req.socket.remoteAddress || 'unknown'
+        const body = await jsonBody(req, 16 * 1024)
+        return json(200, url.pathname.endsWith('/plan') ? await roomService.plan(ip, body) : await roomService.render(ip, body))
+      }
       if (url.pathname === '/api/admin' && req.method === 'GET') return json(200, { configured: admin.configured, authenticated: !!admin.session(req), expiresAt: admin.session(req)?.expiresAt ?? null })
       if (req.method !== 'GET') {
         if (!admin.configured) return json(503, { error: '管理口令尚未配置，当前只读' })
@@ -133,7 +166,7 @@ const server = http.createServer(async (req, res) => {
     res.end(data)
   } catch (error) {
     res.writeHead(error.status || 500, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
-    res.end(JSON.stringify({ error: error.status ? error.message : '服务暂不可用，请稍后重试' }))
+    res.end(JSON.stringify({ error: error.status ? error.message : '服务暂不可用，请稍后重试', ...(typeof error.retryable === 'boolean' ? { retryable: error.retryable } : {}) }))
   }
 })
 

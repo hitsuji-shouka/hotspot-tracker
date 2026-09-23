@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>羊宇宙 · 实验室 · 三版样张</title>
+<style>
+:root{
+  --bg:#F2F0EA;--surface:#fff;--ink:#252319;--ink-soft:#4C4738;--muted:#7B7360;
+  --hair:rgba(37,35,25,.14);--hair2:rgba(37,35,25,.26);--accent:#A8102F;--gold:#9C7A26;
+  --stage-w:1280px;--stage-h:880px;--stage-ar:1280/880;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17160F;--surface:rgba(255,255,255,.055);--ink:#F0ECE0;--ink-soft:#D2CBB9;--muted:#968F7C;
+  --hair:rgba(255,255,255,.14);--hair2:rgba(255,255,255,.26);--accent:#EE8AA2;--gold:#D9AE59;}}
+:root[data-theme="dark"]{
+  --bg:#17160F;--surface:rgba(255,255,255,.055);--ink:#F0ECE0;--ink-soft:#D2CBB9;--muted:#968F7C;
+  --hair:rgba(255,255,255,.14);--hair2:rgba(255,255,255,.26);--accent:#EE8AA2;--gold:#D9AE59;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.75;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.shell{max-width:1760px;margin:0 auto;padding:0 clamp(16px,2.4vw,40px)}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--hair);padding:26px 0 14px}
+.eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+h1{font-size:clamp(18px,2vw,23px);line-height:1.45;margin:0 0 10px;font-weight:600;letter-spacing:0;text-wrap:balance}
+.axis{font-size:14px;line-height:1.8;color:var(--ink-soft);margin:0;max-width:88ch}
+.axis b{color:var(--ink)}
+.hint{font-size:12.5px;color:var(--muted);margin:14px 0 0;line-height:1.8;max-width:88ch}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.board{display:grid;grid-template-columns:74px repeat(3,minmax(0,1fr));gap:13px 18px;
+  align-items:start;padding:22px 0 8px}
+.board.solo{grid-template-columns:minmax(0,1fr);max-width:1280px}
+.board.solo>:not(.pick){display:none}
+.rowlab{font-size:11.5px;font-weight:600;letter-spacing:.1em;color:var(--muted);padding-top:3px;line-height:1.6}
+.vhead,.cell{min-width:0;margin:0}
+.cap{font-size:12.5px;color:var(--muted);margin:9px 0 0}
+.board:not(.solo) .cap{display:none}
+.meta{display:flex;align-items:baseline;gap:9px;padding-bottom:9px;border-bottom:1px solid var(--hair2)}
+.meta .num{font-size:17px;color:var(--gold);font-style:italic}
+.meta .name{font-weight:700;font-size:17px}
+.meta .tag{margin-left:auto;font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.desc{font-size:12.5px;line-height:1.75;color:var(--muted);margin:9px 0 11px;min-height:4.4em}
+.frame{position:relative;aspect-ratio:var(--stage-ar);border:1px solid var(--hair2);border-radius:6px;overflow:hidden;
+  background:#fff;cursor:zoom-in;display:block;width:100%;padding:0;margin:0;font:inherit;text-align:left;color:inherit;
+  -webkit-appearance:none;appearance:none}
+.board.solo .frame{cursor:zoom-out}
+.frame::after{content:"点开放大";position:absolute;right:8px;bottom:8px;z-index:5;font-size:10px;letter-spacing:.1em;
+  padding:3px 9px;border-radius:999px;background:rgba(30,27,18,.62);color:#F6F1E4;opacity:0;transition:opacity .16s}
+.frame:hover::after{opacity:1}
+.board.solo .frame::after{content:"收起"}
+.stage{width:var(--stage-w);height:var(--stage-h);transform-origin:0 0;position:absolute;top:0;left:0}
+.stage>.screen{width:100%;height:100%;position:relative;overflow:hidden}
+.confirm{border-top:1px solid var(--hair);margin-top:34px;padding:34px 0 90px;max-width:800px}
+.confirm h2{font-size:19px;margin:0 0 6px}
+.confirm .sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;line-height:1.8}
+.q{margin-bottom:24px}
+.q .ttl{font-size:14.5px;font-weight:600;margin:0 0 4px}
+.q .why{font-size:12.5px;color:var(--muted);margin:0 0 10px;line-height:1.8}
+.q select,.q .other{width:100%;font:inherit;font-size:14px;padding:11px 13px;border:1px solid var(--hair2);
+  border-radius:7px;background:var(--surface);color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts label{display:inline-flex;align-items:center;gap:7px;padding:7px 14px 7px 11px;border:1px solid var(--hair2);
+  border-radius:999px;cursor:pointer;font-size:13.5px;line-height:1.45;background:var(--surface);user-select:none}
+.opts input{margin:0;accent-color:var(--ink);flex:none}
+.opts label:has(:checked){border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.other{display:none;margin-top:10px}
+.q:has([data-other]:checked) .other{display:block}
+.copy{font:inherit;font-size:14px;font-weight:600;padding:12px 28px;border:0;border-radius:999px;
+  background:var(--ink);color:var(--bg);cursor:pointer}
+.tip{font-size:13px;color:var(--muted);margin-left:12px}
+#fallback{white-space:pre-wrap;font-size:12.5px;background:var(--surface);border:1px solid var(--hair);
+  border-radius:7px;padding:14px;margin-top:14px;overflow-x:auto}
+@media(max-width:900px){.board{grid-template-columns:minmax(0,1fr)}.rowlab{display:none}
+  .desc{min-height:0}.board:not(.solo) .cap{display:block}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <p class="eyebrow">羊宇宙 · 实验室 · 设计方向确认</p>
+  <h1>三版并列，请选一版，并说清另外两版哪里不要。</h1>
+  <p class="axis">三版沿同一条轴排开：<b>作品入口的表现力度</b>。沿用博客现有内容与配色，比较文字主导、图文平衡和游戏主导三种卡片表达。
+  三版只差在这一条轴上，文案完全相同，全部是真实文案。</p>
+  <p class="hint">九屏全在这一页上，不用切换：<b>横着看</b>三版在同一屏上的差别，<b>竖着看</b>一版从首屏到空状态撑不撑得住。
+  点任意一张放大到整宽读细节，再点一次收起。</p>
+</header>
+
+<div class="board" id="board">
+  <div class="rowlab"></div>
+  <div class="vhead">
+    <div class="meta"><span class="num">I</span><span class="name">贴着做</span><span class="tag">延续博客</span></div>
+    <p class="desc">沿用博客窄栏、暖白底和文字主导的卡片，保持整站连续感。</p>
+  </div>
+  <div class="vhead">
+    <div class="meta"><span class="num">II</span><span class="name">取其神</span><span class="tag">图文平衡</span></div>
+    <p class="desc">保留暖色编辑风，让封面成为最先看到的实验入口。</p>
+  </div>
+  <div class="vhead">
+    <div class="meta"><span class="num">III</span><span class="name">反着来</span><span class="tag">游戏舞台</span></div>
+    <p class="desc">让实验室拥有更强的游戏氛围，与博客的阅读页拉开距离。</p>
+  </div>
+  <div class="rowlab">实验室首屏</div>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「贴着做」的实验室首屏"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v1"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="label">正在进行 · 01</div><div class="card"><div class="art"><div class="room"></div><small>羊的小屋</small></div><div class="copy"><div class="badge">家居 × AI</div><h2>羊的小屋</h2><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><span class="action">进入实验　↗</span></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">I 贴着做 · 实验室首屏</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「取其神」的实验室首屏"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v2"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="label">正在进行 · 01</div><div class="card"><div class="art"><div class="room"></div><small>羊的小屋</small></div><div class="copy"><div class="badge">家居 × AI</div><h2>羊的小屋</h2><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><span class="action">进入实验　↗</span></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">II 取其神 · 实验室首屏</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「反着来」的实验室首屏"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v3"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="label">正在进行 · 01</div><div class="card"><div class="art"><div class="room"></div><small>羊的小屋</small></div><div class="copy"><div class="badge">家居 × AI</div><h2>羊的小屋</h2><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><span class="action">进入实验　↗</span></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">III 反着来 · 实验室首屏</figcaption>
+  </figure>
+  <div class="rowlab">羊的小屋入口</div>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「贴着做」的羊的小屋入口"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v1"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><div class="crumb">实验室　/　羊的小屋</div><div class="launch"><div><div class="eyebrow">家居 × AI</div><h1>羊的小屋</h1><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><div class="field"><em>房间</em>客厅　⌄</div><div class="field"><em>想法</em>温暖、适合阅读的小空间</div><span class="action">开始布置　→</span></div><div class="art"><div class="room"></div><small>羊的小屋</small></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">I 贴着做 · 羊的小屋入口</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「取其神」的羊的小屋入口"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v2"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><div class="crumb">实验室　/　羊的小屋</div><div class="launch"><div><div class="eyebrow">家居 × AI</div><h1>羊的小屋</h1><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><div class="field"><em>房间</em>客厅　⌄</div><div class="field"><em>想法</em>温暖、适合阅读的小空间</div><span class="action">开始布置　→</span></div><div class="art"><div class="room"></div><small>羊的小屋</small></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">II 取其神 · 羊的小屋入口</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「反着来」的羊的小屋入口"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v3"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><div class="crumb">实验室　/　羊的小屋</div><div class="launch"><div><div class="eyebrow">家居 × AI</div><h1>羊的小屋</h1><p class="desc">告诉 AI 你想要怎样的房间，看它逛家具店、挑商品，再把它们布置进你的家。</p><div class="field"><em>房间</em>客厅　⌄</div><div class="field"><em>想法</em>温暖、适合阅读的小空间</div><span class="action">开始布置　→</span></div><div class="art"><div class="room"></div><small>羊的小屋</small></div></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">III 反着来 · 羊的小屋入口</figcaption>
+  </figure>
+  <div class="rowlab">只有一个实验时</div>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「贴着做」的只有一个实验时"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v1"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="eyebrow">01 / 目前上线</div><div class="empty"><h2>更多实验，正在酝酿。</h2><p>目前可以先玩「羊的小屋」。新的小游戏和 AI Demo 会继续收进这里。</p><span class="action ghost">玩羊的小屋　↗</span></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">I 贴着做 · 只有一个实验时</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「取其神」的只有一个实验时"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v2"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="eyebrow">01 / 目前上线</div><div class="empty"><h2>更多实验，正在酝酿。</h2><p>目前可以先玩「羊的小屋」。新的小游戏和 AI Demo 会继续收进这里。</p><span class="action ghost">玩羊的小屋　↗</span></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">II 取其神 · 只有一个实验时</figcaption>
+  </figure>
+  <figure class="cell">
+    <button class="frame" type="button" aria-label="放大「反着来」的只有一个实验时"><div class="stage"><div class="screen"><style>
+*{box-sizing:border-box} .lab{height:880px;width:1280px;overflow:hidden;font-family:Arial,'Microsoft YaHei',sans-serif;color:var(--ink);background:var(--bg);padding:34px 96px 54px;position:relative;text-align:left;line-height:1.8}
+.lab.v1{--bg:#faf9f6;--ink:#26221c;--muted:#6b655c;--line:#e8e4dc;--accent:#c2410c;--card:#fff;--soft:#f0eee8}
+.lab.v2{--bg:#f7f5ef;--ink:#282d23;--muted:#687065;--line:#dcded3;--accent:#546f55;--card:#fffefa;--soft:#dfe8d9}
+.lab.v3{--bg:#171e19;--ink:#f3f2e9;--muted:#bdcabc;--line:#526b59;--accent:#a7d597;--card:#263a2d;--soft:#405f49}
+.lab header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 16px;font-size:17px}.lab .brand{font-weight:700;font-size:21px}.lab .nav{display:flex;gap:26px;color:var(--muted)}.lab .active{color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent)}
+.lab main{max-width:880px;margin:0 auto}.lab h1{font-size:51px;margin:42px 0 5px;line-height:1.25;font-weight:700;letter-spacing:0}.lab p{margin:0}.lab .sub{color:var(--muted);font-size:20px}.lab .eyebrow{font-size:15px;letter-spacing:.13em;color:var(--accent);font-weight:700}.lab .line{height:1px;background:var(--line);margin:38px 0 25px}.lab .label{font-size:15px;color:var(--muted);margin-bottom:15px}.lab .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.lab .badge{font-size:14px;font-weight:700;color:var(--accent)}.lab h2{font-size:29px;line-height:1.4;margin:8px 0}.lab .desc{font-size:18px;color:var(--muted);line-height:1.75}.lab .action{display:inline-flex;margin-top:25px;border-radius:8px;background:var(--accent);color:var(--bg);padding:9px 18px;font-size:17px;font-weight:700}.lab .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.lab .art{background:linear-gradient(145deg,#e5ebdf,#95b59b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.lab .room{width:66%;height:56%;background:#f7f6e8;border-left:20px solid #adbfa7;border-top:16px solid #dde2cf;box-shadow:15px 17px 0 #5f8b72;transform:skewY(-7deg);position:relative}.lab .room:after{content:'🛋️  🪴';position:absolute;font-size:76px;left:18%;top:22%}.lab .art small{position:absolute;bottom:19px;right:22px;color:#426b55;font-size:17px;letter-spacing:.12em}
+.lab.v1 .card{display:grid;grid-template-columns:245px 1fr;min-height:245px}.lab.v1 .card .copy{padding:26px 32px}.lab.v1 .art{height:245px}.lab.v1 .room:after{font-size:48px}.lab.v1 .line{margin-top:49px}.lab.v1 h1{font-family:Georgia,'Microsoft YaHei',serif;font-size:44px}
+.lab.v2 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;box-shadow:0 15px 35px #2b3a2612}.lab.v2 .card .copy{padding:44px 38px}.lab.v2 .art{height:355px}.lab.v2 h1{font-family:Georgia,'Microsoft YaHei',serif}
+.lab.v3 header{border-color:#5d765e}.lab.v3 h1{font-size:65px}.lab.v3 .card{display:grid;grid-template-columns:48% 52%;min-height:355px;border-radius:4px;border-color:#6c9d76;box-shadow:9px 9px 0 #48674e}.lab.v3 .card .copy{padding:35px 42px}.lab.v3 .art{height:355px;background:linear-gradient(135deg,#24452e,#83aa73)}.lab.v3 .room{background:#d6dfbd}.lab.v3 .line{background:#5d765e}
+.lab .crumb{font-size:16px;color:var(--muted);padding-top:30px}.lab .launch{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;margin-top:40px}.lab .launch h1{margin-top:8px}.lab .launch .art{height:355px;border-radius:14px}.lab .field{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px 14px;font-size:17px;color:var(--ink)}.lab .field em{font-style:normal;color:var(--muted);font-size:15px;margin-right:16px}.lab.v1 .launch{grid-template-columns:53% 47%}.lab.v1 .launch .art{height:285px}.lab.v3 .launch .art{border:1px solid #6c9d76;border-radius:3px}
+.lab .empty{margin:55px auto 0;max-width:680px;padding:47px 52px;background:var(--card);border:1px dashed var(--line);border-radius:14px}.lab .empty h2{margin:0 0 10px}.lab .empty p{font-size:19px;color:var(--muted);line-height:1.8}.lab.v1 .empty{background:transparent;border-left:3px solid var(--accent);border-right:0;border-top:0;border-bottom:0;border-radius:0}.lab.v3 .empty{border-color:#82aa82;border-radius:4px;text-align:center;box-shadow:8px 8px 0 #456247}
+.lab .foot{position:absolute;bottom:35px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:11px;font-size:14px;color:var(--muted)}
+</style><div class="lab v3"><header><div class="brand">◉ 羊宇宙漫游指南</div><div class="nav"><span>漫游</span><span>学习</span><span>博客</span><span class="active">实验室</span><span>热点</span></div></header><main><h1>实验室</h1><p class="sub">一些可以亲手玩的想法。</p><div class="line"></div><div class="eyebrow">01 / 目前上线</div><div class="empty"><h2>更多实验，正在酝酿。</h2><p>目前可以先玩「羊的小屋」。新的小游戏和 AI Demo 会继续收进这里。</p><span class="action ghost">玩羊的小屋　↗</span></div></main><div class="foot">羊宇宙漫游指南　 /　 实验室</div></div></div></div></button>
+    <figcaption class="cap">III 反着来 · 只有一个实验时</figcaption>
+  </figure>
+</div>
+
+<section class="confirm">
+  <h2>三个问题</h2>
+  <p class="sub">每问三条，对不上的写在「其他」。确认页只有三版，没有「现在」。</p>
+  <div class="q">
+    <p class="ttl" id="pick-ttl">1 · 选哪个？</p>
+    <select id="pick" aria-labelledby="pick-ttl">
+      <option value="">— 请选择 —</option>
+      <option>贴着做（延续博客）</option>
+      <option>取其神（图文平衡）</option>
+      <option>反着来（游戏舞台）</option>
+      <option>三个都不要</option>
+    </select>
+  </div>
+  <div class="q">
+    <p class="ttl" id="reject-ttl">2 · 另外两个，哪里不要？</p>
+    <p class="why">三选，可多选。具体的那句骂写在「其他」，并点名是哪一版。</p>
+    <div class="opts" role="group" aria-labelledby="reject-ttl">
+      <label><input type="checkbox" name="reject" value="太满太挤，或装饰抢戏"><span>太满太挤，或装饰抢戏</span></label><label><input type="checkbox" name="reject" value="太空太素，一屏里没什么可抓的"><span>太空太素，一屏里没什么可抓的</span></label><label><input type="checkbox" name="reject" value="气质不对（太嫩 / 太商务 / 太炫）"><span>气质不对（太嫩 / 太商务 / 太炫）</span></label>
+      <label><input type="checkbox" name="reject" data-other value="其他"><span>其他</span></label>
+    </div>
+    <input class="other" id="reject-other" type="text" autocomplete="off"
+      placeholder="例：「取其神」圆角太软，看着像儿童产品">
+  </div>
+  <div class="q">
+    <p class="ttl" id="context-ttl">3 · 你的用户，在什么状态下打开这个产品？</p>
+    <p class="why">三选，可多选。更具体的现场写在「其他」。</p>
+    <div class="opts" role="group" aria-labelledby="context-ttl">
+      <label><input type="checkbox" name="context" value="手机上，经常单手"><span>手机上，经常单手</span></label><label><input type="checkbox" name="context" value="电脑前，或投在大屏上"><span>电脑前，或投在大屏上</span></label><label><input type="checkbox" name="context" value="赶时间，扫一眼就得懂"><span>赶时间，扫一眼就得懂</span></label>
+      <label><input type="checkbox" name="context" data-other value="其他"><span>其他</span></label>
+    </div>
+    <input class="other" id="context-other" type="text" autocomplete="off"
+      placeholder="例：闭门会现场，二三十人扫码进来，写的人在别人讲话时单手打字">
+  </div>
+  <button class="copy" id="copyBtn" type="button">复制我的选择</button><span class="tip" id="tip"></span>
+  <pre id="fallback" hidden></pre>
+</section>
+</div>
+<script>
+(function(){
+  var stages=[].slice.call(document.querySelectorAll('.stage')), board=document.getElementById('board');
+  function fit(){stages.forEach(function(st){var w=st.parentElement.clientWidth;
+    if(w)st.style.transform='scale('+(w/1280)+')';});}
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  fit();
+  var cells=[].slice.call(document.querySelectorAll('.cell'));
+  cells.forEach(function(c){c.querySelector('.frame').addEventListener('click',function(){
+    var was=c.classList.contains('pick');
+    cells.forEach(function(x){x.classList.remove('pick');});
+    board.classList.toggle('solo',!was);
+    if(!was)c.classList.add('pick');
+    fit();
+    if(!was)c.scrollIntoView({block:'nearest'});
+  });});
+  function gather(name){
+    var parts=[], extra=(document.getElementById(name+'-other').value||'').trim();
+    [].slice.call(document.querySelectorAll('input[name="'+name+'"]:checked')).forEach(function(el){
+      if(!el.hasAttribute('data-other')) parts.push(el.value);
+    });
+    if(extra) parts.push(extra);
+    return parts.join('；')||'（空）';
+  }
+  function wireOther(name){
+    var box=document.querySelector('input[name="'+name+'"][data-other]');
+    var inp=document.getElementById(name+'-other');
+    if(!box||!inp) return;
+    box.addEventListener('change',function(){ if(box.checked) inp.focus(); });
+    inp.addEventListener('input',function(){ if(inp.value.trim()) box.checked=true; });
+  }
+  wireOther('reject'); wireOther('context');
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var t='【列宾 · 设计方向确认】\n'
+      +'1 选择：'+(document.getElementById('pick').value||'（未选）')+'\n'
+      +'2 否决理由（原话）：'+gather('reject')+'\n'
+      +'3 使用场景：'+gather('context');
+    var tip=document.getElementById('tip'),fb=document.getElementById('fallback');
+    function manual(){tip.textContent='复制失败，请手动选中下面这段：';fb.textContent=t;fb.hidden=false;}
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(t).then(function(){tip.textContent='已复制，贴回对话里即可';fb.hidden=true;},manual);
+    else manual();
+  });
+})();
+</script>
+</body>
+</html>

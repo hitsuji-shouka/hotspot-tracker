@@ -1,0 +1,96 @@
+{
+  "brief": {
+    "room": "客厅",
+    "style": "原木、舒服，有一点绿",
+    "needs": "沙发、茶几、灯、书柜和绿植",
+    "budget": 8000,
+    "duration": 600
+  },
+  "products": [
+    {
+      "id": "596ae79a-f4fb-42bb-a55e-7a089fcae2b9",
+      "name": "GULLVALLA 古瓦拉",
+      "description": "三人沙发，西科瑞德 灰绿色",
+      "sku": "",
+      "image": "https://file.app.ikea.cn/cn/zh/images/products/gullvalla-gu-wa-la-san-ren-sha-fa-xi-ke-rui-de-hui-lu-se__1576775_pe1032702_s5.jpg",
+      "quantity": 1,
+      "currency": "CNY",
+      "type": "家具",
+      "reason": "真实商品参考图链路验证",
+      "price": 1499,
+      "url": "https://www.ikea.cn/cn/zh/p/gullvalla-gu-wa-la-san-ren-sha-fa-xi-ke-rui-de-hui-lu-se-00618511/",
+      "store": "宜家",
+      "checkedAt": "2026-09-23T11:05:15.223Z"
+    },
+    {
+      "id": "61584db7-7cf9-4122-b153-5d3329528ac5",
+      "name": "BORGEBY 伯格比",
+      "description": "茶几，桦木贴面，70 厘米",
+      "sku": "",
+      "image": "https://file.app.ikea.cn/cn/zh/images/products/borgeby-bo-ge-bi-cha-ji-hua-mu-tie-mian__0987623_pe817609_s5.jpg",
+      "quantity": 1,
+      "currency": "CNY",
+      "type": "家具",
+      "reason": "真实商品参考图链路验证",
+      "price": 599,
+      "url": "https://www.ikea.cn/cn/zh/p/borgeby-bo-ge-bi-cha-ji-hua-mu-tie-mian-70449402/",
+      "store": "宜家",
+      "checkedAt": "2026-09-23T11:05:49.101Z"
+    },
+    {
+      "id": "d17db0ba-5da7-401c-8547-3b14dccc7f95",
+      "name": "RÖDFLIK 洛德弗利",
+      "description": "落地灯/阅读灯，浅米色",
+      "sku": "",
+      "image": "https://file.app.ikea.cn/cn/zh/images/products/roedflik-luo-de-fu-li-luo-di-deng-yue-du-deng-qian-mi-se__1232751_pe916596_s5.jpg",
+      "quantity": 1,
+      "currency": "CNY",
+      "type": "家具",
+      "reason": "真实商品参考图链路验证",
+      "price": 199,
+      "url": "https://www.ikea.cn/cn/zh/p/roedflik-luo-de-fu-li-luo-di-deng-yue-du-deng-qian-mi-se-00561939/",
+      "store": "宜家",
+      "checkedAt": "2026-09-23T11:06:54.253Z"
+    },
+    {
+      "id": "19ba8e6d-bc5c-4575-8ccd-406062ffa410",
+      "name": "BILLY 毕利 / OXBERG 奥克伯",
+      "description": "带板/玻璃门书柜，白色，80x30x202 厘米",
+      "sku": "",
+      "image": "https://file.app.ikea.cn/cn/zh/images/products/billy-bi-li-oxberg-ao-ke-bo-dai-ban-bo-li-men-shu-gui-bai-se__0667793_pe714087_s5.jpg",
+      "quantity": 1,
+      "currency": "CNY",
+      "type": "家具",
+      "reason": "真实商品参考图链路验证",
+      "price": 699,
+      "url": "https://www.ikea.cn/cn/zh/p/billy-bi-li-oxberg-ao-ke-bo-dai-ban-bo-li-men-shu-gui-bai-se-s39528345/",
+      "store": "宜家",
+      "checkedAt": "2026-09-23T11:07:11.309Z"
+    },
+    {
+      "id": "6ded9cad-62b0-4d25-b10f-ae77539d23e4",
+      "name": "FEJKA 菲卡",
+      "description": "人造盆栽植物，室内/户外/悬挂，9 厘米",
+      "sku": "",
+      "image": "https://file.app.ikea.cn/cn/zh/images/products/fejka-fei-qia-ren-zao-pen-zai-zhi-wu-shi-nei-hu-wai-xuan-gua__0748917_pe745318_s5.jpg",
+      "quantity": 1,
+      "currency": "CNY",
+      "type": "家具",
+      "reason": "真实商品参考图链路验证",
+      "price": 39.99,
+      "url": "https://www.ikea.cn/cn/zh/p/fejka-fei-qia-ren-zao-pen-zai-zhi-wu-shi-nei-hu-wai-xuan-gua-90615259/",
+      "store": "宜家",
+      "checkedAt": "2026-09-23T11:07:28.779Z"
+    }
+  ],
+  "searchedAt": "2026-09-23T11:07:33.798Z",
+  "elapsed": 189,
+  "timedOut": false,
+  "stopReason": "step_limit",
+  "metrics": {
+    "modelCalls": 20,
+    "modelMs": 3,
+    "modelTimeouts": 0,
+    "actionErrors": 6
+  }
+}

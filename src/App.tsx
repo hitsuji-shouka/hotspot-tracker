@@ -6,6 +6,8 @@ import ShelfPage from './pages/ShelfPage'
 import BlogPage from './pages/BlogPage'
 import StudyPage from './pages/StudyPage'
 import StudyPostPage from './pages/StudyPostPage'
+import LabPage from './pages/LabPage'
+import SheepRoomPage from './pages/SheepRoomPage'
 import { AdminSession } from './components/AdminControl'
 
 export default function App() {
@@ -16,6 +18,8 @@ export default function App() {
       <Route path="/reading" element={<Navigate to="/hotspot?view=fav&tab=articles" replace />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/study" element={<StudyPage />} />
+      <Route path="/lab" element={<LabPage />} />
+      <Route path="/lab/sheep-room" element={<SheepRoomPage />} />
       <Route path="/study/:slug" element={<StudyPostPage />} />
       <Route path="/post/:slug" element={<PostPage />} />
       <Route path="/hotspot" element={<Home />} />

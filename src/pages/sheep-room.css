@@ -1,0 +1,134 @@
+.sheep-room { background: #f6f3e9; color: #234334; }
+.sheep-room .lab-header { background: #f6f3e9; }
+.room-stage { position: relative; height: calc(100svh - 80px); min-height: 560px; overflow: hidden; }
+.room-stage .lab-room-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lab-room-scene[data-draggable="true"] canvas { cursor: grab; }
+.lab-room-scene[data-dragging="true"] canvas { cursor: grabbing; }
+.lab-room-scene canvas:focus-visible { outline: 2px solid #829b66; outline-offset: -4px; }
+.room-back { position: absolute; top: 14px; left: 28px; z-index: 2; }
+.room-welcome { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; }
+.room-welcome span, .room-eyebrow { font-size: 12px; color: #6f8066; letter-spacing: .12em; }
+.room-welcome h1 { margin-top: 5px; font-size: clamp(32px, 3.5vw, 54px); font-weight: 650; letter-spacing: -.04em; }
+.room-status { position: absolute; top: 23px; right: 28px; max-width: 60%; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; background: #f9f9e9ed; border: 1px solid #dce1cf; border-radius: 999px; padding: 10px 17px; }
+.room-status small { color: #75806e; }
+.room-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4a946c; }
+.room-controls { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap; z-index: 3; }
+.sheep-room .lab-action { background: #f5f3e7ed; border: 1px solid #d6dbc8; color: #304d3b; min-height: 46px; font-size: 14px; font-weight: 500; padding: 10px 22px; text-decoration: none; cursor: pointer; }
+.sheep-room .lab-action:hover { background: #e7edda; }
+.sheep-room button:disabled { opacity: .45; cursor: not-allowed; }
+.room-views { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: #f5f3e7ed; border: 1px solid #d6dbc8; }
+.room-views button { border-radius: 999px; padding: 8px 19px; min-height: 38px; font-size: 14px; }
+.room-views button[aria-pressed="true"] { background: #dde6ca; }
+.room-loading { display: grid; height: 100%; place-content: center; color: #6f8066; }
+.room-flat-view { height: 100%; padding: 90px 20px 110px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.room-flat-view img { max-width: 100%; min-height: 0; object-fit: contain; }
+.room-added { position: absolute; bottom: 98px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; width: 330px; max-width: 90%; padding: 14px; background: #f9f8e9f5; border: 1px solid #d7dcc6; border-radius: 17px; box-shadow: 0 8px 35px #193a3020; animation: room-notice-in 200ms ease-out; }
+.room-added > .room-product-photo { width: 77px; height: 77px; flex-shrink: 0; border-radius: 9px; }
+.room-added > div:last-child { display: grid; gap: 4px; }
+.room-added small { font-size: 11px; color: #778469; }
+.room-added strong { font-size: 17px; line-height: 1.3; }
+.room-added span { font-size: 13px; color: #6d7e61; }
+@keyframes room-notice-in { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+.room-error { position: absolute; bottom: 94px; left: 50%; transform: translateX(-50%); max-width: 80%; border-radius: 13px; padding: 12px 20px; background: #fff2e5; color: #8b513b; }
+.room-dialog { position: fixed; inset: 0; margin: auto; width: min(940px, calc(100vw - 48px)); max-height: calc(100svh - 64px); padding: 46px 48px 36px; border-radius: 24px; border: 1px solid #e4e8d8; background: #f7f7e8; color: #244633; box-shadow: 0 30px 100px #1a352a38; overflow: auto; }
+.room-dialog::backdrop { background: #294f3438; backdrop-filter: blur(12px); }
+@media (min-width: 641px) and (max-height: 800px) {
+  .room-dialog-setup { padding: 26px 40px; }
+  .room-dialog-setup .room-dialog-intro { margin-bottom: 16px; }
+  .room-dialog-setup .room-choices button { min-height: 135px; padding: 16px; }
+  .room-dialog-setup .room-brief { margin-top: 16px; gap: 12px; }
+  .room-dialog-setup .room-dialog-footer { margin-top: 16px; }
+}
+.room-dialog h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 550; letter-spacing: -.045em; margin: 7px 0 16px; }
+.room-dialog-intro { color: #7a826f; font-size: 15px; line-height: 1.8; margin-bottom: 27px; }
+.room-close { position: absolute; right: 16px; top: 16px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #6a7a5e; }
+.room-close:hover { background: #e7edd9; }
+.room-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.room-choices button { display: flex; flex-direction: column; align-items: flex-start; text-align: left; min-height: 164px; gap: 8px; padding: 22px; border-radius: 13px; border: 1px solid #d9dfc8; background: #fffef5; transition: background 160ms, border-color 160ms; }
+.room-choices button[aria-pressed="true"] { background: #e0e9cb; border-color: #829b66; box-shadow: 0 3px 14px #3249310c; }
+.room-choices strong { font-size: 23px; font-weight: 600; }
+.room-choices small { color: #7c866f; font-size: 12px; line-height: 1.65; }
+.room-choice-shape { display: block; width: 22px; height: 22px; margin-bottom: 9px; background: #527c56; border-radius: 50%; }
+.room-choice-shape.shape-1 { border-radius: 4px 14px 4px 14px; background: #95a079; }
+.room-choice-shape.shape-2 { border-radius: 5px; background: #677e6d; transform: rotate(12deg); }
+.room-choice-shape.shape-3 { background: #bfa870; border-radius: 50% 50% 3px 3px; }
+.room-brief { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: stretch; gap: 18px; margin-top: 25px; }
+.room-brief label { display: grid; gap: 8px; font-size: 13px; color: #677c5d; }
+.room-brief input, .room-brief textarea { width: 100%; border: 1px solid #d8dfc9; background: #fffef6; padding: 12px 14px; border-radius: 11px; color: #344b36; font: inherit; font-size: 14px; }
+.room-brief .room-ideas { grid-template-rows: auto 1fr; }
+.room-brief textarea { resize: vertical; min-height: 132px; }
+.room-limits { display: grid; align-content: start; gap: 14px; }
+.room-dialog-footer { display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: 25px; }
+.room-subtle { font-size: 12px; color: #7e8674; line-height: 1.7; }
+.room-dialog-haul { width: min(880px, calc(100vw - 48px)); text-align: center; }
+.room-haul-heading { display: flex; justify-content: space-between; align-items: center; color: #879179; font-size: 12px; }
+.room-haul-view { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 17px auto; }
+.room-product-photo { display: grid; place-items: center; overflow: hidden; background: #fff; }
+.room-product-photo img { width: 100%; height: 100%; object-fit: contain; }
+.room-product-photo > span { padding: 12px; font-size: 12px; color: #8b8b79; }
+.room-haul-view .room-product-photo { width: min(340px, 55vw); aspect-ratio: 1; border-radius: 18px; box-shadow: 0 7px 24px #263d2d07; }
+.room-gallery-arrow { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #d9dfcc; border-radius: 50%; }
+.room-haul-caption h3 { font-size: 24px; font-weight: 600; }
+.room-haul-caption p { max-width: 580px; margin: 7px auto; font-size: 13px; color: #7b8670; line-height: 1.5; }
+.room-haul-caption strong { display: block; margin: 12px 0; font-size: 16px; font-weight: 500; }
+.room-haul-caption a { color: #56734e; font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+.room-thumbnails { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
+.room-thumbnails button { width: 51px; height: 51px; border: 1px solid #dbe0cd; border-radius: 10px; padding: 4px; overflow: hidden; }
+.room-thumbnails .room-product-photo { height: 100%; border-radius: 6px; }
+.room-thumbnails button[aria-pressed="true"] { border-color: #51734b; box-shadow: 0 0 0 1px #51734b; }
+.room-bag-empty { display: grid; justify-items: center; gap: 24px; padding: 60px 0; color: #728267; }
+.room-receipt { background: #fffef5; padding: 35px; max-width: 580px; margin: auto; box-shadow: 0 9px 30px #2b432510; text-align: center; }
+.room-receipt h2 { font-size: 30px; }
+.room-receipt > p { font-size: 13px; color: #839079; }
+.room-receipt-total { display: flex; align-items: center; justify-content: space-between; padding: 23px 0; margin-top: 15px; border-top: 1px dashed #cad3bd; font-size: 14px; }
+.room-receipt-total strong { font-size: 26px; }
+.room-receipt ol { padding: 0; list-style: none; }
+.room-receipt li { display: flex; text-align: left; gap: 15px; align-items: center; padding: 20px 0; border-top: 1px solid #e7e9dd; font-size: 13px; }
+.room-receipt li > .room-product-photo { width: 65px; height: 65px; flex-shrink: 0; }
+.room-receipt li > div:nth-child(2) { display: grid; gap: 5px; flex: 1; }
+.room-receipt li strong { font-weight: 550; }
+.room-receipt li small, .room-receipt li span { color: #87907c; font-size: 11px; }
+.room-receipt li b { white-space: nowrap; font-weight: 550; }
+.room-receipt-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; }
+.room-render-action { display: flex; align-items: center; flex-direction: column; gap: 12px; margin-top: 30px; }
+.room-render-action small { font-size: 12px; color: #7e8b73; }
+.room-final-image { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+.room-dialog-error { color: #975638; background: #faedde; padding: 13px 18px; border-radius: 12px; font-size: 13px; margin-top: 20px; }
+@media (min-width: 641px) and (max-height: 800px) {
+  .room-dialog-haul { padding: 24px 40px; }
+  .room-dialog-haul h2 { font-size: 34px; margin-bottom: 8px; }
+  .room-haul-view { margin: 10px auto; }
+  .room-haul-view .room-product-photo { width: 235px; }
+  .room-haul-caption strong { margin: 6px 0; }
+  .room-thumbnails { margin-top: 12px; }
+}
+@media (max-width: 640px) {
+  .room-stage { height: calc(100svh - 76px); min-height: 530px; }
+  .room-back { top: 10px; left: 14px; }
+  .sheep-room .lab-action { min-height: 44px; padding: 9px 16px; font-size: 13px; }
+  .room-welcome { top: 76px; width: 100%; }
+  .room-welcome h1 { font-size: 36px; }
+  .room-status { top: 70px; right: 14px; left: 14px; max-width: none; justify-content: center; border-radius: 13px; font-size: 12px; }
+  .room-controls { bottom: max(18px, env(safe-area-inset-bottom)); width: calc(100% - 28px); flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .room-views button { min-height: 33px; padding: 6px 14px; font-size: 12px; }
+  .room-dialog { width: calc(100vw - 24px); max-height: calc(100svh - 28px); padding: 48px 20px 25px; border-radius: 20px; }
+  .room-dialog h2 { font-size: 29px; }
+  .room-dialog-intro { font-size: 13px; }
+  .room-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .room-choices button { padding: 16px; min-height: 135px; }
+  .room-choices strong { font-size: 21px; }
+  .room-brief { grid-template-columns: 1fr; gap: 14px; }
+  .room-limits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .room-brief textarea { min-height: 104px; }
+  .room-dialog-footer { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .room-dialog-footer button { width: 100%; justify-content: center; }
+  .room-haul-view { gap: 9px; }
+  .room-haul-view .room-product-photo { width: 100%; max-width: 270px; }
+  .room-gallery-arrow { flex-shrink: 0; width: 32px; height: 44px; border: 0; }
+  .room-haul-caption h3 { font-size: 21px; }
+  .room-receipt { padding: 20px 13px; }
+  .room-receipt h2 { font-size: 25px; }
+  .room-receipt li { gap: 9px; font-size: 12px; }
+  .room-receipt li > .room-product-photo { width: 48px; height: 48px; }
+  .room-added { bottom: 136px; }
+}

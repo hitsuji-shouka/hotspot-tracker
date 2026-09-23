@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="320" viewBox="0 0 360 320" fill="none">
+  <defs>
+    <linearGradient id="glass" x1="130" y1="60" x2="245" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#b6e7c8" stop-opacity=".24"/></linearGradient>
+    <linearGradient id="planet" x1="144" y1="158" x2="219" y2="241" gradientUnits="userSpaceOnUse"><stop stop-color="#83efab"/><stop offset="1" stop-color="#279c62"/></linearGradient>
+  </defs>
+  <ellipse cx="180" cy="277" rx="91" ry="12" fill="#88c6a0" opacity=".18"/>
+  <path d="M160 57v67l-58 115q-13 29 23 30h111q35-1 21-30l-57-115V57" fill="url(#glass)" stroke="#a6d8b9" stroke-width="3"/>
+  <ellipse cx="180" cy="57" rx="26" ry="7" fill="#edfff3" stroke="#a6d8b9" stroke-width="3"/>
+  <path d="M169 78v49l-40 85" stroke="#fff" stroke-opacity=".8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M139 182C50 228 89 266 212 210s114-79 12-53" stroke="#233e2e" stroke-width="2.5"/>
+  <circle cx="182" cy="199" r="47" fill="url(#planet)"/>
+  <path d="m146 170 54 6 27 27-50-8-41 20 18-31z" fill="#b7f5c8" opacity=".24"/>
+  <path d="M98 241c16 13 69-2 114-31 36-22 64-47 68-62" stroke="#233e2e" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="278" cy="153" r="3" fill="#233e2e"/>
+  <path d="m89 106 4 12 12 4-12 4-4 12-4-12-12-4 12-4 4-12ZM272 218l4 11 11 4-11 4-4 11-4-11-11-4 11-4 4-11Z" fill="#233e2e"/>
+</svg>
