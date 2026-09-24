@@ -7,7 +7,7 @@ import { extname, join, resolve, relative, isAbsolute } from 'node:path'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { createAdmin } from './server-auth.mjs'
-import { createRoomService } from './server-room.mjs'
+import { createRoomService, createRenderJobs } from './server-room.mjs'
 import { createCafeService, serveAudio } from './server-cafe.mjs'
 
 const root = fileURLToPath(new URL('./dist', import.meta.url))
@@ -15,9 +15,16 @@ const syncFile = process.env.SYNC_FILE || fileURLToPath(new URL('./sync-data.jso
 const port = Number(process.argv[2] || 8080)
 const admin = createAdmin(process.env.ADMIN_PASSWORD, process.env.SITE_ORIGIN)
 const roomService = createRoomService()
+const renderJobs = createRenderJobs((ip, body) => roomService.render(ip, body))
 const cafeService = createCafeService(process.env.CAFE_DATA_DIR || fileURLToPath(new URL('./state/central-perk', import.meta.url)), admin, jsonBody)
 const publicKeys = ['favorites', 'bookmarks', 'fav_skills', 'fav_papers', 'readingArticles']
 let writes = Promise.resolve()
+
+function clientIp(req) {
+  return req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
+    ? String(req.headers['cf-connecting-ip'] || req.socket.remoteAddress)
+    : req.socket.remoteAddress || 'unknown'
+}
 
 async function jsonBody(req, limit = 2 * 1024 * 1024) {
   if (!req.headers['content-type']?.startsWith('application/json')) throw Object.assign(new Error('Expected JSON'), { status: 415 })
@@ -63,9 +70,7 @@ const server = http.createServer(async (req, res) => {
       if (url.pathname === '/api/room/status' && req.method === 'GET') return json(200, { available: roomService.browserReady, provider: roomService.provider, renderAvailable: roomService.renderAvailable })
       if (url.pathname === '/api/room/play' && req.method === 'POST') {
         if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
-        const ip = req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
-          ? String(req.headers['cf-connecting-ip'] || req.socket.remoteAddress)
-          : req.socket.remoteAddress || 'unknown'
+        const ip = clientIp(req)
         const body = await jsonBody(req, 16 * 1024)
         res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', Connection: 'keep-alive' })
         let closed = false
@@ -82,14 +87,23 @@ const server = http.createServer(async (req, res) => {
         res.end()
         return
       }
-      if (url.pathname === '/api/room/plan' || url.pathname === '/api/room/render') {
+      if (url.pathname === '/api/room/render') {
+        if (req.method === 'GET') return json(200, renderJobs.status(url.searchParams.get('runId')))
         if (req.method !== 'POST') return json(405, { error: 'Method Not Allowed' })
         if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
-        const ip = req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
-          ? String(req.headers['cf-connecting-ip'] || req.socket.remoteAddress)
-          : req.socket.remoteAddress || 'unknown'
         const body = await jsonBody(req, 16 * 1024)
-        return json(200, url.pathname.endsWith('/plan') ? await roomService.plan(ip, body) : await roomService.render(ip, body))
+        return json(202, renderJobs.start(clientIp(req), body?.runId))
+      }
+      if (url.pathname === '/api/room/image' && req.method === 'GET') {
+        const image = renderJobs.image(url.searchParams.get('runId'))
+        res.writeHead(200, { 'Content-Type': 'image/png', 'Content-Length': image.length, 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' })
+        return res.end(image)
+      }
+      if (url.pathname === '/api/room/plan') {
+        if (req.method !== 'POST') return json(405, { error: 'Method Not Allowed' })
+        if (!admin.sameOrigin(req)) return json(403, { error: '请求来源不匹配，请刷新页面后重试' })
+        const body = await jsonBody(req, 16 * 1024)
+        return json(200, await roomService.plan(clientIp(req), body))
       }
       if (url.pathname === '/api/admin' && req.method === 'GET') return json(200, { configured: admin.configured, authenticated: !!admin.session(req), expiresAt: admin.session(req)?.expiresAt ?? null })
       if (req.method !== 'GET') {

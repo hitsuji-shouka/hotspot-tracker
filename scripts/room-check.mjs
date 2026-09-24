@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { createRoomService, productUrl, validateBrief, verifiedProducts, readProductPhoto, prepareRoomImage } from '../server-room.mjs'
+import { createRoomService, createRenderJobs, productUrl, validateBrief, verifiedProducts, readProductPhoto, prepareRoomImage } from '../server-room.mjs'
 import { ikeaPage, readIkeaProduct, productImage } from '../server-room-browser.mjs'
 
 const brief = { room: '客厅', style: '原木', needs: '看书和收纳', budget: 8000, duration: 150 }
@@ -58,6 +58,25 @@ await assert.rejects(service.render('visitor', { runId: 'invented', products: [i
 assert.equal(calls, 2, 'Unverified render requests must not spend a model call')
 assert.equal(createRoomService({}).configured, false)
 assert.equal(createRoomService({ ROOM_ENABLED: '1', OPENAI_API_KEY: 'test', ROOM_BROWSER_EXECUTABLE: process.execPath }).browserReady, true)
+const runId = '00000000-0000-4000-8000-000000000001'
+let resolveImage, renderCalls = 0
+const jobs = createRenderJobs(async () => { renderCalls++; return await new Promise(resolve => { resolveImage = resolve }) })
+assert.deepEqual(jobs.start('visitor', runId), { status: 'pending' })
+assert.deepEqual(jobs.start('visitor', runId), { status: 'pending' })
+await new Promise(resolve => setImmediate(resolve))
+assert.equal(renderCalls, 1, 'Polling or duplicate clicks must not submit a second paid request')
+resolveImage({ image: 'data:image/png;base64,iVBORw==' })
+await new Promise(resolve => setImmediate(resolve))
+assert.deepEqual(jobs.status(runId), { status: 'done', image: `/api/room/image?runId=${runId}` })
+assert.deepEqual([...jobs.image(runId)], [137, 80, 78, 71])
+await assert.rejects(Promise.resolve().then(() => jobs.status('missing')), { status: 404 })
+let failedCalls = 0
+const uncertain = createRenderJobs(async () => { failedCalls++; throw new Error('provider timeout') })
+assert.deepEqual(uncertain.start('visitor', runId), { status: 'pending' })
+await new Promise(resolve => setImmediate(resolve))
+assert.equal(uncertain.status(runId).retryable, false)
+assert.equal(uncertain.start('visitor', runId).status, 'error')
+assert.equal(failedCalls, 1, 'An uncertain generation must never be submitted again')
 const relay = createRoomService({ ROOM_ENABLED: '1', ROOM_API_KEY: 'test', ROOM_API_BASE_URL: 'https://api.aicode007.com', ROOM_TEXT_MODEL: 'gpt-5.6-luna' }, async (path, body, key, timeout, baseUrl) => {
   assert.equal(path, 'responses')
   assert.equal(body.model, 'gpt-5.6-luna')

@@ -9,6 +9,7 @@ type Brief = { room: string; style: string; needs: string; budget: number; durat
 type Product = { id: string; name: string; description: string; image: string; quantity: number; currency: string; reason: string; price: number; url: string; store: string }
 type Plan = { runId: string; brief: Brief; products: Product[]; elapsed: number; timedOut?: boolean; stopReason?: string }
 type ShopEvent = { type: 'session' | 'frame' | 'step' | 'bag' | 'done' | 'error'; runId?: string; duration?: number; startedAt?: number; message?: string; image?: string; elapsed?: number; products?: Product[]; added?: Product; result?: Plan }
+type RenderStatus = { status: 'pending' | 'done' | 'error'; image?: string; error?: string; retryable?: boolean }
 const SheepRoomScene = lazy(() => import('./SheepRoomScene'))
 const ROOMS = [{ name: '客厅', note: '窝进沙发，慢慢过周末。' }, { name: '卧室', note: '留一盏灯，好好睡一觉。' }, { name: '书房', note: '读几页书，发一会儿呆。' }, { name: '餐厅', note: '把日子，摆上餐桌。' }]
 const money = (value: number) => `¥${value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -186,12 +187,22 @@ export default function SheepRoomPage() {
     if (!renderAvailable || !runId || !complete || rendering || renderAttempted || !products.length) return
     setRendering(true); setRenderAttempted(true); setError('')
     try {
-      const response = await fetch('/api/room/render', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ runId }) })
-      const result = await response.json()
-      if (!response.ok) {
-        if (result.retryable === true) setRenderAttempted(false)
-        throw new Error(result.error || '效果图暂时没生成，购物清单已经保留')
+      async function readStatus(response: Response): Promise<RenderStatus> {
+        if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('生图连接中断，生成状态待确认；请勿重复提交')
+        const result = await response.json() as RenderStatus
+        if (!response.ok || result.status === 'error') {
+          if (result.retryable === true) setRenderAttempted(false)
+          throw new Error(result.error || '效果图暂时没生成，购物清单已经保留')
+        }
+        return result
       }
+      let result = await readStatus(await fetch('/api/room/render', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ runId }) }))
+      const deadline = Date.now() + 5 * 60_000
+      while (result.status === 'pending' && Date.now() < deadline) {
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        result = await readStatus(await fetch(`/api/room/render?runId=${encodeURIComponent(runId)}`, { cache: 'no-store' }))
+      }
+      if (result.status !== 'done' || !result.image) throw new Error('生成仍在继续，状态待确认；请勿重复提交')
       setImage(result.image); setModal('image')
     } catch (cause) { setError(cause instanceof Error ? cause instanceof TypeError ? '生图连接中断，结果尚未确认，请先核对服务商记录，清单仍然保留' : cause.message : '效果图生成失败，清单仍然保留') }
     finally { setRendering(false) }

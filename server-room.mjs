@@ -251,3 +251,45 @@ export function createRoomService(env = process.env, call = openai) {
     },
   }
 }
+
+export function createRenderJobs(render) {
+  const jobs = new Map()
+  const get = runId => {
+    for (const [id, job] of jobs) if (Date.now() - job.started > 60 * 60 * 1000) jobs.delete(id)
+    const job = jobs.get(runId)
+    if (!job) throw Object.assign(new Error('生成记录已失效，请保存清单后重新逛店'), { status: 404 })
+    return job
+  }
+  const state = (runId, job) => job.status === 'done'
+    ? { status: 'done', image: `/api/room/image?runId=${runId}` }
+    : job.status === 'error' ? { status: 'error', error: job.error, retryable: job.retryable }
+      : { status: 'pending' }
+  return {
+    start(ip, runId) {
+      if (typeof runId !== 'string' || !/^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(runId)) {
+        throw Object.assign(new Error('逛店记录无效'), { status: 400, retryable: true })
+      }
+      let job
+      try { job = get(runId) } catch (error) { if (error.status !== 404) throw error }
+      if (job && !(job.status === 'error' && job.retryable)) return state(runId, job)
+      job = { status: 'pending', started: Date.now() }
+      jobs.set(runId, job)
+      Promise.resolve().then(() => render(ip, { runId })).then(result => {
+        if (typeof result?.image !== 'string' || !result.image.startsWith('data:image/png;base64,')) throw new Error('生图接口未返回有效图片')
+        job.image = result.image
+        job.status = 'done'
+      }).catch(error => {
+        job.status = 'error'
+        job.error = error.status ? error.message : '生图连接中断，结果尚未确认；请先核对服务商记录'
+        job.retryable = error.retryable === true
+      })
+      return state(runId, job)
+    },
+    status(runId) { return state(runId, get(runId)) },
+    image(runId) {
+      const job = get(runId)
+      if (job.status !== 'done') throw Object.assign(new Error('效果图尚未生成'), { status: 404 })
+      return Buffer.from(job.image.slice('data:image/png;base64,'.length), 'base64')
+    },
+  }
+}
