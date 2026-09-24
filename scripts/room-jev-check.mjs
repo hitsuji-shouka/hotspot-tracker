@@ -4,7 +4,7 @@ import { createRoomService } from '../server-room.mjs'
 
 const url = 'https://www.ikea.cn/cn/zh/p/chair/'
 const product = { url, name: '测试椅', price: 199, quantity: 1, image: 'https://file.app.ikea.cn/chair.jpg', type: '餐椅' }
-const state = { brief: { room: '餐厅', needs: '原木餐椅', budget: 300 }, secondsLeft: 120, previousResult: '', products: [], history: [{ action: 'search', query: '餐椅' }], currentProduct: product,
+const state = { brief: { room: '餐厅', needs: '原木餐椅', budget: 300 }, secondsLeft: 120, previousResult: '', products: [], history: [{ action: 'search', query: '餐椅', result: '搜索了餐椅' }], currentProduct: product,
   page: { url, title: '商品', text: '测试椅 ¥199', controls: [
     { index: 0, tag: 'a', href: '/cn/zh/p/lamp/', label: '灯' },
     { index: 1, tag: 'a', href: 'https://evil.test/p/lamp/', label: '外站' },
@@ -21,6 +21,23 @@ assert.equal(jevActions({ ...state, currentProduct: { ...product, image: '' } })
 assert.equal(jevActions({ ...state, products: [{ ...product, url: `${url}?tracking=1` }] }).has('add'), false)
 assert.equal(jevActions({ ...state, products: [product], history: [] }).has('search_餐椅'), true)
 assert.equal(actions.has('search_餐椅'), false, 'Do not repeat a recent search')
+const plantState = { ...state, brief: { ...state.brief, needs: '想要绿植和沙发', budget: 8000 }, history: [], currentProduct: null }
+const plantActions = jevActions(plantState)
+assert.deepEqual([...plantActions.values()].filter(item => item.action === 'search').map(item => item.query), ['绿植', '沙发'], 'Search explicit room wishes in the order supplied')
+assert.equal(jevActions({ ...plantState, brief: { ...plantState.brief, needs: '原木、舒服，有一点绿' } }).has('search_绿植'), true)
+assert.equal(jevActions({ ...plantState, brief: { ...plantState.brief, needs: '我想要香薰蜡烛' } }).has('search_香薰蜡烛'), true, 'An explicitly named item need not be in the fallback list')
+assert.equal(jevActions({ ...plantState, brief: { ...plantState.brief, needs: '不要绿植，想要花盆' } }).has('search_绿植'), false, 'Do not invert a negative preference')
+assert.equal(jevActions({ ...plantState, history: [{ action: 'search', query: '沙发', result: '搜索了沙发' }] }).has('search_绿植'), true)
+assert.equal(jevActions({ ...plantState, history: [{ action: 'search', query: '沙发', result: '搜索了沙发' }, { action: 'search', query: '绿植', result: '搜索了绿植' }] }).has('search_茶几'), true, 'Resume broad search after trying explicit wishes')
+assert.equal(jevActions({ ...plantState, history: [{ action: 'search', query: '绿植', result: '页面还未完成加载' }] }).has('search_绿植'), true, 'Retry a failed explicit search')
+assert.equal(jevActions({ ...plantState, history: Array(2).fill({ action: 'search', query: '绿植', result: '页面还未完成加载' }) }).has('search_绿植'), false, 'Do not repeat a persistently failing search')
+const preferred = await decideWithJev(plantState, { key: 'fixture', fetchImpl: async (_endpoint, options) => {
+  const criteria = JSON.parse(options.body).questions.next.criteria
+  assert.ok(criteria.search_绿植)
+  assert.equal(criteria.search_茶几, undefined, 'Generic furniture must not outrank an explicit wish')
+  return Response.json({ answers: { next: { type: 'choice', choice: 'search_绿植' } } })
+} })
+assert.equal(preferred.query, '绿植')
 const searchActions = jevActions({ ...state, page: { ...state.page, url: 'https://www.ikea.cn/cn/zh/search/products/?q=餐椅' } })
 assert.ok([...searchActions.values()].every(action => action.action !== 'search'), 'Inspect the fresh search results first')
 const bottomActions = jevActions({ ...state, currentProduct: null, page: { url: 'https://www.ikea.cn/cn/zh/search/products/?q=餐椅', controls: [], canScroll: false } })
