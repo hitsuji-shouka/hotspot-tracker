@@ -17,7 +17,7 @@ export function arcPosition(offset: number, width: number, gap: number, step: nu
 }
 
 export function swipeDestination(start: number, current: number, distance: number, count: number) {
-  const next = Math.abs(distance) >= 40 && Math.abs(current - start) < 0.5
+  const next = Math.abs(distance) >= 28 && Math.abs(current - start) < 0.5
     ? Math.round(start) - Math.sign(distance)
     : Math.round(current)
   return clampPosition(next, count)

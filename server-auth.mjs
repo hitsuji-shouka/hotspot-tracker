@@ -10,6 +10,9 @@ export function createAdmin(password, origin) {
     throw new Error('SITE_ORIGIN must use HTTPS, except on localhost.')
   }
   const key = password ? scryptSync(password, 'hotspot-admin-v1', 32) : null
+  const allowedOrigins = new Set(site ? [site.origin] : [])
+  // Both hostnames serve the production site.
+  if (site?.origin === 'https://hitsuji-shouka.com') allowedOrigins.add('https://www.hitsuji-shouka.com')
   let attempts = 0
   let retryAt = 0
   const sign = text => createHmac('sha256', key).update(text).digest('base64url')
@@ -19,7 +22,7 @@ export function createAdmin(password, origin) {
   return {
     configured: !!key,
     sameOrigin(req) {
-      return !!site && req.headers.origin === site.origin && req.headers['sec-fetch-site'] !== 'cross-site'
+      return allowedOrigins.has(req.headers.origin) && req.headers['sec-fetch-site'] !== 'cross-site'
     },
     session(req) {
       if (!key) return null

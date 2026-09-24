@@ -52,6 +52,10 @@ try {
   assert.equal((await request('/api/admin/login', { password })).status, 429)
 
   const admin = createAdmin(password, 'https://example.com')
+  const publicSite = createAdmin(password, 'https://hitsuji-shouka.com')
+  assert.equal(publicSite.sameOrigin({ headers: { origin: 'https://www.hitsuji-shouka.com', 'sec-fetch-site': 'same-origin' } }), true)
+  assert.equal(publicSite.sameOrigin({ headers: { origin: 'https://www.hitsuji-shouka.com', 'sec-fetch-site': 'cross-site' } }), false)
+  assert.equal(publicSite.sameOrigin({ headers: { origin: 'https://evil.hitsuji-shouka.com' } }), false)
   const login = admin.login(password)
   assert.match(login.cookie, /; Secure/)
   const req = { headers: { cookie: login.cookie.split(';')[0] } }

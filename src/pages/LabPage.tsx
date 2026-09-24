@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type TouchEvent } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import SiteNav from '@/components/SiteNav'
@@ -57,6 +57,7 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
   const destination = useRef(initial)
   const frame = useRef(0)
   const drag = useRef<{ id: number; x: number; y: number; start: number; horizontal: boolean } | null>(null)
+  const touch = useRef<{ x: number; y: number } | null>(null)
   const suppressClick = useRef(false)
   const multiple = items.length > 1
 
@@ -81,7 +82,7 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
 
   function startDrag(event: PointerEvent<HTMLDivElement>) {
     suppressClick.current = false
-    if (!multiple || !event.isPrimary || event.button !== 0) return
+    if (!multiple || event.pointerType === 'touch' || !event.isPrimary || event.button !== 0) return
     drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: current.current, horizontal: false }
   }
 
@@ -112,6 +113,17 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
     }
   }
 
+  function endTouch(event: TouchEvent<HTMLDivElement>) {
+    const start = touch.current
+    touch.current = null
+    if (!start) return
+    const dx = event.changedTouches[0].clientX - start.x
+    const dy = event.changedTouches[0].clientY - start.y
+    if (Math.abs(dx) < 28 || Math.abs(dx) <= Math.abs(dy)) return
+    suppressClick.current = true
+    moveTo(swipeDestination(destination.current, destination.current, dx, items.length))
+  }
+
   return <section className="lab-gallery" aria-label="浏览实验">
     <div className={`lab-carousel ${multiple ? 'lab-carousel-multiple' : ''}`}
       tabIndex={multiple ? 0 : -1} role="region" aria-roledescription="轮播" aria-label="实验卡片，使用左右方向键切换"
@@ -124,6 +136,8 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
       onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag}
       onPointerCancel={event => endDrag(event, true)}
       onLostPointerCapture={event => endDrag(event, true)}
+      onTouchStart={event => { if (multiple && event.touches.length === 1) touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY } }}
+      onTouchEnd={endTouch} onTouchCancel={() => { touch.current = null }}
       onClickCapture={event => { if (suppressClick.current && event.detail > 0) { event.preventDefault(); event.stopPropagation() } }}>
       {items.map((item, index) => {
         const offset = index - position
