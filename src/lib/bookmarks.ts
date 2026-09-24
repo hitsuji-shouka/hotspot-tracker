@@ -13,7 +13,7 @@ export const BOOKMARK_CATEGORIES: BookmarkCategory[] = [
   { id: 'blog', label: 'Blog', emoji: '📖', gradient: 'from-[#58a6ff] to-[#1f6feb]' },
   { id: 'tech', label: '技术', emoji: '💻', gradient: 'from-[#39c5cf] to-[#0e7490]' },
   { id: 'work', label: '工作', emoji: '💼', gradient: 'from-[#3fb950] to-[#238636]' },
-  { id: 'media', label: '影视', emoji: '🎬', gradient: 'from-[#f78166] to-[#da3633]' },
+  { id: 'media', label: '乐趣', emoji: '🎬', gradient: 'from-[#f78166] to-[#da3633]' },
   { id: 'design', label: '设计', emoji: '🎨', gradient: 'from-[#d2a8ff] to-[#a371f7]' },
   { id: 'tools', label: '工具', emoji: '🔧', gradient: 'from-[#e3b341] to-[#bf8700]' },
   { id: 'other', label: '其他', emoji: '📦', gradient: 'from-[#8b949e] to-[#6e7681]' },

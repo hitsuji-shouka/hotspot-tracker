@@ -181,20 +181,6 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto px-3 py-4 space-y-4 sm:px-4 sm:py-6 sm:space-y-6">
-        {/* 统计条（仅热点视图显示） */}
-        {view === 'hot' && (
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
-          <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
-          <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
-          <StatCard icon={<Flame className="w-4 h-4 text-[#e3b341]" />} label="时间范围" value={rangeLabel(range)} />
-          <StatCard
-            icon={<RefreshCw className="w-4 h-4 text-[#58a6ff]" />}
-            label="上次更新"
-            value={updatedAt ? updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
-          />
-        </div>
-        )}
-
         {/* 主导航 */}
         <nav ref={navRef} aria-label="热点导航" className="-mx-3 flex items-center gap-2 overflow-x-auto border-b border-[#30363d] px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-4">
           {NAV.map((n) => (
@@ -223,6 +209,20 @@ export default function Home() {
               <TabsTrigger value="monthly">本月热点</TabsTrigger>
             </TabsList>
           </Tabs>
+        </div>
+        )}
+
+        {/* 统计条（仅热点视图显示） */}
+        {view === 'hot' && (
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
+          <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
+          <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
+          <StatCard icon={<Flame className="w-4 h-4 text-[#e3b341]" />} label="时间范围" value={rangeLabel(range)} />
+          <StatCard
+            icon={<RefreshCw className="w-4 h-4 text-[#58a6ff]" />}
+            label="上次更新"
+            value={updatedAt ? updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
+          />
         </div>
         )}
 
