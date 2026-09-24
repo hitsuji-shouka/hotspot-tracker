@@ -3,23 +3,21 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 type BagItem = { id: string; name: string; image: string; price: number; quantity: number }
-type Props = { screenImage: string; view: 'room' | 'desk'; products: BagItem[]; message: string; paused?: boolean; onSettled: () => void }
+type Props = { screenImage: string; view: 'room' | 'desk'; products: BagItem[]; message: string; onSettled: () => void }
 
-export default function SheepRoomScene({ screenImage, view, products, message, paused = false, onSettled }: Props) {
+export default function SheepRoomScene({ screenImage, view, products, message, onSettled }: Props) {
   const mount = useRef<HTMLDivElement>(null)
   const screen = useRef<{ canvas: HTMLCanvasElement; texture: THREE.CanvasTexture } | null>(null)
   const board = useRef<{ canvas: HTMLCanvasElement; texture: THREE.CanvasTexture } | null>(null)
   const closeUp = useRef(view === 'desk')
   const settled = useRef(onSettled)
-  const renderingPaused = useRef(paused)
-  useEffect(() => { renderingPaused.current = paused }, [paused])
   const photos = useRef(new Map<string, HTMLImageElement>())
   const [fallback, setFallback] = useState(false)
   useEffect(() => { closeUp.current = view === 'desk'; settled.current = onSettled }, [view, onSettled])
   useEffect(() => { if (fallback && view === 'desk') settled.current() }, [fallback, view])
   useEffect(() => {
     const target = screen.current
-    if (!target || paused) return
+    if (!target) return
     if (!screenImage) {
       const c = target.canvas.getContext('2d')!
       c.fillStyle = '#173b2c'; c.fillRect(0, 0, 1180, 760)
@@ -37,10 +35,10 @@ export default function SheepRoomScene({ screenImage, view, products, message, p
     }
     image.src = screenImage
     return () => { valid = false }
-  }, [screenImage, paused])
+  }, [screenImage])
   useEffect(() => {
     const target = board.current
-    if (!target || paused) return
+    if (!target) return
     let valid = true
     const paint = () => {
       if (!valid) return
@@ -77,7 +75,7 @@ export default function SheepRoomScene({ screenImage, view, products, message, p
     }
     paint()
     return () => { valid = false }
-  }, [products, message, paused])
+  }, [products, message])
 
   useEffect(() => {
     const host = mount.current
@@ -325,7 +323,7 @@ export default function SheepRoomScene({ screenImage, view, products, message, p
       }
       host.dataset.draggable = String(controls.enabled)
       camera.lookAt(look)
-      if (!renderingPaused.current) renderer.render(scene, camera)
+      renderer.render(scene, camera)
     }
     animate()
     return () => {

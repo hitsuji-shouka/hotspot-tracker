@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
-import { ChevronLeft, ChevronRight, X, ShoppingBag, Download, RefreshCw, Maximize2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, ShoppingBag, Download, RefreshCw } from 'lucide-react'
 import { LabHeader } from './LabPage'
 import './lab.css'
 import './sheep-room.css'
@@ -30,7 +30,7 @@ export default function SheepRoomPage() {
   const [brief, setBrief] = useState<Brief>({ room: '客厅', style: '以布置想法为准', needs: '原木、舒服，有一点绿。能窝着休息，也留一点收纳空间。', budget: 8000, duration: 150 })
   const [phase, setPhase] = useState<'room' | 'zoom' | 'shopping' | 'done'>('room')
   const [view, setView] = useState<'room' | 'desk'>('room')
-  const [modal, setModal] = useState<'setup' | 'haul' | 'receipt' | 'image' | 'live' | null>(null)
+  const [modal, setModal] = useState<'setup' | 'haul' | 'receipt' | 'image' | null>(null)
   const [products, setProducts] = useState<Product[]>([])
   const [runId, setRunId] = useState('')
   const [complete, setComplete] = useState(false)
@@ -99,8 +99,6 @@ export default function SheepRoomPage() {
   const total = products.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100
   const product = products[Math.min(activeItem, products.length - 1)]
   const busy = phase === 'shopping' || phase === 'zoom'
-  const showLive = mobile && view === 'desk'
-  const remainingSeconds = Math.max(0, (shoppingClock?.duration ?? brief.duration) - elapsed)
 
   function openSetup() { setView('room'); setModal('setup'); setError(''); void refreshAvailability() }
   function start(event: FormEvent<HTMLFormElement>) {
@@ -116,9 +114,14 @@ export default function SheepRoomPage() {
     requestRef.current = controller
     setPhase('shopping'); setMessage('正在打开宜家')
     let finished = false
+    let started = false
     try {
       const response = await fetch('/api/room/play', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(brief), signal: controller.signal })
-      if (!response.ok || !response.body) throw new Error('逛店服务暂时不可用')
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null) as { error?: string } | null
+        throw new Error(payload?.error || '逛店服务暂时不可用')
+      }
+      if (!response.body) throw new Error('逛店连接未建立，请重试')
       const reader = response.body.getReader(), decoder = new TextDecoder()
       let buffer = ''
       for (;;) {
@@ -131,6 +134,7 @@ export default function SheepRoomPage() {
           if (!line) continue
           const update = JSON.parse(line.slice(6)) as ShopEvent
           if (update.type === 'session') {
+            started = true
             setRunId(update.runId || '')
             setShoppingClock({ startedAt: update.startedAt ?? Date.now(), duration: update.duration ?? brief.duration })
           }
@@ -155,10 +159,15 @@ export default function SheepRoomPage() {
       if (!finished) throw new Error('连接中断了，已经选好的商品还在')
     } catch (cause) {
       if (controller.signal.aborted) setMessage('已停止，留下已经挑好的商品')
-      else { setError(cause instanceof Error ? cause.message : '逛店暂时失败'); setMessage('这轮没有完整结束') }
+      else {
+        const detail = cause instanceof Error ? cause.message : '逛店暂时失败'
+        setError(detail)
+        setMessage(started ? '这轮没有完整结束' : detail)
+      }
     } finally {
-      requestRef.current = null; setPhase('done'); setAdded(null); setActiveItem(0)
-      if (bagRef.current.length) setModal(current => current === 'receipt' || current === 'live' ? current : 'haul')
+      requestRef.current = null; setPhase(started ? 'done' : 'room'); setAdded(null); setActiveItem(0)
+      if (!started) { setView('room'); setModal('setup') }
+      else if (bagRef.current.length) setModal(current => current === 'receipt' ? current : 'haul')
     }
   }
   function receiptText() {
@@ -190,23 +199,15 @@ export default function SheepRoomPage() {
 
   return <div className="lab-page sheep-room" data-category="all">
     <LabHeader />
-    <main className="room-stage" data-view={view} data-phase={phase} data-live={showLive}>
-      <Suspense fallback={<div className="room-loading">正在打开小屋…</div>}><SheepRoomScene screenImage={frame} view={view} products={products} message={message} paused={showLive} onSettled={() => { if (phase === 'zoom') void shop() }} /></Suspense>
-      {showLive && <section className="room-mobile-live" aria-label="逛店直播">
-        <div className="room-live-heading"><div><span className="room-eyebrow">羊的小屋 · {brief.room}</span><h1>{busy ? '正在替你挑心头好' : phase === 'done' ? '这趟逛店结束了' : '从一间小屋开始'}</h1></div><button className="lab-action" disabled={!frame} onClick={() => setModal('live')} aria-label="放大直播画面"><Maximize2 size={18} /></button></div>
-        <button className="room-live-preview" disabled={!frame} onClick={() => setModal('live')} aria-label="放大查看宜家直播">{frame ? <img src={frame} alt="正在浏览的宜家页面" /> : <span>{busy ? '正在打开宜家，画面马上就来…' : '开始逛店后，这里会显示实时画面。'}</span>}</button>
-        <div className="room-live-meta"><span>{phase === 'shopping' ? `剩余 ${Math.floor(remainingSeconds / 60)}:${String(remainingSeconds % 60).padStart(2, '0')}` : `${elapsed} 秒的闲逛`}</span><span>{products.length} 件 · {money(total)}</span></div>
-        <p className="room-live-message" role="status">{message}</p>
-        <div className="room-live-bag-heading"><h2>已经看中的</h2><button onClick={() => setModal('receipt')} disabled={!products.length}>完整清单 <ChevronRight size={15} /></button></div>
-        {products.length ? <div className="room-live-products">{products.map((item, index) => <button key={item.id} onClick={() => { setActiveItem(index); setModal('haul') }}><Photo product={item} /><strong>{item.name}</strong><span>{money(item.price)}</span></button>)}</div> : <p className="room-live-empty">合适的商品会陆续放进来。先看它逛一会儿。</p>}
-      </section>}
+    <main className="room-stage" data-view={view} data-phase={phase}>
+      <Suspense fallback={<div className="room-loading">正在打开小屋…</div>}><SheepRoomScene screenImage={frame} view={view} products={products} message={message} onSettled={() => { if (phase === 'zoom') void shop() }} /></Suspense>
       <Link to="/lab" className="lab-action room-back"><ChevronLeft size={17} aria-hidden="true" />返回实验室</Link>
       {phase === 'room' && view === 'room' && <div className="room-welcome"><span>一个慢慢布置家的小实验</span><h1>羊的小屋</h1></div>}
       {phase !== 'room' && <div className="room-status" role="status"><span className={busy ? 'room-live-dot' : ''} /><span>{phase === 'shopping' && shoppingClock && elapsed >= shoppingClock.duration ? '时间到了，正在整理清单' : message}</span>{phase !== 'zoom' && <small>{phase === 'shopping' ? shoppingClock ? `剩余 ${Math.floor(Math.max(0, shoppingClock.duration - elapsed) / 60)} 分 ${Math.max(0, shoppingClock.duration - elapsed) % 60} 秒` : '准备中' : `${elapsed} 秒`} · {products.length} 件</small>}</div>}
       {error && !modal && <div className="room-error" role="alert">{error}</div>}
       {added && <div className="room-added" role="status"><Photo key={added.id} product={added} /><div><small>放进小屋购物袋了</small><strong>{added.name}</strong><span>{money(added.price)}</span></div></div>}
       <div className="room-controls">
-        <div className="room-views" aria-label="观看视角"><button disabled={phase === 'zoom'} aria-pressed={view === 'room'} onClick={() => setView('room')}>{mobile ? '小屋' : '全景'}</button><button disabled={phase === 'zoom'} aria-pressed={view === 'desk'} onClick={() => setView('desk')}>{mobile ? '直播' : '近景'}</button></div>
+        <div className="room-views" aria-label="观看视角"><button disabled={phase === 'zoom'} aria-pressed={view === 'room'} onClick={() => setView('room')}>远景</button><button disabled={phase === 'zoom'} aria-pressed={view === 'desk'} onClick={() => setView('desk')}>近景</button></div>
         {phase === 'room' ? <button className="lab-action" onClick={openSetup}>布置一间小屋</button> : <button className="lab-action" onClick={() => { setActiveItem(0); setModal('haul') }}><ShoppingBag size={17} aria-hidden="true" />小屋购物袋 · {products.length}</button>}
         {phase === 'shopping' && <button className="lab-action" onClick={() => requestRef.current?.abort()}>结束逛店</button>}
         {phase === 'done' && <button className="lab-action" onClick={openSetup}>再逛一次</button>}
@@ -217,6 +218,7 @@ export default function SheepRoomPage() {
       {modal === 'setup' && <form onSubmit={start}>
         <span className="room-eyebrow">先给这趟逛店一个小目标</span><h2 id="room-dialog-title">想布置哪一间？</h2>
         <p className="room-dialog-intro">选好房间，在设定时间和总预算内尽量多挑合适的商品。照片、价格和心头好，都会带回来。</p>
+        {error && <p className="room-dialog-error" role="alert">{error}</p>}
         <div className="room-choices">{ROOMS.map((item, index) => <button key={item.name} type="button" aria-pressed={brief.room === item.name} onClick={() => setBrief(previous => ({ ...previous, room: item.name }))}><span className={`room-choice-shape shape-${index}`} aria-hidden="true" /><strong>{item.name}</strong><small>{item.note}</small></button>)}</div>
         <div className="room-brief">
           <label className="room-ideas">说说你的布置想法<textarea required maxLength={500} rows={3} placeholder="喜欢什么风格、想怎么用这间房，都可以写在这里。" value={brief.needs} onChange={event => setBrief(previous => ({ ...previous, needs: event.target.value }))} /></label>
@@ -225,7 +227,7 @@ export default function SheepRoomPage() {
             <label>购物时间 · 分钟<input type="number" required min="0.5" max="10" step="0.5" value={brief.duration / 60 || ''} placeholder="0.5–10" onChange={event => setBrief(previous => ({ ...previous, duration: Number(event.target.value) * 60 }))} /></label>
           </div>
         </div>
-        <div className="room-dialog-footer"><button className="lab-action" disabled={available !== true || busy} type="submit">开始逛店</button></div>
+        <div className="room-dialog-footer"><button className="lab-action" disabled={available !== true || busy || error.includes('今天的实验次数')} type="submit">开始逛店</button></div>
         {available !== true && <p role="status">{available === null ? '正在连接逛店服务…' : statusFailed ? '连接逛店服务失败，请检查网络。' : '当前站点的逛店服务尚未配置完成。'}{available === false && <button className="room-status-retry" type="button" onClick={() => void refreshAvailability()}>重新检查</button>}</p>}
       </form>}
       {modal === 'haul' && <>
@@ -253,8 +255,7 @@ export default function SheepRoomPage() {
         <div className="room-receipt-actions room-receipt-toolbar"><button className="lab-action room-save-primary" onClick={saveList}><Download size={16} />保存清单</button><button className="lab-action" onClick={copyList}>{copied ? '清单已复制' : '复制清单'}</button><button className="lab-action" onClick={() => setModal('haul')}>看商品图片</button></div>
       </>}
       {modal === 'image' && <><span className="room-eyebrow">这些心头好，有了家的样子</span><h2 id="room-dialog-title">小屋，布置好了。</h2><img className="room-final-image" src={image} alt={`${brief.room}的家具搭配概念图`} /><p className="room-subtle">由本轮清单和商品参考图生成；外观与尺寸仍以实物为准。</p><div className="room-receipt-actions"><a className="lab-action" href={image} download="羊的小屋-效果图.png"><Download size={16} />保存效果图</a><button className="lab-action" onClick={() => setModal('receipt')}>查看购物清单</button></div></>}
-      {modal === 'live' && <><h2 id="room-dialog-title">逛店直播</h2><p className="room-subtle">左右、上下滑动查看细节，画面会继续更新。</p><div className="room-live-detail" tabIndex={0} aria-label="可滚动的直播画面"><img src={frame} alt="宜家实时浏览画面" /></div></>}
-      {error && modal && <p className="room-dialog-error" role="alert">{error}</p>}
+      {error && modal && modal !== 'setup' && <p className="room-dialog-error" role="alert">{error}</p>}
     </dialog>
   </div>
 }

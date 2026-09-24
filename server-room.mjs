@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
+import { isIP } from 'node:net'
 import { shopWithLuna, productImage } from './server-room-browser.mjs'
 import { decideWithJev } from './server-room-jev.mjs'
 
@@ -139,6 +140,7 @@ export function createRoomService(env = process.env, call = openai) {
   const renderAvailable = env.ROOM_ENABLED === '1' && !!apiKey
   const request = (path, body, key, timeout, signal) => call(path, body, key, timeout, env.ROOM_API_BASE_URL || 'https://api.openai.com/v1', signal)
   const browserReady = configured && !!env.ROOM_BROWSER_EXECUTABLE && existsSync(env.ROOM_BROWSER_EXECUTABLE)
+  const quotaExemptIps = new Set(String(env.ROOM_QUOTA_EXEMPT_IPS || '').split(',').map(ip => ip.trim()).filter(ip => isIP(ip)))
   const quotas = new Map()
   const sessions = new Map()
   const global = { day: 0, plan: 0, render: 0 }
@@ -155,13 +157,14 @@ export function createRoomService(env = process.env, call = openai) {
   async function run(ip, kind, fn) {
     if (!configured) throw Object.assign(new Error('实验服务尚未开通'), { status: 503, retryable: kind === 'render' })
     if (active >= 3) throw Object.assign(new Error('当前实验较多，请稍后再试'), { status: 429, retryable: kind === 'render' })
-    if (!useQuota(ip, kind)) throw Object.assign(new Error('今天的实验次数已用完，请明天再来'), { status: 429, retryable: kind === 'render' })
+    const charged = !quotaExemptIps.has(ip)
+    if (charged && !useQuota(ip, kind)) throw Object.assign(new Error('今天的实验次数已用完，请明天再来'), { status: 429, retryable: kind === 'render' })
     active++
     const day = global.day
     try { return await fn() }
     catch (error) {
       // Only release image quota when no generation was submitted or it was explicitly rejected.
-      if (kind === 'render' && error.retryable === true && global.day === day) {
+      if (charged && kind === 'render' && error.retryable === true && global.day === day) {
         global.render--; quotas.get(ip).render--
       }
       throw error

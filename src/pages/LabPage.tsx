@@ -81,7 +81,7 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
 
   function startDrag(event: PointerEvent<HTMLDivElement>) {
     suppressClick.current = false
-    if (!multiple || !event.isPrimary || event.button !== 0 || (event.target as HTMLElement).closest('a, button')) return
+    if (!multiple || !event.isPrimary || event.button !== 0) return
     drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: current.current, horizontal: false }
   }
 
@@ -91,8 +91,8 @@ function ExperimentCarousel({ items, layout }: { items: Experiment[]; layout: Re
     const dx = event.clientX - gesture.x
     const dy = event.clientY - gesture.y
     if (!gesture.horizontal) {
-      if (Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)) { drag.current = null; return }
-      if (Math.abs(dx) < 8) return
+      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 1.5) { drag.current = null; return }
+      if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return
       gesture.horizontal = true
       cancelAnimationFrame(frame.current)
       event.currentTarget.setPointerCapture(event.pointerId)

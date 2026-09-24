@@ -300,8 +300,8 @@ export function makeCafe(onAssetError: (message: string) => void) {
     pipe(sofa, [[x - .12, 1.55, -.275], [x, 1.17, -.26], [x + .09, .91, -.245]], .006, material('#ab603d'))
   }
   armchair(-3.70, 2.55, .45, floral).scale.setScalar(1.22)
-  armchair(2.80, 2.40, -.62, olive, true, .102).scale.setScalar(1.22)
-  table(root, -4.0, 3.0); flowers(root, -4.02, .83, 3.02)
+  armchair(3.65, 3.15, -.62, olive, true, .102).scale.setScalar(1.22)
+  table(root, -5.25, 2.75); flowers(root, -5.27, .83, 2.77)
   // Large green apron coffee table with turned legs, tissue box, flowers and magazines.
   const coffeeTable = new T.Group(); coffeeTable.position.set(.1, .11, 3.05); coffeeTable.scale.set(1.27, 1.05, 1.05); root.add(coffeeTable)
   const turnedLeg = new T.LatheGeometry([[.07, 0], [.10, .04], [.075, .09], [.07, .24], [.12, .34], [.13, .40], [.09, .46], [.12, .52], [.12, .62]].map(([r, y]) => new T.Vector2(r, y)), 24)
@@ -596,7 +596,7 @@ export function makeCafe(onAssetError: (message: string) => void) {
   polygon(slice,[[-.11,-.15],[.11,-.15],[0,.14]],0,.035,material('#e4b967')); cylinder(slice,0,.04,-.045,.032,.032,.008,pepperoni,12)
   const rachel = friend('Rachel', -3.28, .08, 1.22, .28)
   cylinder(rachel,.42,.97,.29,.29,.29,.034,metal,40); cup(rachel,.46,.99,.27,'#fff1d9').scale.setScalar(.72)
-  const monica = friend('Monica', 2.80, .362, 2.37, -.62, true)
+  const monica = friend('Monica', 3.65, .362, 3.12, -.62, true)
   cylinder(monica,.37,.99,.29,.15,.15,.022,cream,24)
   cylinder(monica,.37,1.075,.29,.079,.060,.14,material('#ad8050'),16)
   sphere(monica,.37,1.17,.29,.105,.078,.105,material('#c99854'))
