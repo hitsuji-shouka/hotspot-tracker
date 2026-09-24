@@ -48,8 +48,11 @@ export function jevActions({ page, products, currentProduct, brief, history = []
     operations.ADD = `当前商品「${currentProduct.name}」确实符合用户需求、排除条件和剩余预算时，加入独立的小屋清单；不在商家下单`
   }
   if (page.canScroll !== false) operations.SCROLL_DOWN = '当前可见商品不合适，向下查看更多商品'
-  operations.DONE = '已核实的商品足以满足用户布置目标时结束；选择后仍由程序检查实际结果'
-  operations.BLOCKED = '页面无法继续或没有符合需求的商品时结束，并保留已选商品'
+  if (products.length) operations.DONE = '已核实的商品足以满足用户布置目标时结束；选择后仍由程序检查实际结果'
+  const successfulSearches = history.filter(item => item.action === 'search' && item.result?.startsWith('搜索了')).length
+  if (successfulSearches >= 2 || (!Object.keys(clickTargets).length && !Object.keys(textTargets).length && page.canScroll === false)) {
+    operations.BLOCKED = '尝试不同搜索词后仍找不到符合需求的商品，或页面确实无法继续时结束；保留已选商品'
+  }
   return { elements, operations, targets: { CLICK: clickTargets, TYPE_TEXT: textTargets }, category }
 }
 
