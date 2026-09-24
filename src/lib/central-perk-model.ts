@@ -93,6 +93,7 @@ export function makeCafe(onAssetError: (message: string) => void) {
   const black = material('#242321'); const cream = material('#e9d9ba'); const orange = material('#b65d2f', { map: fabricMap, bumpMap: fabricMap, bumpScale: .015 })
   const floral = material('#ede2c6', { map: floralMap }); const olive = material('#706b4d', { map: fabricMap })
   const stone = material('#a69b89', { roughness: .92 })
+  const counterGreen = material('#56735e', { roughness: .62 })
   const glass = material('#c2d2c9', { transparent: true, opacity: .075, roughness: .15, depthWrite: false, emissive: '#ffb766', emissiveIntensity: 0 })
   windowLights.push(glass)
   const geoCache = new Map<string, T.BufferGeometry>()
@@ -195,6 +196,15 @@ export function makeCafe(onAssetError: (message: string) => void) {
   box(root, -1.6, .62, -4.12, 9.6, 1.2, .1, walnut)
   for (let x = -6.1; x < 3.2; x += .65) box(root, x, .62, -4.04, .035, 1.08, .035, oak)
   box(root, -1.6, 4.45, -4.1, 9.6, .34, .32, green)
+  // Staff door at the far end of the bar, set into the rear brick wall.
+  const staffDoor = new T.Group(); staffDoor.name = 'Staff door behind the bar'; staffDoor.position.set(-5.42, 0, -4.055); root.add(staffDoor)
+  box(staffDoor, 0, 1.51, 0, 1.20, 3.02, .10, material('#291d17'))
+  box(staffDoor, 0, 1.48, .07, 1.04, 2.84, .065, material('#57382a', { map: woodMap }))
+  box(staffDoor, 0, 2.56, .113, .79, .40, .018, material('#9b9f88', { roughness: .42 }))
+  box(staffDoor, 0, 1.21, .113, .78, 1.43, .019, walnut)
+  box(staffDoor, .38, 1.50, .135, .07, .11, .05, brass, .02)
+  for (const x of [-.63, .63]) box(staffDoor, x, 1.58, .075, .075, 3.17, .13, walnut)
+  box(staffDoor, 0, 3.14, .075, 1.36, .10, .16, walnut)
   box(root, 5.04, .19, .9, 2.48, .34, 5.6, green)
   box(root, 5.04, .38, .9, 2.38, .035, 5.5, material('#eee2d0', { map: rugMap }))
   const logo = tex((c, w, h) => {
@@ -309,37 +319,37 @@ export function makeCafe(onAssetError: (message: string) => void) {
   flowers(coffeeTable, 1.05, .79, -.06)
   const hotCup = cup(coffeeTable, -.2, .80, -.43, '#75816b'); hotCup.userData.action = 'cup'; clicks.push(hotCup)
 
-  // Independent customer counter: a straight display face turns diagonally at the till.
+  // Independent customer counter: the return turns toward Rachel's end.
   // The wall worktop stays separate, with a clear staff aisle and an open end.
   const bar = new T.Group(); bar.name = 'Angled service counter'; bar.position.set(-3.78, .09, -.80); bar.rotation.y = Math.PI / 2; bar.scale.y = .84; root.add(bar)
-  const counterOutline = [[-1.72,-.43],[.70,-.43],[1.40,-.90],[1.93,-.25],[1.03,.45],[-1.72,.45]]
+  const counterOutline = [[-1.93,-.25],[-1.40,-.90],[-.70,-.43],[1.72,-.43],[1.72,.45],[-1.03,.45]]
   polygon(bar, counterOutline, .02, 1.25, walnut)
-  polygon(bar, counterOutline.map(([x,z]) => [x * 1.035,z * 1.13]), 1.27, .14, stone)
+  polygon(bar, counterOutline.map(([x,z]) => [x * 1.035,z * 1.13]), 1.27, .14, counterGreen)
   polygon(bar, counterOutline.map(([x,z]) => [x * 1.01,z * 1.03]), .06, .12, walnut)
-  const counterTurn = new T.Group(); counterTurn.position.set(1.48, 0, .10); counterTurn.rotation.y = Math.atan2(.70,.90); bar.add(counterTurn)
+  const counterTurn = new T.Group(); counterTurn.position.set(-1.48, 0, .10); counterTurn.rotation.y = -Math.atan2(.70,.90); bar.add(counterTurn)
   box(counterTurn, 0, .66, .025, 1.08, 1.05, .035, oak)
   box(counterTurn, 0, .66, .05, .94, .88, .04, walnut)
   for (const x of [-.40,.40]) box(counterTurn,x,.66,.075,.026,.92,.026,oak)
-  box(bar, -.38, .69, .46, 2.23, 1.12, .08, black)
+  box(bar, .38, .69, .46, 2.23, 1.12, .08, black)
   for (let row = 0; row < 3; row++) {
-    box(bar, -.38, .26 + row * .35, .55, 2.24, .045, .24, oak)
+    box(bar, .38, .26 + row * .35, .55, 2.24, .045, .24, oak)
     for (let col = 0; col < 7; col++) {
       const colors = ['#c4af79', '#a33228', '#bdc7b1', '#4c6668', '#dfb24a']
-      const x = -1.26 + col * .26, y = .42 + row * .35
+      const x = -.40 + col * .26, y = .42 + row * .35
       box(bar, x, y, .54, .2, .27, .17, material(colors[(row + col) % 5]), .01)
       panel(bar, x, y, .631, .13, .17, lettering(col % 2 ? 'PERK' : 'COFFEE', '#e4d8b9', '#523629', 58))
     }
   }
-  for (const x of [-1.60,.85]) box(bar, x, .68, .48, .07, 1.18, .07, oak)
+  for (const x of [-.78,1.56]) box(bar, x, .68, .48, .07, 1.18, .07, oak)
   cup(bar, .65, 1.42, .10, '#b46e36')
-  box(bar, 1.32, 1.49, -.22, .37, .15, .32, black, .025)
-  const barTill = panel(bar,1.32,1.66,-.32,.33,.22,lettering('PERK', '#223a32', '#d1bc91', 64)); barTill.rotation.x = -.25
+  box(bar, -1.32, 1.49, -.22, .37, .15, .32, black, .025)
+  const barTill = panel(bar,-1.32,1.66,-.32,.33,.22,lettering('PERK', '#223a32', '#d1bc91', 64)); barTill.rotation.x = -.25
   cylinder(bar, .15, 1.47, -.10, .23, .23, .04, metal)
   sphere(bar, .15, 1.64, -.1, .23, .19, .23, material('#b4c7bc', { transparent: true, opacity: .27, roughness: .1 }))
   // Back worktop, dispensers and espresso machine.
   const serviceStart = root.children.length
   box(root, -4.1, .62, -3.53, 3.9, 1.2, .96, walnut)
-  box(root, -4.1, 1.3, -3.53, 4.05, .13, 1.02, stone, .03)
+  box(root, -4.1, 1.3, -3.53, 4.05, .13, 1.02, counterGreen, .03)
   for (const x of [-5.65, -5.12]) {
     cylinder(root, x, 2.13, -3.67, .19, .22, 1.20, brass)
     sphere(root, x, 2.78, -3.67, .21, .17, .21, brass)

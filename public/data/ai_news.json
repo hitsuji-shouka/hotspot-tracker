@@ -1,103 +1,223 @@
 {
- "updatedAt": "2026-09-23T08:10:11+08:00",
+ "updatedAt": "2026-09-24T08:10:03+08:00",
  "source": "量子位 · Hacker News",
- "count": 12,
+ "count": 27,
  "items": [
   {
-   "source": "Hacker News",
-   "time": "2026-09-22 16:29:05",
-   "title": "Claude Opus 5.5",
-   "text": null,
-   "url": "https://www.anthropic.com/claude-opus-5-5",
-   "points": 1124
+   "source": "量子位",
+   "time": "2026-09-23 18:35:16",
+   "title": "联想亮相阿里云栖大会：联想天禧AI把超级组织落地到端侧",
+   "text": "联想天禧AI携全场景多端产品矩阵亮相阿里云栖大会",
+   "url": "https://www.qbitai.com/2026/09/496609.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 17:56:53",
+   "title": "让Token生产更高效：异构混推的关键技术演进与创新实践",
+   "text": "商汤大装置异构混推创新实践与技术演进",
+   "url": "https://www.qbitai.com/2026/09/496578.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 17:50:26",
+   "title": "汇智智能发布Hellome：国内首个FDE直连智能体服务平台，把AI交付周期压进“周”",
+   "text": "企业AI服务迎来平台化交付时代",
+   "url": "https://www.qbitai.com/2026/09/496493.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 17:46:57",
+   "title": "达卯科技完成新一轮融资，算电协同核心软件层“稀缺标的”",
+   "text": "打造算电协同领域“Windows”级操作系统",
+   "url": "https://www.qbitai.com/2026/09/496494.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 16:54:04",
+   "title": "它石智航顶尖团队引领中国具身智能率先迈入规模化落地阶段",
+   "text": "它石智航将继续扩大研发团队，加快布局生产基地，全面提升机器人交付能力",
+   "url": "https://www.qbitai.com/2026/09/496481.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 16:45:22",
+   "title": "斑马智能发布端模型AutoOmni2.0，让元神AI更懂“我的世界”",
+   "text": "9月23日云栖大会期间，斑马智能发布新一代全模态端侧大模型AutoOmni 2.0-23B-A3B",
+   "url": "https://www.qbitai.com/2026/09/496471.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 15:29:50",
+   "title": "DeepSeek新论文公开Agent训练！梁文锋署名",
+   "text": "每秒能产生5000+个沙盒",
+   "url": "https://www.qbitai.com/2026/09/496393.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 15:27:49",
+   "title": "Qwen一号位定了！刘大一恒接棒",
+   "text": "与稚晖君同届天才少年",
+   "url": "https://www.qbitai.com/2026/09/496384.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 14:38:07",
+   "title": "Jev vs Decitron：同为决策AI，为什么不是一回事？",
+   "text": "对复杂现实进行推演与决策",
+   "url": "https://www.qbitai.com/2026/09/496352.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 14:08:50",
+   "title": "实时世界模型进入“全科生”阶段，PixVerse R2先交卷！",
+   "text": "实时性和通用能力，世界模型可以全都要",
+   "url": "https://www.qbitai.com/2026/09/496329.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 13:16:54",
+   "title": "稚晖君把机器人卖到2万元一台，可人可狗可开发！",
+   "text": "两万元，买到的是怎样一个机器人",
+   "url": "https://www.qbitai.com/2026/09/496304.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 13:13:19",
+   "title": "阿里千问AI平台全面升级模型服务、Agent服务、AI应用",
+   "text": "覆盖MaaS、Agent服务、行业AI解决方案",
+   "url": "https://www.qbitai.com/2026/09/496301.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 13:01:24",
+   "title": "GPT-6 Astra搓3D刷屏后，3D生成的竞争规则变了",
+   "text": "下半场开始了",
+   "url": "https://www.qbitai.com/2026/09/496170.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 12:59:29",
+   "title": "Claude Opus 5.5突袭！68万行代码一天迁完，API价格打8折",
+   "text": "缓存读取价砍了60%",
+   "url": "https://www.qbitai.com/2026/09/496221.html",
+   "points": null
+  },
+  {
+   "source": "量子位",
+   "time": "2026-09-23 12:25:12",
+   "title": "刷视频也能教会机器人干活！1200亿tokens人类动作预训练，误差按幂律下降",
+   "text": "押注互联网里的人类经验",
+   "url": "https://www.qbitai.com/2026/09/496129.html",
+   "points": null
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 18:00:34",
-   "title": "GPT-6 Sol and Luna",
+   "time": "2026-09-23 17:06:16",
+   "title": "Italian parliament votes for return to nuclear energy",
    "text": null,
-   "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna/",
-   "points": 1090
+   "url": "https://apnews.com/article/italy-nuclear-chernobyl-4891b6b7c7791ae84db6b0bf0f7cf567",
+   "points": 543
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 14:30:12",
-   "title": "Apple has added persistent 'ads' to iOS, and it's driving users crazy",
+   "time": "2026-09-23 18:06:47",
+   "title": "Claude discovers a novel enzyme system with CRISPR-like repeats",
    "text": null,
-   "url": "https://www.techradar.com/phones/iphone/i-wish-apple-would-just-stop-that-crap-apple-has-added-persistent-ads-to-ios-and-its-driving-users-crazy",
-   "points": 581
+   "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+   "points": 442
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 13:52:15",
-   "title": "OpenAI GPT–6 Astra breaks Enigma message that has resisted solution since 2005",
+   "time": "2026-09-23 12:15:33",
+   "title": "Claude Code reads AGENTS.md only when telemetry is on [fixed]",
    "text": null,
-   "url": "https://www.cryptocellar.org/bgac/the-mvueh-break.html",
-   "points": 541
+   "url": "https://blog.szypowi.cz/p/claude-code-reads-agents.md-only-when-telemetry-is-on/",
+   "points": 439
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 06:08:39",
-   "title": "Can gzip be a language model?",
+   "time": "2026-09-23 15:18:53",
+   "title": "Fixing the Portobello Police Station Clock",
    "text": null,
-   "url": "https://nathan.rs/posts/gzip-lm/",
-   "points": 370
+   "url": "https://pointinthecloud.com/2026-04-11-211700.html",
+   "points": 371
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 19:03:38",
-   "title": "Pentagon says overreliance on AI contributed to missile strike on Iran school",
+   "time": "2026-09-23 13:04:44",
+   "title": "I don't want the details",
    "text": null,
-   "url": "https://www.bloomberg.com/graphics/2026-iran-school-attack/",
-   "points": 351
+   "url": "https://michaelheap.com/i-dont-want-the-details/",
+   "points": 338
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 17:46:02",
-   "title": "'We hacked the FBI:' Hackers say they have data on all FBI employees",
+   "time": "2026-09-23 14:04:34",
+   "title": "Seattle City Council votes to ban surveillance pricing in sale of groceries",
    "text": null,
-   "url": "https://www.404media.co/we-hacked-the-fbi-hackers-say-they-have-data-on-all-fbi-employees/",
-   "points": 331
+   "url": "https://advocacy.consumerreports.org/press_release/seattle-city-council-votes-to-ban-surveillance-pricing-in-sale-of-groceries/",
+   "points": 290
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 17:12:51",
-   "title": "There's a high chance of devices being sold with GrapheneOS preinstalled in 2027",
+   "time": "2026-09-23 15:29:23",
+   "title": "Gemini 3.8 text-to-speech",
    "text": null,
-   "url": "https://grapheneos.social/@GrapheneOS/117299954135808210",
-   "points": 255
+   "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-text-to-speech/",
+   "points": 243
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 14:42:59",
-   "title": "OpenAI is well positioned to fast-follow Jev",
+   "time": "2026-09-23 09:21:17",
+   "title": "Tokens too cheap to meter",
    "text": null,
-   "url": "https://arcturus-labs.com/blog/2026/09/21/will-openai-eat-jevs-lunch/",
-   "points": 250
+   "url": "https://jyn.dev/tokens-too-cheap-to-meter/",
+   "points": 223
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-22 16:51:31",
-   "title": "Claude Opus 5.5 Intelligence, Performance and Price Analysis (Max)",
+   "time": "2026-09-23 16:35:34",
+   "title": "28% of job postings on company career sites have been open over 90 days",
    "text": null,
-   "url": "https://artificialanalysis.ai/models/claude-opus-5-5",
-   "points": 220
+   "url": "https://unlisted.careers/ghost-jobs/report/2026-09",
+   "points": 219
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-18 19:01:03",
-   "title": "How did AMD Ryzen get 50% faster in two years?",
+   "time": "2026-09-23 13:38:00",
+   "title": "Stripe's Knowledge AI Platform",
    "text": null,
-   "url": "https://lemire.me/blog/2026/09/18/how-did-amd-ryzen-get-50-faster-in-two-years/",
-   "points": 183
+   "url": "https://stripe.dev/blog/meet-stripes-knowledge-ai-platform",
+   "points": 170
   },
   {
    "source": "Hacker News",
-   "time": "2026-09-20 22:13:07",
-   "title": "MUNI Heritage Weekend in San Francisco",
+   "time": "2026-09-23 19:23:40",
+   "title": "Once Claude can measure something, it can make it faster",
    "text": null,
-   "url": "https://daniel.lawrence.lu/blog/2026-09-20-muni-heritage-weekend/",
-   "points": 149
+   "url": "https://claude.dev/blog/how-we-made-claude-ai-faster/",
+   "points": 148
+  },
+  {
+   "source": "Hacker News",
+   "time": "2026-09-23 11:04:52",
+   "title": "Z80 REPL (2018)",
+   "text": null,
+   "url": "https://abagames.github.io/z80-repl/index.html",
+   "points": 139
   }
  ]
 }

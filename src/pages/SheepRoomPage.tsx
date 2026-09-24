@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { ChevronLeft, ChevronRight, X, ShoppingBag, Download, RefreshCw, Maximize2 } from 'lucide-react'
 import { LabHeader } from './LabPage'
@@ -24,6 +24,7 @@ export default function SheepRoomPage() {
   const swipeRef = useRef<{ x: number; y: number } | null>(null)
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 640px)').matches)
   const [available, setAvailable] = useState<boolean | null>(null)
+  const [statusFailed, setStatusFailed] = useState(false)
   const [renderAvailable, setRenderAvailable] = useState(false)
   // Keep the existing API shape; the combined ideas are passed intact in needs.
   const [brief, setBrief] = useState<Brief>({ room: '客厅', style: '以布置想法为准', needs: '原木、舒服，有一点绿。能窝着休息，也留一点收纳空间。', budget: 8000, duration: 150 })
@@ -52,14 +53,26 @@ export default function SheepRoomPage() {
     return () => query.removeEventListener('change', update)
   }, [])
 
-  useEffect(() => {
-    document.title = '羊的小屋 · 羊宇宙漫游指南'
-    fetch('/api/room/status').then(response => response.json()).then(data => {
+  const refreshAvailability = useCallback(async () => {
+    setAvailable(null)
+    setStatusFailed(false)
+    try {
+      const response = await fetch('/api/room/status', { cache: 'no-store' })
+      if (!response.ok) throw new Error(`Room status ${response.status}`)
+      const data = await response.json()
       setAvailable(data.available === true)
       setRenderAvailable(data.renderAvailable === true)
-    }).catch(() => setAvailable(false))
-    return () => requestRef.current?.abort()
+    } catch {
+      setAvailable(false)
+      setStatusFailed(true)
+    }
   }, [])
+
+  useEffect(() => {
+    document.title = '羊的小屋 · 羊宇宙漫游指南'
+    void refreshAvailability()
+    return () => requestRef.current?.abort()
+  }, [refreshAvailability])
   useEffect(() => {
     if (modal && !dialogRef.current?.open) dialogRef.current?.showModal()
     if (!modal && dialogRef.current?.open) dialogRef.current.close()
@@ -89,7 +102,7 @@ export default function SheepRoomPage() {
   const showLive = mobile && view === 'desk'
   const remainingSeconds = Math.max(0, (shoppingClock?.duration ?? brief.duration) - elapsed)
 
-  function openSetup() { setView('room'); setModal('setup'); setError('') }
+  function openSetup() { setView('room'); setModal('setup'); setError(''); void refreshAvailability() }
   function start(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busy) return
@@ -213,7 +226,7 @@ export default function SheepRoomPage() {
           </div>
         </div>
         <div className="room-dialog-footer"><button className="lab-action" disabled={available !== true || busy} type="submit">开始逛店</button></div>
-        {available !== true && <p role="status">{available === null ? '正在连接逛店服务…' : '逛店服务暂未开通，房间目标可以先填好。'}</p>}
+        {available !== true && <p role="status">{available === null ? '正在连接逛店服务…' : statusFailed ? '连接逛店服务失败，请检查网络。' : '当前站点的逛店服务尚未配置完成。'}{available === false && <button className="room-status-retry" type="button" onClick={() => void refreshAvailability()}>重新检查</button>}</p>}
       </form>}
       {modal === 'haul' && <>
         <span className="room-eyebrow">小屋购物袋</span><h2 id="room-dialog-title">{busy ? '已经看中的几件' : '这趟的心头好。'}</h2>
