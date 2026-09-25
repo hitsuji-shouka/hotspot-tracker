@@ -1467,4 +1467,14 @@ export const SHELF: ShelfItem[] = [
     cover: '/shelf/unnatural.jpg',
     note: '絶望？絶望してる暇あったら、うまいもん食べて寝るかな。',
   },
+  {
+    id: 'music-our-hope',
+    category: 'music',
+    title: 'our hope',
+    creator: '羊文学',
+    cover: '/shelf/our-hope.jpg',
+    musicUrl: 'https://open.spotify.com/album/1ONQrLL5EaVJd34qsM21id',
+    note: '彼女の人生は金色\n真っ白な照明の下で\nきらきらと反射した\nきらきらと反射した光',
+  },
+
 ]
