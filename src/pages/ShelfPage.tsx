@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { Music, Play, Star, X } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
-import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfItem } from '@/data/shelf'
+import { CATEGORY_META, MOVIE_SUBGROUP_META, SHELF, type MovieSubgroup, type ShelfCategory, type ShelfItem } from '@/data/shelf'
 import './shelf.css'
 
 const ACCENT = '#e6b976'
 const CATEGORIES: ShelfCategory[] = ['movie', 'book', 'music']
+const MOVIE_SUBGROUPS: MovieSubgroup[] = ['anime', 'series', 'film']
 const DESCRIPTIONS: Record<ShelfCategory, string> = {
   movie: '借一段光影，走进另一种人生。',
   book: '在书页之间，慢慢认识更辽阔的世界。',
@@ -197,6 +198,7 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
 export default function ShelfPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filter = CATEGORIES.find(category => category === searchParams.get('category')) ?? 'movie'
+  const subgroup: MovieSubgroup = MOVIE_SUBGROUPS.find(g => g === searchParams.get('sub')) ?? 'anime'
   const [playing, setPlaying] = useState<ShelfItem | null>(null)
 
   useEffect(() => {
@@ -204,13 +206,14 @@ export default function ShelfPage() {
   }, [])
 
   const items = useMemo(() => {
-    const filtered = SHELF.filter((item) => item.category === filter)
+    let filtered = SHELF.filter((item) => item.category === filter)
+    if (filter === 'movie') filtered = filtered.filter((item) => (item.subgroup ?? 'film') === subgroup)
     if (filter !== 'music') return filtered
     const firstVideo = filtered.find(item => item.videoUrl)
     const albums = filtered.filter(item => !item.videoUrl).slice(0, 2)
     const firstRow = [firstVideo, ...albums].filter((item): item is ShelfItem => !!item)
     return [...firstRow, ...filtered.filter(item => !firstRow.includes(item))]
-  }, [filter])
+  }, [filter, subgroup])
 
   return (
     <div className="shelf-page min-h-screen">
@@ -242,6 +245,25 @@ export default function ShelfPage() {
             </nav>
           </div>
           <p className="shelf-description" aria-live="polite">{DESCRIPTIONS[filter]}</p>
+          {filter === 'movie' && (
+            <nav className="shelf-subtopics" aria-label="影视分组">
+              {MOVIE_SUBGROUPS.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setSearchParams(previous => {
+                    const next = new URLSearchParams(previous)
+                    next.set('sub', g)
+                    return next
+                  }, { preventScrollReset: true })}
+                  aria-pressed={subgroup === g}
+                  className={subgroup === g ? 'is-active' : ''}
+                >
+                  {MOVIE_SUBGROUP_META[g].label}
+                </button>
+              ))}
+            </nav>
+          )}
         </section>
 
         {items.length === 0 ? (
@@ -249,7 +271,7 @@ export default function ShelfPage() {
             这一类还空着，去 src/data/shelf.ts 添一件喜欢的作品吧。
           </p>
         ) : (
-          <div className={`shelf-grid ${filter === 'music' ? 'shelf-grid-music' : ''}`}>
+          <div className={`shelf-grid ${filter === 'music' ? 'shelf-grid-music' : ''} ${filter === 'movie' ? 'shelf-grid-compact' : ''}`}>
             {items.map((item, index) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} featured={filter === 'music' && index === 0 && !!item.videoUrl} />)}
           </div>
         )}

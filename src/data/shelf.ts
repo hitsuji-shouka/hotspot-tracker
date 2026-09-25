@@ -16,6 +16,7 @@
 //   {
 //     id: 'movie-xxx',
 //     category: 'movie',
+//     subgroup: 'film', // 动漫 anime / 剧集 series / 电影 film
 //     title: '某个很喜欢的视频',
 //     creator: 'UP 主名字',
 //     videoUrl: 'https://www.bilibili.com/video/BV1xx411c7mD',
@@ -26,9 +27,13 @@
 
 export type ShelfCategory = 'movie' | 'book' | 'music'
 
+/** 影视分类下的子分组：动漫 / 剧集 / 电影 */
+export type MovieSubgroup = 'anime' | 'series' | 'film'
+
 export interface ShelfItem {
   id: string
   category: ShelfCategory
+  subgroup?: MovieSubgroup // 仅 category 为 movie 时有意义
   title: string
   creator: string
   cover?: string
@@ -44,6 +49,12 @@ export const CATEGORY_META: Record<ShelfCategory, { label: string }> = {
   music: { label: '音乐' },
 }
 
+export const MOVIE_SUBGROUP_META: Record<MovieSubgroup, { label: string }> = {
+  anime: { label: '动漫' },
+  series: { label: '剧集' },
+  film: { label: '电影' },
+}
+
 export const SHELF: ShelfItem[] = [
   {
     id: 'book-qianshuiting',
@@ -56,6 +67,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-interstellar',
     category: 'movie',
+    subgroup: 'film',
     title: '星际穿越',
     creator: '克里斯托弗·诺兰',
     cover: '/shelf/interstellar.jpg',
@@ -64,6 +76,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-fire-of-love',
     category: 'movie',
+    subgroup: 'film',
     title: '火山挚恋',
     creator: '萨拉·多萨',
     cover: '/shelf/fire-of-love-2.jpg',
@@ -106,6 +119,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-kaze',
     category: 'movie',
+    subgroup: 'anime',
     title: '强风吹拂',
     creator: '三浦紫苑 · Production I.G',
     cover: '/shelf/kaze.jpg',
@@ -178,6 +192,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-nausicaa',
     category: 'movie',
+    subgroup: 'anime',
     title: '风之谷',
     creator: '宫崎骏',
     cover: '/shelf/nausicaa.jpg',
@@ -186,6 +201,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-laputa',
     category: 'movie',
+    subgroup: 'anime',
     title: '天空之城',
     creator: '宫崎骏',
     cover: '/shelf/laputa.jpg',
@@ -194,6 +210,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-totoro',
     category: 'movie',
+    subgroup: 'anime',
     title: '龙猫',
     creator: '宫崎骏',
     cover: '/shelf/totoro.jpg',
@@ -202,6 +219,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-kiki',
     category: 'movie',
+    subgroup: 'anime',
     title: '魔女宅急便',
     creator: '宫崎骏',
     cover: '/shelf/kiki.jpg',
@@ -210,6 +228,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-porco',
     category: 'movie',
+    subgroup: 'anime',
     title: '红猪',
     creator: '宫崎骏',
     cover: '/shelf/porco.jpg',
@@ -218,6 +237,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-mononoke',
     category: 'movie',
+    subgroup: 'anime',
     title: '幽灵公主',
     creator: '宫崎骏',
     cover: '/shelf/mononoke.jpg',
@@ -226,6 +246,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-chihiro',
     category: 'movie',
+    subgroup: 'anime',
     title: '千与千寻',
     creator: '宫崎骏',
     cover: '/shelf/chihiro.jpg',
@@ -234,6 +255,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-howl',
     category: 'movie',
+    subgroup: 'anime',
     title: '哈尔的移动城堡',
     creator: '宫崎骏',
     cover: '/shelf/howl.jpg',
@@ -242,6 +264,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-ponyo',
     category: 'movie',
+    subgroup: 'anime',
     title: '悬崖上的金鱼姬',
     creator: '宫崎骏',
     cover: '/shelf/ponyo.jpg',
@@ -250,6 +273,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-kazetachinu',
     category: 'movie',
+    subgroup: 'anime',
     title: '起风了',
     creator: '宫崎骏',
     cover: '/shelf/kazetachinu.jpg',
@@ -258,6 +282,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-yorumiji',
     category: 'movie',
+    subgroup: 'anime',
     title: '春宵苦短，少女前进吧！',
     creator: '汤浅政明',
     cover: '/shelf/yoru-wa-mijikashi.jpg',
@@ -266,6 +291,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-hiscore',
     category: 'movie',
+    subgroup: 'anime',
     title: '高分少女',
     creator: 'J.C.STAFF',
     cover: '/shelf/hi-score-girl.jpg',
@@ -274,6 +300,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-fengkuei',
     category: 'movie',
+    subgroup: 'film',
     title: '风柜来的人',
     creator: '侯孝贤',
     cover: '/shelf/fengkuei.jpg',
@@ -282,6 +309,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-violet',
     category: 'movie',
+    subgroup: 'anime',
     title: '紫罗兰永恒花园',
     creator: '京都动画',
     cover: '/shelf/violet-evergarden.jpg',
@@ -290,6 +318,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-flyaway',
     category: 'movie',
+    subgroup: 'film',
     title: '伴你高飞',
     creator: '卡罗尔·巴拉德',
     cover: '/shelf/fly-away-home.jpg',
@@ -298,6 +327,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-longvacation',
     category: 'movie',
+    subgroup: 'series',
     title: '悠长假期',
     creator: '北川悦吏子',
     cover: '/shelf/long-vacation.jpg',
@@ -306,6 +336,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-octopus',
     category: 'movie',
+    subgroup: 'film',
     title: '我的章鱼老师',
     creator: '皮帕·埃尔利希 & 詹姆斯·里德',
     cover: '/shelf/my-octopus-teacher.jpg',
@@ -314,6 +345,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-pingpong',
     category: 'movie',
+    subgroup: 'anime',
     title: '乒乓',
     creator: '汤浅政明',
     cover: '/shelf/pingpong.jpg',
@@ -322,6 +354,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-runningman',
     category: 'movie',
+    subgroup: 'series',
     title: 'Running Man（韩国跑男）',
     creator: 'SBS',
     cover: '/shelf/running-man.jpg',
@@ -330,6 +363,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-gurrenlagann',
     category: 'movie',
+    subgroup: 'anime',
     title: '天元突破红莲螺岩',
     creator: 'GAINAX',
     cover: '/shelf/gurren-lagann.jpg',
@@ -338,6 +372,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-godfather',
     category: 'movie',
+    subgroup: 'film',
     title: '教父',
     creator: '弗朗西斯·福特·科波拉',
     cover: '/shelf/godfather.jpg',
@@ -346,6 +381,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-mistral',
     category: 'movie',
+    subgroup: 'film',
     title: '普罗旺斯的夏天',
     creator: '罗丝·博斯',
     cover: '/shelf/avis-de-mistral.jpg',
@@ -354,6 +390,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-frieren',
     category: 'movie',
+    subgroup: 'anime',
     title: '葬送的芙莉莲',
     creator: 'MADHOUSE',
     cover: '/shelf/frieren.jpg',
@@ -362,6 +399,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-prideprejudice',
     category: 'movie',
+    subgroup: 'film',
     title: '傲慢与偏见',
     creator: '乔·赖特',
     cover: '/shelf/pride-prejudice.jpg',
@@ -370,6 +408,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-prisonplaybook',
     category: 'movie',
+    subgroup: 'series',
     title: '机智牢房生活',
     creator: '申元浩',
     cover: '/shelf/wise-prison-life.jpg',
@@ -378,6 +417,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-bettercallsaul',
     category: 'movie',
+    subgroup: 'series',
     title: '风骚律师',
     creator: '文斯·吉利根 & 皮特·古尔德',
     cover: '/shelf/better-call-saul.jpg',
@@ -386,6 +426,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-capernaum',
     category: 'movie',
+    subgroup: 'film',
     title: '何以为家',
     creator: '娜丁·拉巴基',
     cover: '/shelf/capernaum.jpg',
@@ -394,6 +435,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-skiploader',
     category: 'movie',
+    subgroup: 'anime',
     title: '跃动青春',
     creator: 'P.A.WORKS',
     cover: '/shelf/skip-and-loafer.jpg',
@@ -402,6 +444,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-bocchi',
     category: 'movie',
+    subgroup: 'anime',
     title: '孤独摇滚！',
     creator: 'CloverWorks',
     cover: '/shelf/bocchi-the-rock.jpg',
@@ -410,6 +453,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-hotarubi',
     category: 'movie',
+    subgroup: 'anime',
     title: '萤火之森',
     creator: '大森贵弘',
     cover: '/shelf/hotarubi.jpg',
@@ -418,6 +462,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-lalaland',
     category: 'movie',
+    subgroup: 'film',
     title: '爱乐之城',
     creator: '达米恩·查泽雷',
     cover: '/shelf/la-la-land.jpg',
@@ -426,6 +471,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-kikujiro',
     category: 'movie',
+    subgroup: 'film',
     title: '菊次郎的夏天',
     creator: '北野武',
     cover: '/shelf/kikujiro.jpg',
@@ -434,6 +480,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-danshi',
     category: 'movie',
+    subgroup: 'anime',
     title: '男子高中生的日常',
     creator: 'SUNRISE',
     cover: '/shelf/danshi-koukousei.jpg',
@@ -442,6 +489,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-hyouka',
     category: 'movie',
+    subgroup: 'anime',
     title: '冰菓',
     creator: '京都动画',
     cover: '/shelf/hyouka.jpg',
@@ -450,6 +498,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-nichijou',
     category: 'movie',
+    subgroup: 'anime',
     title: '日常',
     creator: '京都动画',
     cover: '/shelf/nichijou.jpg',
@@ -458,6 +507,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-drstone',
     category: 'movie',
+    subgroup: 'anime',
     title: '石纪元',
     creator: 'TMS Entertainment',
     cover: '/shelf/dr-stone.jpg',
@@ -466,6 +516,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-madeinabyss',
     category: 'movie',
+    subgroup: 'anime',
     title: '来自深渊',
     creator: 'Kinema Citrus',
     cover: '/shelf/made-in-abyss.jpg',
@@ -474,6 +525,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-attackontitan',
     category: 'movie',
+    subgroup: 'anime',
     title: '进击的巨人',
     creator: 'WIT STUDIO',
     cover: '/shelf/attack-on-titan.jpg',
@@ -482,6 +534,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-gintama',
     category: 'movie',
+    subgroup: 'anime',
     title: '银魂',
     creator: 'SUNRISE',
     cover: '/shelf/gintama.jpg',
@@ -490,6 +543,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-oppenheimer',
     category: 'movie',
+    subgroup: 'film',
     title: '奥本海默',
     creator: '克里斯托弗·诺兰',
     cover: '/shelf/oppenheimer.jpg',
@@ -498,6 +552,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-kagidorobo',
     category: 'movie',
+    subgroup: 'film',
     title: '盗钥匙的方法',
     creator: '内田贤治',
     cover: '/shelf/kagi-dorobo.jpg',
@@ -506,6 +561,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-hospitalplaylist',
     category: 'movie',
+    subgroup: 'series',
     title: '机智医生生活',
     creator: '申元浩',
     cover: '/shelf/hospital-playlist.jpg',
@@ -514,6 +570,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-insideout',
     category: 'movie',
+    subgroup: 'anime',
     title: '头脑特工队',
     creator: '皮克斯',
     cover: '/shelf/inside-out.jpg',
@@ -522,6 +579,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-bohemian',
     category: 'movie',
+    subgroup: 'film',
     title: '波西米亚狂想曲',
     creator: '布莱恩·辛格',
     cover: '/shelf/bohemian-rhapsody.jpg',
@@ -530,6 +588,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'movie-greatestshowman',
     category: 'movie',
+    subgroup: 'film',
     title: '马戏之王',
     creator: '迈克尔·格雷西',
     cover: '/shelf/the-greatest-showman.jpg',
