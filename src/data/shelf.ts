@@ -1526,4 +1526,13 @@ export const SHELF: ShelfItem[] = [
     note: '我要去的地方我将会有很多的朋友。',
   },
 
+  {
+    id: 'book-escape-from-freedom',
+    category: 'book',
+    title: '逃避自由',
+    creator: '艾里希·弗洛姆',
+    cover: '/shelf/escape-from-freedom.jpg',
+    note: '他以牺牲个人自我的完整性为代价，找到了新的脆弱的安全感。由于他无法忍受孤独，于是便选择失去自我。',
+  },
+
 ]
