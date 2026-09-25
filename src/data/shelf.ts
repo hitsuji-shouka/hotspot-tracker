@@ -1477,4 +1477,14 @@ export const SHELF: ShelfItem[] = [
     note: '彼女の人生は金色\n真っ白な照明の下で\nきらきらと反射した\nきらきらと反射した光',
   },
 
+  {
+    id: 'music-zhangzhenyue-ok',
+    category: 'music',
+    title: 'OK',
+    creator: '张震岳',
+    cover: '/shelf/ok-zhangzhenyue.jpg',
+    musicUrl: 'https://open.spotify.com/album/08x1RIz97KNej8hxLDSE7e',
+    note: '有时候想把自己关起来，还是学着把心门打开。',
+  },
+
 ]
