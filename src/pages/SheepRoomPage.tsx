@@ -212,7 +212,7 @@ export default function SheepRoomPage() {
     <LabHeader />
     <main className="room-stage" data-view={view} data-phase={phase}>
       <Suspense fallback={<div className="room-loading">正在打开小屋…</div>}><SheepRoomScene screenImage={frame} view={view} products={products} message={message} onSettled={() => { if (phase === 'zoom') void shop() }} /></Suspense>
-      <Link to="/lab" className="lab-action room-back"><ChevronLeft size={17} aria-hidden="true" />返回实验室</Link>
+      <Link to="/lab" className="lab-action room-back"><ChevronLeft size={17} aria-hidden="true" />返回实验</Link>
       {phase === 'room' && view === 'room' && <div className="room-welcome"><span>一个慢慢布置家的小实验</span><h1>羊的小屋</h1></div>}
       {phase !== 'room' && <div className="room-status" role="status"><span className={busy ? 'room-live-dot' : ''} /><span>{phase === 'shopping' && shoppingClock && elapsed >= shoppingClock.duration ? '时间到了，正在整理清单' : message}</span>{phase !== 'zoom' && <small>{phase === 'shopping' ? shoppingClock ? `剩余 ${Math.floor(Math.max(0, shoppingClock.duration - elapsed) / 60)} 分 ${Math.max(0, shoppingClock.duration - elapsed) % 60} 秒` : '准备中' : `${elapsed} 秒`} · {products.length} 件</small>}</div>}
       {error && !modal && <div className="room-error" role="alert">{error}</div>}

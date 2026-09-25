@@ -21,7 +21,7 @@
 | `/blog` | 博客与原学习文章合并展示（`src/posts/*.md`、`src/study/*.md`） |
 | `/post/:slug` | 文章详情页（旧 `/study/:slug` 自动跳转） |
 | `/hotspot` | 热点追踪站：GitHub 热点、Agent Skills、论文热点、AI 新闻、财经看点、统一收藏 |
-| `/lab` | 实验室：按分类浏览实验卡片 |
+| `/lab` | 实验：按分类浏览实验卡片 |
 | `/lab/sheep-room` | 羊的小屋：进入 3D 小屋，填写房间想法，观看 AI 逛店并选择购物清单，最后生成概念效果图（需单独配置服务） |
 
 ## 功能

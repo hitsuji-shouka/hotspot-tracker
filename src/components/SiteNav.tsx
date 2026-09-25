@@ -8,7 +8,7 @@ const GITHUB_USER = 'hitsuji-shouka'
 const ITEMS: { to: string; label: string; end?: boolean }[] = [
   { to: '/shelf', label: '漫游' },
   { to: '/blog', label: '博客' },
-  { to: '/lab', label: '实验室' },
+  { to: '/lab', label: '实验' },
 ]
 
 function MobileMenu() {

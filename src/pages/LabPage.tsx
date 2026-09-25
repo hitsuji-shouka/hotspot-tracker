@@ -166,7 +166,7 @@ export default function LabPage() {
   const items = filterExperiments(entries, category)
   const categoryName = LAB_CATEGORIES.find(item => item.id === category)!.label
 
-  useEffect(() => { document.title = '实验室 · 羊宇宙漫游指南' }, [])
+  useEffect(() => { document.title = '实验 · 羊宇宙漫游指南' }, [])
   useEffect(() => {
     for (const src of ['/lab/room-card.webp', '/lab/central-perk/cover-card.webp']) {
       const image = new Image()

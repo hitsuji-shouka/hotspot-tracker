@@ -95,10 +95,10 @@ export default function BlogHome() {
         <div className="home-section-heading">
           <div>
             <span className="home-section-index">03 / LABS</span>
-            <h2 id="home-lab-title">实验室</h2>
+            <h2 id="home-lab-title">实验</h2>
             <p>一些奇奇怪怪的小折腾。想到什么，就做出来玩玩。</p>
           </div>
-          <Link className="home-section-link" to="/lab">进入实验室 <ArrowUpRight size={18} aria-hidden="true" /></Link>
+          <Link className="home-section-link" to="/lab">进入实验 <ArrowUpRight size={18} aria-hidden="true" /></Link>
         </div>
         <div className="home-lab-grid">
           {EXPERIMENTS.filter(item => item.path).map(item => <Link key={item.id} className="home-lab-pick" to={item.path!}>
