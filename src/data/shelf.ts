@@ -1535,4 +1535,14 @@ export const SHELF: ShelfItem[] = [
     note: '他以牺牲个人自我的完整性为代价，找到了新的脆弱的安全感。由于他无法忍受孤独，于是便选择失去自我。',
   },
 
+  {
+    id: 'movie-sword-art-online',
+    category: 'movie',
+    subgroup: 'anime',
+    title: '刀剑神域',
+    creator: 'A-1 Pictures',
+    cover: '/shelf/sword-art-online.jpg',
+    note: 'これは、ゲームであっても遊びではない。',
+  },
+
 ]
