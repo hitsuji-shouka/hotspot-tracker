@@ -1554,4 +1554,41 @@ export const SHELF: ShelfItem[] = [
     note: '抽屉里塞满团得圆溜溜的漂亮pants，我以为大约是人生中微小而又确实的幸福之一（简称“小确幸”）。',
   },
 
+  {
+    id: 'movie-k-on',
+    category: 'movie',
+    subgroup: 'anime',
+    title: '轻音少女',
+    creator: '京都动画',
+    cover: '/shelf/k-on.jpg',
+    note: 'けいおん大好きー！',
+  },
+  {
+    id: 'movie-samurai-champloo',
+    category: 'movie',
+    subgroup: 'anime',
+    title: '混沌武士',
+    creator: 'manglobe',
+    cover: '/shelf/samurai-champloo.jpg',
+    note: 'てめえの生き方決めんのはてめえ自身だろ。',
+  },
+  {
+    id: 'movie-tokyo-ghoul',
+    category: 'movie',
+    subgroup: 'anime',
+    title: '东京喰种',
+    creator: 'studio pierrot',
+    cover: '/shelf/tokyo-ghoul.png',
+    note: '1000引く7は？',
+  },
+  {
+    id: 'movie-death-note',
+    category: 'movie',
+    subgroup: 'anime',
+    title: '死亡笔记',
+    creator: 'MADHOUSE',
+    cover: '/shelf/death-note.png',
+    note: 'そして僕は新世界の神となる。',
+  },
+
 ]
