@@ -9,7 +9,7 @@ export function createPorsche(onError: (message: string) => void) {
   const standard = (color: string, roughness: number, metalness = 0) => {
     const m = new T.MeshStandardMaterial({ color, roughness, metalness }); materials.add(m); return m
   }
-  const paint = new T.MeshPhysicalMaterial({ color: '#c71e24', metalness: .48, roughness: .24, clearcoat: 1, clearcoatRoughness: .16 }); materials.add(paint)
+  const paint = new T.MeshPhysicalMaterial({ color: '#b8bac1', metalness: .48, roughness: .24, clearcoat: 1, clearcoatRoughness: .16 }); materials.add(paint)
   const glass = new T.MeshPhysicalMaterial({ color: '#b6cbd2', metalness: .05, roughness: .09, clearcoat: 1, transparent: true, opacity: .28, depthWrite: false }); materials.add(glass)
   const lampGlass = glass.clone(); lampGlass.opacity = .16; lampGlass.color.set('#f2f4f4'); materials.add(lampGlass)
   const chrome = standard('#b9c2c9', .23, 1), alloy = standard('#c6cbd0', .3, .95), dark = standard('#171c20', .68), rubber = standard('#17191b', .86), interior = standard('#34332f', .85), brakes = standard('#b32222', .38, .3), red = standard('#8b1722', .25, .2), gold = standard('#bc9650', .4, .7)
