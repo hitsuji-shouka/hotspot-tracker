@@ -135,10 +135,14 @@ html { scroll-behavior: smooth; }
 .article-toc-mobile { border-block: 1px solid #e8e4dc; margin-bottom: 2rem; padding-block: 1rem; }
 .article-toc-mobile summary { cursor: pointer; }
 .article-toc-mobile nav { margin-top: 1rem; }
-@media (min-width: 1280px) {
+@media (min-width: 1360px) {
   .article-toc-mobile { display: none; }
-  .article-toc-desktop { display: block; position: absolute; inset: 0 auto 0 -15rem; width: 12rem; }
-  .article-toc-desktop nav { position: sticky; top: 3rem; max-height: calc(100dvh - 6rem); overflow-y: auto; padding: 2px; }
+  .article-toc-desktop { display: block; position: absolute; inset: 0 auto 0 max(-18rem, calc(444px - 50vw)); width: 12rem; }
+  .article-toc-desktop nav { position: sticky; top: 3rem; max-height: calc(100dvh - 6rem); overflow-y: auto; padding: 2px; scrollbar-width: thin; scrollbar-color: #59544e transparent; }
+  .article-toc-desktop nav::-webkit-scrollbar { width: 6px; }
+  .article-toc-desktop nav::-webkit-scrollbar-track { background: transparent; }
+  .article-toc-desktop nav::-webkit-scrollbar-thumb { border-radius: 999px; background: #59544e; }
+  .article-toc-desktop nav::-webkit-scrollbar-thumb:hover { background: #817a72; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
