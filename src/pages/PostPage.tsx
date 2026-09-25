@@ -35,7 +35,6 @@ export default function PostPage() {
       </header>
       {post.audience && <aside className="garden-audience" aria-label="适合谁阅读"><strong>适合谁阅读</strong><p>{post.audience}</p></aside>}
       {post.content.trim() ? <ArticleBody key={post.slug} content={post.content} /> : <p className="garden-empty-article">这篇笔记的正文还在整理中。</p>}
-      <Link to="/blog" className="garden-end-link">← 继续逛逛博客</Link>
     </main>
   </div>
 }
