@@ -19,14 +19,14 @@
 .shelf-description { margin: 28px 0 0 clamp(31px, 3.6vw, 58px); max-width: 38em; color: #d5cec5; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(21px, 2.5vw, 38px); line-height: 1.45; }
 .shelf-subtopics { display: flex; align-items: baseline; gap: clamp(22px, 2.6vw, 40px); margin: clamp(28px, 3.2vw, 44px) 0 0 clamp(31px, 3.6vw, 58px); overflow-x: auto; scrollbar-width: none; }
 .shelf-subtopics::-webkit-scrollbar { display: none; }
-.shelf-subtopics button { position: relative; flex: none; border: 0; padding: 0 0 9px; color: #8f8981; font-family: ui-serif, Georgia, Cambria, serif; font-size: 16px; letter-spacing: .08em; white-space: nowrap; transition: color 180ms ease; }
+.shelf-subtopics button { position: relative; flex: none; border: 0; padding: 0 0 9px; color: #8f8981; font-family: ui-serif, Georgia, Cambria, serif; font-size: 19px; letter-spacing: .08em; white-space: nowrap; transition: color 180ms ease; }
 .shelf-subtopics button:hover { color: #d5cec5; }
 .shelf-subtopics button.is-active { color: #64d5e9; }
 .shelf-subtopics button.is-active::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 22px; height: 2px; border-radius: 2px; background: #64d5e9; transform: translateX(-50%); }
 .shelf-subtopics button:focus-visible { outline: 2px solid #64d5e9; outline-offset: 4px; }
-.shelf-sub-count { margin-left: 5px; font-size: 11px; font-variant-numeric: tabular-nums; vertical-align: super; letter-spacing: 0; color: #6b665f; transition: color 180ms ease; }
+.shelf-sub-count { margin-left: 6px; font-size: 12px; font-variant-numeric: tabular-nums; vertical-align: super; letter-spacing: 0; color: #6b665f; transition: color 180ms ease; }
 .shelf-subtopics button.is-active .shelf-sub-count { color: #64d5e9; opacity: .75; }
-.shelf-grid-compact { margin-top: clamp(40px, 4.5vw, 64px); }
+.shelf-grid-compact { margin-top: clamp(26px, 3vw, 44px); }
 .shelf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px clamp(22px, 3vw, 50px); margin-top: clamp(74px, 8vw, 120px); }
 .shelf-card-featured { grid-column: span 2; }
 .shelf-cover-featured { aspect-ratio: 2.15; }
@@ -45,7 +45,7 @@
   .shelf-tab-large { font-size: clamp(36px, 10vw, 50px); }
   .shelf-description { min-height: 2.9em; margin: 23px 0 0; font-size: 22px; }
   .shelf-subtopics { margin: 22px 0 0; gap: 26px; }
-  .shelf-subtopics button { padding-bottom: 7px; font-size: 15px; }
+  .shelf-subtopics button { padding-bottom: 7px; font-size: 17px; }
   .shelf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 16px; margin-top: 62px; }
   .shelf-grid-compact { margin-top: 34px; }
 }
