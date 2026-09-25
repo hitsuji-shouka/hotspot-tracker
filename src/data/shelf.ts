@@ -202,7 +202,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-hitsuji-1999',
     category: 'music',
-    subgroup: 'album',
+    subgroup: 'live',
     title: '1999（官方 MV）',
     creator: '羊文学',
     videoUrl: 'https://www.bilibili.com/video/BV1kk4y1E7LW',
