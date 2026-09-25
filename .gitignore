@@ -10,3 +10,4 @@ sync-data.json.tmp
 .env
 .env.*
 .tmp-shelf/
+.tmp-npm-cache/
