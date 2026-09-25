@@ -1,0 +1,39 @@
+.shelf-page { min-height: 100svh; background: #211f1c; color: #e8e2da; }
+.shelf-page .site-nav { color: #a8a29a; }
+.shelf-page .site-nav a:hover,
+.shelf-page .site-nav a[aria-current="page"] { color: #f4efe7; }
+.shelf-page .site-menu-toggle { color: #e8e2da; }
+.shelf-main { width: min(100%, 1536px); margin-inline: auto; padding: clamp(42px, 5vw, 80px) clamp(20px, 4vw, 64px) 96px; }
+.shelf-switcher { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 26px); }
+.shelf-count { flex: none; color: #64d5e9; font-size: clamp(19px, 2vw, 32px); font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
+.shelf-tabs { display: flex; align-items: center; min-width: 0; gap: clamp(8px, 1.8vw, 26px); }
+.shelf-tab { position: relative; flex: none; width: clamp(80px, 18vw, 270px); height: clamp(68px, 8vw, 124px); padding: 0; border: 0; font-family: ui-serif, Georgia, Cambria, serif; font-weight: 500; white-space: nowrap; }
+.shelf-tab + .shelf-tab::before { content: ''; position: absolute; left: calc(clamp(8px, 1.8vw, 26px) / -2); top: 10%; height: 80%; border-left: 1px solid #625e59; }
+.shelf-tab-small, .shelf-tab-large { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; line-height: 1.12; transition: opacity 210ms ease, color 210ms ease; }
+.shelf-tab-small { color: #625e59; font-size: clamp(42px, 5.3vw, 78px); opacity: 1; }
+.shelf-tab-large { color: #eee9e2; font-size: clamp(60px, 7.4vw, 110px); opacity: 0; }
+.shelf-tab.is-active .shelf-tab-small { opacity: 0; }
+.shelf-tab.is-active .shelf-tab-large { opacity: 1; }
+.shelf-tab:not(.is-active):hover .shelf-tab-small { color: #bcb7b1; }
+.shelf-tab:focus-visible { outline: 2px solid #64d5e9; outline-offset: 7px; }
+.shelf-description { margin: 28px 0 0 clamp(31px, 3.6vw, 58px); max-width: 38em; color: #d5cec5; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(21px, 2.5vw, 38px); line-height: 1.45; }
+.shelf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px clamp(22px, 3vw, 50px); margin-top: clamp(74px, 8vw, 120px); }
+.shelf-card-featured { grid-column: span 2; }
+.shelf-cover-featured { aspect-ratio: 2.15; }
+@media (max-width: 950px) {
+  .shelf-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .shelf-grid-music { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shelf-tab-small { font-size: clamp(38px, 5.5vw, 60px); }
+  .shelf-tab-large { font-size: clamp(52px, 7vw, 76px); }
+}
+@media (max-width: 639px) {
+  .shelf-main { padding-top: 44px; padding-bottom: 64px; }
+  .shelf-switcher { gap: 10px; }
+  .shelf-count { font-size: 17px; }
+  .shelf-tab { width: clamp(76px, calc((100vw - 86px) / 3), 112px); }
+  .shelf-tab-small { font-size: clamp(25px, 7vw, 35px); }
+  .shelf-tab-large { font-size: clamp(36px, 10vw, 50px); }
+  .shelf-description { min-height: 2.9em; margin: 23px 0 0; font-size: 22px; }
+  .shelf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 16px; margin-top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) { .shelf-tab-small, .shelf-tab-large { transition: none; } }

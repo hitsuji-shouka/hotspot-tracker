@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { Music, Play, Star, X } from 'lucide-react'
-import SiteNav from '@/components/SiteNav'
-import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfFilter, type ShelfItem } from '@/data/shelf'
+import SiteHeader from '@/components/SiteHeader'
+import { CATEGORY_META, SHELF, type ShelfCategory, type ShelfItem } from '@/data/shelf'
+import './shelf.css'
 
-const ACCENT = '#c2410c'
+const ACCENT = '#e6b976'
+const CATEGORIES: ShelfCategory[] = ['movie', 'book', 'music']
+const DESCRIPTIONS: Record<ShelfCategory, string> = {
+  movie: '借一段光影，走进另一种人生。',
+  book: '在书页之间，慢慢认识更辽阔的世界。',
+  music: '有些心情说不清楚，就交给旋律。',
+}
 
 const GRADIENTS: Record<ShelfCategory, string> = {
   movie: 'from-[#1f2937] to-[#0f172a]',
@@ -80,27 +87,26 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
   )
 }
 
-function ShelfCard({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
+function ShelfCard({ item, onPlay, featured = false }: { item: ShelfItem; onPlay: (item: ShelfItem) => void; featured?: boolean }) {
   const isVideo = !!item.videoUrl
-  const coverAspect = item.category === 'music'
+  const coverAspect = featured ? 'shelf-cover-featured' : item.category === 'music'
     ? isVideo
       ? 'aspect-video'
       : 'aspect-square'
     : 'aspect-[2/3]'
 
   return (
-    <article className={`group min-w-0 ${isVideo ? 'col-span-2 sm:col-span-1' : ''}`}>
-      <div className={`overflow-hidden rounded-lg border border-[#e8e4dc] bg-[#eeeae2] shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-md ${coverAspect}`}>
+    <article className={`group min-w-0 ${featured ? 'shelf-card-featured' : isVideo ? 'col-span-2 sm:col-span-1' : ''}`}>
+      <div className={`overflow-hidden rounded-lg border border-[#504b44] bg-[#2b2926] shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${coverAspect}`}>
         <CoverBox item={item} onPlay={onPlay} />
       </div>
-      <div className="mt-1 h-1.5 rounded-sm bg-gradient-to-b from-[#c9a06b] to-[#9c7748] shadow-[0_2px_3px_rgba(0,0,0,0.12)]" />
-      <div className="mt-2.5">
-        <div className="line-clamp-2 font-serif text-[15px] font-semibold leading-snug text-[#26221c] sm:text-base">
+      <div className="mt-3">
+        <div className="line-clamp-2 font-serif text-[15px] font-semibold leading-snug text-[#eee9e0] sm:text-base">
           {item.title}
         </div>
-        <div className="mt-1 truncate text-xs text-[#9b9388]">{item.creator}</div>
+        <div className="mt-1 truncate text-xs text-[#aaa39a]">{item.creator}</div>
         {item.note && (
-          <div className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#6b655c]">{item.note}</div>
+          <div className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#aaa39a]">{item.note}</div>
         )}
         {item.rating != null && (
           <div className="mt-2 flex gap-0.5">
@@ -189,62 +195,62 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
 }
 
 export default function ShelfPage() {
-  const [filter, setFilter] = useState<ShelfFilter>('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filter = CATEGORIES.find(category => category === searchParams.get('category')) ?? 'movie'
   const [playing, setPlaying] = useState<ShelfItem | null>(null)
 
   useEffect(() => {
     document.title = '漫游 · 羊宇宙漫游指南'
   }, [])
 
-  const items = useMemo(
-    () => {
-      const filtered = filter === 'all' ? SHELF : SHELF.filter((item) => item.category === filter)
-      if (filter !== 'all') return filtered
-      return [...filtered].sort((a, b) => Number(a.category === 'music') - Number(b.category === 'music'))
-    },
-    [filter],
-  )
+  const items = useMemo(() => {
+    const filtered = SHELF.filter((item) => item.category === filter)
+    if (filter !== 'music') return filtered
+    const firstVideo = filtered.find(item => item.videoUrl)
+    const albums = filtered.filter(item => !item.videoUrl).slice(0, 2)
+    const firstRow = [firstVideo, ...albums].filter((item): item is ShelfItem => !!item)
+    return [...firstRow, ...filtered.filter(item => !firstRow.includes(item))]
+  }, [filter])
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-6 text-sm">
-        <Link to="/" className="flex items-center gap-2 font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">
-          <img src="/sheep-planet.png" alt="返回首页" className="w-6 h-6 object-contain" />
-          羊宇宙漫游指南
-        </Link>
-        <SiteNav />
-      </header>
+    <div className="shelf-page min-h-screen">
+      <SiteHeader />
 
-      <main className="mx-auto max-w-6xl px-6 pb-16">
-        <section className="pb-6 pt-6 sm:pt-8">
-          <h1 className="font-serif text-2xl font-bold">漫游</h1>
-          <p className="mt-2 text-sm text-[#6b655c]">在文学、电影和音乐里漫游——这个书架会慢慢填满。</p>
-        </section>
-
-        <div className="mb-8 flex flex-wrap gap-2">
-          {(Object.keys(CATEGORY_META) as ShelfFilter[]).map((k) => (
+      <main className="shelf-main">
+        <h1 className="sr-only">漫游</h1>
+        <section className="shelf-intro" aria-label="作品分类">
+          <div className="shelf-switcher">
+            <span className="shelf-count" aria-label={`${items.length} 件作品`}>{String(items.length).padStart(2, '0')}</span>
+            <nav className="shelf-tabs" aria-label="作品分类">
+              {CATEGORIES.map((k) => (
             <button
               key={k}
-              onClick={() => setFilter(k)}
-              className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
-                filter === k
-                  ? 'border-transparent text-white'
-                  : 'border-[#e8e4dc] bg-white text-[#6b655c] hover:border-[#a39e93]'
-              }`}
-              style={filter === k ? { background: ACCENT } : undefined}
+              type="button"
+              onClick={() => setSearchParams(previous => {
+                const next = new URLSearchParams(previous)
+                next.set('category', k)
+                return next
+              }, { preventScrollReset: true })}
+              aria-pressed={filter === k}
+              aria-label={CATEGORY_META[k].label}
+              className={`shelf-tab ${filter === k ? 'is-active' : ''}`}
             >
-              {CATEGORY_META[k].emoji} {CATEGORY_META[k].label}
+              <span className="shelf-tab-small" aria-hidden="true">{CATEGORY_META[k].label}</span>
+              <span className="shelf-tab-large" aria-hidden="true">{CATEGORY_META[k].label}</span>
             </button>
-          ))}
-        </div>
+              ))}
+            </nav>
+          </div>
+          <p className="shelf-description" aria-live="polite">{DESCRIPTIONS[filter]}</p>
+        </section>
 
         {items.length === 0 ? (
-          <p className="text-sm text-[#a39e93] py-16 text-center">
+          <p className="text-sm text-[#aaa39a] py-16 text-center">
             这一类还空着，去 src/data/shelf.ts 添一件喜欢的作品吧。
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
-            {items.map((item) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} />)}
+          <div className={`shelf-grid ${filter === 'music' ? 'shelf-grid-music' : ''}`}>
+            {items.map((item, index) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} featured={filter === 'music' && index === 0 && !!item.videoUrl} />)}
           </div>
         )}
       </main>

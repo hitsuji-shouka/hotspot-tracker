@@ -7,6 +7,10 @@ export interface Post {
   date: string
   tags: string[]
   summary: string
+  cover?: string
+  updated?: string
+  audience?: string
+  layout?: 'essay'
   content: string
 }
 
@@ -15,9 +19,13 @@ interface Frontmatter {
   date?: string
   tags?: string[]
   summary?: string
+  cover?: string
+  updated?: string
+  audience?: string
+  layout?: string
 }
 
-function parseFrontmatter(raw: string): { meta: Frontmatter; body: string } {
+export function parseFrontmatter(raw: string): { meta: Frontmatter; body: string } {
   const normalized = raw.replace(/\r\n?/g, '\n')
   const m = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
   if (!m) return { meta: {}, body: normalized }
@@ -50,7 +58,7 @@ const studyModules = import.meta.glob('../study/*.md', { query: '?raw', import: 
 
 function toPosts(mods: Record<string, unknown>): Post[] {
   return Object.entries(mods)
-    .map(([path, raw]) => {
+    .map(([path, raw]): Post => {
       const slug = path.split('/').pop()!.replace(/\.md$/, '')
       const { meta, body } = parseFrontmatter(raw as string)
       return {
@@ -59,23 +67,22 @@ function toPosts(mods: Record<string, unknown>): Post[] {
         date: meta.date ?? '',
         tags: meta.tags ?? [],
         summary: meta.summary ?? '',
+        cover: meta.cover || undefined,
+        updated: meta.updated || undefined,
+        audience: meta.audience || undefined,
+        layout: meta.layout === 'essay' ? 'essay' : undefined,
         content: body,
       }
     })
     .sort((a, b) => b.date.localeCompare(a.date))
 }
 
-export const posts: Post[] = toPosts(modules)
-
-/** 学习专栏文章：Markdown 文件存在 src/study/ */
-export const studyPosts: Post[] = toPosts(studyModules)
+/** 博客同时收录原博客与学习专栏，保留各自的 Markdown 文件。 */
+export const posts: Post[] = [...toPosts(modules), ...toPosts(studyModules)]
+  .sort((a, b) => b.date.localeCompare(a.date))
 
 export function getPost(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug)
-}
-
-export function getStudyPost(slug: string): Post | undefined {
-  return studyPosts.find((p) => p.slug === slug)
 }
 
 /**

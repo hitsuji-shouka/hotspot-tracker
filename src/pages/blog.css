@@ -1,0 +1,97 @@
+.garden-page { min-height: 100svh; background: #211f1c; color: #e8e2da; }
+.garden-page .site-nav { color: #aaa49d; }
+.garden-page .site-nav a:hover,
+.garden-page .site-nav a[aria-current="page"] { color: #f4efe7; }
+.garden-reading .site-nav a[href="/blog"] { color: #f4efe7; }
+.garden-page .site-menu-toggle { color: #e8e2da; }
+.garden-main { width: min(100%, 1536px); margin-inline: auto; padding: clamp(42px, 5vw, 80px) clamp(20px, 4vw, 64px) 110px; }
+.garden-heading { display: flex; align-items: baseline; gap: clamp(12px, 1.6vw, 26px); }
+.garden-count { flex: none; color: #64d5e9; font-size: clamp(19px, 2vw, 32px); font-variant-numeric: tabular-nums; }
+.garden-heading h1 { margin: 0; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(64px, 8vw, 120px); font-weight: 500; letter-spacing: -.055em; line-height: 1.05; }
+.garden-intro > p { margin: 30px 0 0 clamp(31px, 3.6vw, 58px); color: #d2cbc3; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(22px, 2.5vw, 36px); line-height: 1.45; }
+.garden-topics { display: flex; align-items: center; gap: 20px; margin-top: clamp(68px, 7.5vw, 110px); padding-bottom: 18px; border-bottom: 1px solid #3c3935; }
+.garden-topics-label { flex: none; color: #a9a39b; font-size: 11px; font-weight: 600; letter-spacing: .1em; }
+.garden-topics-label span { margin-left: 8px; color: #64d5e9; }
+.garden-topic-list { display: flex; gap: 5px; min-width: 0; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #615c55 transparent; }
+.garden-topic-list button { flex: none; border: 0; border-radius: 99px; padding: 8px 14px; color: #b5aea5; white-space: nowrap; font-size: 13px; transition: background 160ms, color 160ms; }
+.garden-topic-list button:hover { color: #f5f0e9; background: #36332f; }
+.garden-topic-list button.is-active { background: #54c5d9; color: #12262a; font-weight: 600; }
+.garden-topic-list button:focus-visible, .garden-post:focus-visible, .garden-back:focus-visible, .garden-end-link:focus-visible { outline: 2px solid #64d5e9; outline-offset: 3px; }
+.garden-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.8vw, 28px); align-items: start; margin-top: 42px; }
+.garden-post { display: flex; gap: 13px; min-width: 0; padding: 18px 18px 20px; color: inherit; border: 1px solid transparent; border-radius: 8px; transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.garden-post:hover, .garden-post:focus-visible { background: #2b2926; border-color: #403c37; box-shadow: 0 8px 24px #00000018; }
+.garden-post:hover h2, .garden-post:focus-visible h2 { color: #d978ad; }
+.garden-post-mark { flex: none; width: 10px; height: 10px; margin: 10px 3px 0; background: #64d5e9; transform: rotate(45deg); }
+.garden-post-copy { min-width: 0; }
+.garden-post h2 { margin: 0; color: #e4ded7; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(19px, 1.6vw, 25px); font-weight: 400; line-height: 1.25; transition: color 160ms; overflow-wrap: anywhere; }
+.garden-post p { margin: 10px 0 0; color: #a7a19a; font-size: 14px; line-height: 1.6; }
+.garden-post-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; color: #88827c; font-size: 12px; }
+.garden-featured { display: block; grid-row: span 2; padding: 0; overflow: hidden; border: 1px solid #47423c; border-radius: 5px; background: #2b2824; }
+.garden-featured .garden-post-copy { padding: 22px 24px 25px; }
+.garden-featured h2 { font-size: clamp(22px, 2vw, 30px); }
+.garden-cover { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.garden-article-main { width: min(100%, 870px); margin-inline: auto; padding: 72px 24px 120px; }
+.garden-back { display: inline-flex; align-items: center; gap: 9px; color: #aaa49d; font-size: 13px; }
+.garden-back:hover, .garden-end-link:hover { color: #64d5e9; }
+.garden-article-header { margin-top: 65px; }
+.garden-article-eyebrow { display: flex; gap: 13px; align-items: center; color: #64d5e9; font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.garden-article-header h1 { margin: 22px 0 0; color: #f0ebe5; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(42px, 5.5vw, 76px); font-weight: 500; line-height: 1.12; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.garden-article-summary { margin: 24px 0 0; color: #bcb5ad; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(20px, 2.2vw, 29px); line-height: 1.55; }
+.garden-article-meta { display: flex; justify-content: space-between; gap: 24px; margin-top: 42px; padding-block: 16px; border-top: 1px solid #403c37; border-bottom: 1px solid #403c37; color: #a8a198; font-size: 12px; }
+.garden-article-tags { display: flex; flex-wrap: wrap; gap: 14px; color: #64d5e9; }
+.garden-article-dates { display: grid; gap: 3px; text-align: right; }
+.garden-essay .garden-article-main { width: min(100%, 1080px); }
+.garden-essay .garden-article-eyebrow { display: none; }
+.garden-essay .garden-article-header h1 { font-size: clamp(48px, 6.4vw, 94px); font-weight: 600; line-height: 1.06; }
+.garden-essay .garden-article-summary { font-size: clamp(23px, 2.4vw, 35px); }
+.garden-essay .garden-article-meta { border-bottom: 0; }
+.garden-audience { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 24px; align-items: start; margin-top: 48px; padding: 26px 30px; border: 1px solid #393530; border-radius: 8px; background: #292724; }
+.garden-audience strong { color: #64d5e9; font-size: 12px; font-weight: 600; letter-spacing: .07em; }
+.garden-audience p { margin: -5px 0 0; color: #d3ccc4; font: 20px/1.7 ui-serif, Georgia, Cambria, serif; }
+.garden-reading.garden-essay .article-body-layout { margin-top: 72px; }
+.garden-essay .article-toc-desktop, .garden-essay .article-toc-mobile { display: none; }
+.garden-reading.garden-essay .md-body { font-size: 20px; }
+.garden-essay .md-body > p:first-child::first-letter { float: left; padding: .13em .1em 0 0; color: #eee8e1; font-size: 4em; line-height: .78; }
+.garden-reading .article-body-layout { margin-top: 60px; }
+.garden-reading .md-body { color: #d3ccc4; font-family: ui-serif, Georgia, Cambria, serif; font-size: 19px; line-height: 1.95; overflow-wrap: anywhere; }
+.garden-reading .md-body h1, .garden-reading .md-body h2, .garden-reading .md-body h3, .garden-reading .md-body h4 { color: #eee8e1; font-weight: 500; }
+.garden-reading .md-body h2 { border-color: #403c37; }
+.garden-reading .md-body a { color: #75d3e4; }
+.garden-reading .md-body code { background: #302e2a; border-color: #4c4740; color: #9ce0ec; }
+.garden-reading .md-body pre { background: #171715; border: 1px solid #3b3833; }
+.garden-reading .md-body blockquote { background: #2b2926; border-color: #64d5e9; color: #bfb8b0; }
+.garden-reading .md-body th, .garden-reading .md-body td { border-color: #504b44; }
+.garden-reading .md-body th { background: #302d29; color: #eee8e1; }
+.garden-reading .md-body figcaption { color: #aaa49d; }
+.garden-reading .article-toc-title, .garden-reading .article-toc-mobile summary { color: #e8e2da; }
+.garden-reading .article-toc-list, .garden-reading .article-toc-mobile { border-color: #4b4741; }
+.garden-reading .article-toc-list a { color: #aaa49d; }
+.garden-reading .article-toc-list a:hover, .garden-reading .article-toc-list a[aria-current="location"] { color: #64d5e9; }
+.garden-reading .article-toc-list a[aria-current="location"] { border-left-color: #64d5e9; }
+.garden-end-link { display: inline-block; margin-top: 60px; padding-top: 20px; border-top: 1px solid #403c37; color: #b8b0a7; font-size: 14px; }
+.garden-empty-article { margin-top: 60px; color: #aaa49d; font-family: ui-serif, Georgia, Cambria, serif; font-size: 20px; }
+.garden-missing { max-width: 870px; margin: auto; padding: 120px 24px; }
+.garden-missing h1 { font: 42px ui-serif, Georgia, serif; }
+.garden-missing a { display: inline-block; margin-top: 20px; color: #64d5e9; }
+@media (max-width: 950px) { .garden-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) {
+  .garden-main { padding-top: 48px; padding-bottom: 70px; }
+  .garden-heading h1 { font-size: 62px; }
+  .garden-intro > p { margin: 20px 0 0; font-size: 22px; }
+  .garden-topics { display: block; margin-top: 58px; }
+  .garden-topics-label { display: block; margin-bottom: 10px; }
+  .garden-topic-list { margin-inline: -6px; }
+  .garden-grid { display: block; margin-top: 24px; }
+  .garden-post { margin-top: 22px; }
+  .garden-featured { margin-bottom: 32px; }
+  .garden-article-main { padding: 40px 20px 80px; }
+  .garden-article-header { margin-top: 48px; }
+  .garden-audience { grid-template-columns: 1fr; gap: 10px; margin-top: 32px; padding: 20px; }
+  .garden-audience p { margin: 0; font-size: 17px; }
+  .garden-reading.garden-essay .article-body-layout { margin-top: 42px; }
+  .garden-reading.garden-essay .md-body { font-size: 18px; }
+  .garden-essay .md-body > p:first-child::first-letter { font-size: 3.4em; }
+  .garden-reading .article-body-layout { margin-top: 36px; }
+  .garden-reading .md-body { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .garden-topic-list button, .garden-post, .garden-post h2 { transition: none; } }

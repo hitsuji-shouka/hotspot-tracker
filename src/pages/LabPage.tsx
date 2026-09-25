@@ -1,19 +1,13 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type TouchEvent } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import SiteNav from '@/components/SiteNav'
+import SiteHeader from '@/components/SiteHeader'
 import { CONCEPTS, EXPERIMENTS, LAB_CATEGORIES, filterExperiments, selectCategory, type Experiment } from '@/data/lab'
 import { arcPosition, carouselLayout, clampPosition, swipeDestination } from '@/lib/lab-motion'
 import './lab.css'
 
 export function LabHeader() {
-  return <header className="lab-header">
-    <Link to="/" className="lab-brand flex items-center gap-2 font-serif font-bold text-lg">
-      <img src="/sheep-planet.png" alt="" className="w-6 h-6 object-contain" />
-      羊宇宙漫游指南
-    </Link>
-    <SiteNav />
-  </header>
+  return <SiteHeader className="lab-header" />
 }
 
 export function Backdrop() {

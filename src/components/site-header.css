@@ -1,0 +1,32 @@
+.site-header {
+  position: relative;
+  z-index: 3;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  padding-inline: clamp(20px, 2.5vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  color: inherit;
+  font-family: ui-serif, Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.site-brand img { width: 24px; height: 24px; object-fit: contain; }
+.site-brand:hover { color: #c2410c; }
+.site-brand:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+@media (max-width: 639px) {
+  .site-header { height: 72px; padding-inline: 20px; }
+  .site-brand { font-size: 16px; }
+}

@@ -1,56 +1,57 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router'
-import SiteNav from '@/components/SiteNav'
-import { posts } from '@/lib/posts'
+import { useEffect, useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router'
+import SiteHeader from '@/components/SiteHeader'
+import { posts, type Post } from '@/lib/posts'
+import './blog.css'
 
-const ACCENT = '#c2410c'
-const BORDER = '#e8e4dc'
+const topics = Array.from(new Set(posts.flatMap((post) => post.tags)))
+  .sort((a, b) => {
+    const count = (tag: string) => posts.filter((post) => post.tags.includes(tag)).length
+    return count(b) - count(a) || a.localeCompare(b, 'zh-CN')
+  })
+
+function PostCard({ post, featured = false }: { post: Post; featured?: boolean }) {
+  return <Link to={`/post/${encodeURIComponent(post.slug)}`} className={`garden-post ${featured ? 'garden-featured' : ''}`}>
+    {featured && post.cover ? <img className="garden-cover" src={post.cover} alt="" loading="lazy" /> : <span className="garden-post-mark" aria-hidden="true" />}
+    <div className="garden-post-copy">
+      <h2>{post.title}</h2>
+      {post.summary && <p>{post.summary}</p>}
+      <div className="garden-post-meta"><span>{post.tags[0] ?? '笔记'}</span><span aria-hidden="true">·</span><time dateTime={post.date}>{post.date}</time></div>
+    </div>
+  </Link>
+}
 
 export default function BlogPage() {
-  useEffect(() => {
-    document.title = '博客 · 羊宇宙漫游指南'
-  }, [])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const requestedTopic = searchParams.get('topic')
+  const topic = requestedTopic && topics.includes(requestedTopic) ? requestedTopic : ''
+  const filtered = useMemo(() => topic ? posts.filter((post) => post.tags.includes(topic)) : posts, [topic])
+  const featured = filtered.find((post) => post.cover)
+  const displayed = featured ? [featured, ...filtered.filter((post) => post.slug !== featured.slug)] : filtered
 
-  return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
-      <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <Link to="/" className="flex items-center gap-2 font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">
-          <img src="/sheep-planet.png" alt="返回首页" className="w-6 h-6 object-contain" />
-          羊宇宙漫游指南
-        </Link>
-        <SiteNav />
+  useEffect(() => { document.title = '博客 · 羊宇宙漫游指南' }, [])
+
+  function selectTopic(next: string) {
+    setSearchParams(next ? { topic: next } : {}, { replace: true })
+  }
+
+  return <div className="garden-page">
+    <SiteHeader />
+    <main className="garden-main">
+      <header className="garden-intro">
+        <div className="garden-heading"><span className="garden-count">{String(filtered.length).padStart(2, '0')}</span><h1>博客</h1></div>
+        <p>技术笔记、学习记录和偶尔冒出的想法。<br />一座还在生长的文字花园。</p>
       </header>
-
-      <main className="max-w-3xl mx-auto px-6 pb-16">
-        <section className="pt-6 pb-6 sm:pt-8">
-          <h1 className="font-serif text-2xl font-bold">博客</h1>
-          <p className="text-sm text-[#6b655c] mt-2">随手记录，慢慢来。</p>
-        </section>
-
-        <div className="space-y-1">
-          {posts.map((p) => (
-            <Link
-              key={p.slug}
-              to={`/post/${p.slug}`}
-              className="group flex items-baseline gap-4 py-3 border-b last:border-0 hover:bg-white/60 -mx-3 px-3 rounded-lg transition-colors"
-              style={{ borderColor: BORDER }}
-            >
-              <span className="text-xs text-[#a39e93] font-mono shrink-0 w-20">{p.date}</span>
-              <div className="min-w-0">
-                <span
-                  className="font-medium text-[15px] group-hover:underline underline-offset-4"
-                  style={{ textDecorationColor: ACCENT }}
-                >
-                  {p.title}
-                </span>
-                {p.summary && (
-                  <span className="block text-sm text-[#6b655c] mt-0.5 line-clamp-1">{p.summary}</span>
-                )}
-              </div>
-            </Link>
-          ))}
+      <nav className="garden-topics" aria-label="按主题筛选文章">
+        <span className="garden-topics-label">TOPICS <span aria-hidden="true">│</span></span>
+        <div className="garden-topic-list">
+          <button type="button" className={!topic ? 'is-active' : ''} aria-pressed={!topic} onClick={() => selectTopic('')}>全部</button>
+          {topics.map((item) => <button type="button" key={item} className={topic === item ? 'is-active' : ''} aria-pressed={topic === item} onClick={() => selectTopic(item)}>{item}</button>)}
         </div>
-      </main>
-    </div>
-  )
+      </nav>
+      <section className="garden-grid" aria-label={topic ? `${topic}文章` : '全部文章'}>
+        {displayed.map((post, index) => <PostCard key={post.slug} post={post} featured={index === 0 && !!post.cover} />)}
+      </section>
+    </main>
+  </div>
 }

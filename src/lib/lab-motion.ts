@@ -4,7 +4,7 @@ export function clampPosition(value: number, count: number) {
 
 export function carouselLayout(viewport: number) {
   const mobile = viewport < 640
-  const width = mobile ? Math.max(208, Math.min(320, viewport - 96)) : Math.max(270, Math.min(320, viewport * 0.175))
+  const width = mobile ? Math.max(208, Math.min(320, viewport - 96)) : Math.max(208, Math.min(340, viewport * 0.161))
   return { width, gap: mobile ? 16 : 34, step: mobile ? 0.04 : 0.115 }
 }
 

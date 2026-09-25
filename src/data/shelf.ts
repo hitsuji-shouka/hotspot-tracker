@@ -25,7 +25,6 @@
 //   },
 
 export type ShelfCategory = 'movie' | 'book' | 'music'
-export type ShelfFilter = ShelfCategory | 'all'
 
 export interface ShelfItem {
   id: string
@@ -39,11 +38,10 @@ export interface ShelfItem {
   rating?: number // 1-5
 }
 
-export const CATEGORY_META: Record<ShelfFilter, { label: string; emoji: string }> = {
-  all: { label: '全部', emoji: '✨' },
-  movie: { label: '影视', emoji: '🎬' },
-  book: { label: '书籍', emoji: '📖' },
-  music: { label: '音乐', emoji: '🎵' },
+export const CATEGORY_META: Record<ShelfCategory, { label: string }> = {
+  movie: { label: '影视' },
+  book: { label: '图书' },
+  music: { label: '音乐' },
 }
 
 export const SHELF: ShelfItem[] = [

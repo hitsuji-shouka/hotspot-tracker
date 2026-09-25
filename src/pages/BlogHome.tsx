@@ -1,166 +1,134 @@
-import AdminControl from '@/components/AdminControl'
-// 博客首页 v2：极简编辑风（灵感：addyosmani.com）
-// 浅色暖底 + 自我介绍 + 精选项目
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { fetchUserRepos, formatNumber, type Repo } from '@/lib/github'
-import SiteNav from '@/components/SiteNav'
-import { ArrowUpRight, Flame, Github, Mail, MapPin, Star } from 'lucide-react'
+import { ArrowDown, ArrowRight, ArrowUpRight, Github, Mail } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
+import { SHELF, type ShelfItem } from '@/data/shelf'
+import { EXPERIMENTS } from '@/data/lab'
+import { posts, type Post } from '@/lib/posts'
+import HomeSpace from './HomeSpace'
+import './home.css'
 
-const GITHUB_USER = 'hitsuji-shouka'
+const shelfPicks = ['movie-interstellar', 'book-qianshuiting', 'music-wanqing']
+  .map(id => SHELF.find(item => item.id === id))
+  .filter((item): item is ShelfItem => !!item)
 
-/** 首页公开介绍 */
-const PROFILE = {
-  name: '羊宇宙',
-  tagline: '复旦大学 · AI Agent / 后端开发',
-  introPre: '你好，我是 ',
-  introName: '羊宇宙',
-  introPost: '。',
-  introLine2: '喜欢探究技术，也喜欢感受故事。',
-  introParagraphs: [
-    '我热衷于 AI Agent 与后端技术，喜欢探究智能体如何理解问题、使用工具，也关心支撑它们的系统如何做到可靠、高效。这里记录我从原理到实践的探索，以及构建过程中遇到的问题与思考。',
-    '技术之外，我也喜欢在文学、电影和音乐里漫游，记录那些让我停留、回味或产生新想法的作品。',
-    '欢迎来到我的「羊宇宙漫游指南」，一起探索技术，也交换关于世界的感受。',
-  ],
-  location: '上海',
-  email: '2483346490@qq.com',
-}
+const blogPicks = ['hotspot-tracker-story', 'domain-deploy-story', 'hello-blog']
+  .map(slug => posts.find(post => post.slug === slug))
+  .filter((post): post is Post => !!post)
 
-const EXPERIENCE = [
-  { period: '2026.05 – 2026.08', title: '蚂蚁 · 财富 AI Lab · 智能体与大模型应用开发' },
-  { period: '2025.11 – 2026.04', title: '蔚来 · 能源数智化 · Java 后端开发' },
+const contacts = [
+  { label: '个人网站', href: 'https://hitsuji-shouka.com/', mark: '羊' },
+  { label: 'GitHub', href: 'https://github.com/hitsuji-shouka', mark: 'github' },
+  { label: '知乎', href: 'https://www.zhihu.com/people/richardy-62', mark: '知' },
+  { label: '小红书', href: 'https://www.xiaohongshu.com/user/profile/65bcd985000000000e027267', mark: '红' },
+  { label: 'B站', href: 'https://space.bilibili.com/3546877089811185?spm_id_from=333.1007.0.0', mark: 'B' },
+  { label: 'X', href: 'https://x.com/richard29861802', mark: '𝕏' },
 ]
-
-const ACCENT = '#c2410c'
-const BORDER = '#e8e4dc'
+const email = '2483346490@qq.com'
 
 export default function BlogHome() {
-  const [repos, setRepos] = useState<Repo[]>([])
+  const [emailCopied, setEmailCopied] = useState(false)
+  useEffect(() => { document.title = '羊宇宙漫游指南' }, [])
 
-  useEffect(() => {
-    document.title = '羊宇宙漫游指南'
-    fetchUserRepos(GITHUB_USER)
-      .then((list) => setRepos([...list].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6)))
-      .catch(() => {})
-  }, [])
+  return <div className="home-page">
+    <section className="home-hero" aria-label="关于我">
+      <HomeSpace />
+      <div className="home-hero-vignette" aria-hidden="true" />
+      <SiteHeader className="home-header" />
+      <div className="home-intro">
+        <h1>喜欢探究技术，<br />也喜欢感受故事。</h1>
+        <div className="home-intro-copy">
+          <p>你好，我是羊宇宙。</p>
+          <p>这里记录 AI Agent、后端开发，以及文学、电影和音乐。</p>
+        </div>
+      </div>
+      <a className="home-scroll-cue" href="#home-wander">继续探索 <ArrowDown size={16} aria-hidden="true" /></a>
+    </section>
 
-  return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
-      {/* 顶部导航 */}
-      <header className="max-w-3xl mx-auto px-6 pt-6 flex items-center justify-between text-sm">
-        <Link to="/" className="flex items-center gap-2 font-serif font-bold text-lg hover:text-[#c2410c] transition-colors">
-          <img src="/sheep-planet.png" alt="返回首页" className="w-6 h-6 object-contain" />
-          羊宇宙漫游指南
-        </Link>
-        <SiteNav />
-      </header>
+    <main className="home-sections">
+      <section className="home-section" id="home-wander" aria-labelledby="home-wander-title">
+        <div className="home-section-heading">
+          <div>
+            <span className="home-section-index">01 / WANDER</span>
+            <h2 id="home-wander-title">漫游</h2>
+            <p>电影、书页和旋律，收集那些让我停下来的瞬间。</p>
+          </div>
+          <Link className="home-section-link" to="/shelf">走进漫游 <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        </div>
+        <div className="home-shelf-grid">
+          {shelfPicks.map(item => <Link key={item.id} className={`home-shelf-pick home-shelf-pick--${item.category}`} to={`/shelf?category=${item.category}`}>
+            <div className={`home-shelf-visual home-shelf-visual--${item.category}`}>{item.cover && <img src={item.cover} alt="" loading="lazy" />}</div>
+            <span className="home-pick-type">{{ movie: '影视', book: '图书', music: '音乐' }[item.category]}</span>
+            <div className="home-pick-title"><h3>{item.title}</h3><ArrowUpRight size={19} aria-hidden="true" /></div>
+            <p>{item.creator}</p>
+          </Link>)}
+        </div>
+      </section>
 
-      <main className="max-w-3xl mx-auto px-6 pb-16">
-        {/* 大字段我介绍 */}
-        <section className="pt-6 pb-10 sm:pt-8">
-          <div className="flex items-center gap-4 mb-8">
-            <img
-              src="/profile-avatar.png"
-              alt={PROFILE.name}
-              width={56}
-              height={56}
-              loading="eager"
-              fetchPriority="high"
-              className="h-14 w-14 shrink-0 rounded-full"
-            />
-            <div className="text-sm text-[#6b655c]">
-              <div className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5" />
-                {PROFILE.location}
-              </div>
-              <div className="mt-0.5">{PROFILE.tagline}</div>
+      <section className="home-section" aria-labelledby="home-blog-title">
+        <div className="home-section-heading">
+          <div>
+            <span className="home-section-index">02 / WRITING</span>
+            <h2 id="home-blog-title">博客</h2>
+            <p>把做过的事、走过的弯路和正在想的问题写下来。</p>
+          </div>
+          <Link className="home-section-link" to="/blog">阅读全部文章 <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        </div>
+        <div className="home-blog-grid">
+          {blogPicks[0] && <Link className="home-blog-feature" to={`/post/${blogPicks[0].slug}`}>
+            <span className="home-pick-type">精选文章 · {blogPicks[0].date}</span>
+            <h3>{blogPicks[0].title}</h3>
+            <p>{blogPicks[0].summary}</p>
+            <span className="home-read-more">阅读文章 <ArrowRight size={17} aria-hidden="true" /></span>
+          </Link>}
+          <div className="home-blog-list">
+            {blogPicks.slice(1).map(post => <Link key={post.slug} to={`/post/${post.slug}`}>
+              <span className="home-pick-type">{post.tags[0] ?? '文章'} · {post.date}</span>
+              <div className="home-pick-title"><h3>{post.title}</h3><ArrowUpRight size={19} aria-hidden="true" /></div>
+              <p>{post.summary}</p>
+            </Link>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section" aria-labelledby="home-lab-title">
+        <div className="home-section-heading">
+          <div>
+            <span className="home-section-index">03 / LABS</span>
+            <h2 id="home-lab-title">实验室</h2>
+            <p>一些奇奇怪怪的小折腾。想到什么，就做出来玩玩。</p>
+          </div>
+          <Link className="home-section-link" to="/lab">进入实验室 <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        </div>
+        <div className="home-lab-grid">
+          {EXPERIMENTS.filter(item => item.path).map(item => <Link key={item.id} className="home-lab-pick" to={item.path!}>
+            <div className="home-lab-visual"><img src={item.cover === 'room' ? '/lab/room.png' : '/lab/central-perk/cover.png'} alt="" loading="lazy" /></div>
+            <div className="home-lab-copy">
+              <span className="home-pick-type">{item.status === 'ready' ? '可以体验' : '筹备中'}</span>
+              <div className="home-pick-title"><h3>{item.title}</h3><ArrowUpRight size={19} aria-hidden="true" /></div>
+              <p>{item.description}</p>
             </div>
-          </div>
-          <p className="font-serif text-[26px] sm:text-[32px] leading-[1.5] font-medium text-[#1d1a15]">
-            {PROFILE.introPre}
-            <span style={{ color: ACCENT }}>{PROFILE.introName}</span>
-            {PROFILE.introPost}
-            <br />
-            {PROFILE.introLine2}
-          </p>
-          <div className="mt-6 space-y-4 text-[15px] sm:text-base leading-[1.9] text-[#57534a]">
-            {PROFILE.introParagraphs.map((p) => (
-              <p key={p}>{p}</p>
-            ))}
-          </div>
-        </section>
+          </Link>)}
+        </div>
+      </section>
+    </main>
 
-        {/* 经历 */}
-        <section className="py-8 border-t" style={{ borderColor: BORDER }}>
-          <h2 className="font-serif text-xl font-bold mb-6">经历</h2>
-
-          <h3 className="text-xs font-semibold tracking-widest text-[#a39e93] mb-3">实习经历</h3>
-          <div className="space-y-4 mb-8">
-            {EXPERIENCE.map((e) => (
-              <div key={e.title} className="flex gap-4">
-                <div className="w-28 shrink-0 text-xs text-[#a39e93] pt-1 font-mono">{e.period}</div>
-                <div>
-                  <div className="font-semibold text-[15px]">{e.title}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </section>
-
-        {/* 项目 */}
-        {repos.length > 0 && (
-          <section id="projects" className="py-8 border-t" style={{ borderColor: BORDER }}>
-            <h2 className="font-serif text-xl font-bold mb-6">项目</h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {repos.map((r) => (
-                <a
-                  key={r.id}
-                  href={r.html_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group rounded-xl border bg-white px-5 py-4 hover:shadow-md hover:-translate-y-0.5 transition-all"
-                  style={{ borderColor: BORDER }}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-[15px] truncate" style={{ color: ACCENT }}>
-                      {r.full_name.split('/')[1] ?? r.full_name}
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 text-[#a39e93] group-hover:text-[#26221c] shrink-0 transition-colors" />
-                  </div>
-                  <p className="text-sm text-[#6b655c] mt-1.5 line-clamp-2 min-h-[2.5rem] leading-relaxed">
-                    {r.description ?? '暂无描述'}
-                  </p>
-                  <div className="flex items-center gap-3 mt-2.5 text-xs text-[#a39e93]">
-                    <span className="flex items-center gap-1">
-                      <Star className="w-3 h-3" />
-                      {formatNumber(r.stargazers_count)}
-                    </span>
-                    {r.language && <span>{r.language}</span>}
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* 页脚 */}
-        <footer className="pt-10 mt-6 border-t text-sm text-[#a39e93] flex items-center justify-between flex-wrap gap-3" style={{ borderColor: BORDER }}>
-          <span>© 2026 {PROFILE.name}</span>
-          <div className="flex items-center gap-4">
-            <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
-              <Github className="w-3.5 h-3.5" /> GitHub
-            </a>
-            <Link to="/hotspot" className="flex items-center gap-1 hover:text-[#26221c] transition-colors">
-              <Flame className="w-3.5 h-3.5" /> 热点追踪站
-            </Link>
-            <span className="flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5" /> {PROFILE.email}
-            </span>
-          </div>
-          <div className="mt-3"><AdminControl /></div>
-        </footer>
-      </main>
-    </div>
-  )
+    <footer className="home-footer">
+      <div className="home-footer-inner">
+        <p>保持联系</p>
+        <nav className="home-contact-links" aria-label="联系链接">
+          {contacts.map(contact => <a key={contact.label} href={contact.href} target="_blank" rel="noopener noreferrer" aria-label={contact.label} title={contact.label}>
+            <span className="home-contact-mark" aria-hidden="true">{contact.mark === 'github' ? <Github /> : contact.mark}</span>
+            <span>{contact.label}</span>
+          </a>)}
+        </nav>
+        <small>© {new Date().getFullYear()} 羊宇宙 · <button type="button" className="home-email-copy" title={emailCopied ? '已复制' : '点击复制邮箱地址'} onClick={async () => {
+          try { await navigator.clipboard.writeText(email); setEmailCopied(true) }
+          catch { setEmailCopied(false) }
+        }} onMouseLeave={() => setEmailCopied(false)} onBlur={() => setEmailCopied(false)}>
+          <Mail size={16} aria-hidden="true" />{email}<span className="home-email-copy-status" role="status">{emailCopied ? '已复制' : ''}</span>
+        </button></small>
+      </div>
+    </footer>
+  </div>
 }

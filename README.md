@@ -10,23 +10,23 @@
 
 | 个人首页 | 热点追踪站 |
 | --- | --- |
-| ![个人首页](docs/screenshot-home.png) | ![热点追踪站](docs/screenshot-hotspot.png) |
+| ![个人首页](design/home-voyage-1440.png) | ![热点追踪站](docs/screenshot-hotspot.png) |
 
 ## 站点地图
 
 | 页面 | 内容 |
 | --- | --- |
-| `/` | 简历页：自我介绍、实习经历、教育经历、科研论文、精选 GitHub 项目 |
-| `/shelf` | 漫游：影视 / 书籍 / 音乐书架（`src/data/shelf.ts` 维护） |
-| `/blog` | 博客列表（`src/posts/*.md`） |
-| `/post/:slug` | 博文详情页（Markdown 渲染，支持标签与日期） |
+| `/` | 一屏太空首页：地球与黑洞之间的动态 3D 飞船和个人介绍 |
+| `/shelf` | 漫游：影视 / 图书 / 音乐分类书架（`src/data/shelf.ts` 维护） |
+| `/blog` | 博客与原学习文章合并展示（`src/posts/*.md`、`src/study/*.md`） |
+| `/post/:slug` | 文章详情页（旧 `/study/:slug` 自动跳转） |
 | `/hotspot` | 热点追踪站：GitHub 热点、Agent Skills、论文热点、AI 新闻、财经看点、统一收藏 |
 | `/lab` | 实验室：按分类浏览实验卡片 |
 | `/lab/sheep-room` | 羊的小屋：进入 3D 小屋，填写房间想法，观看 AI 逛店并选择购物清单，最后生成概念效果图（需单独配置服务） |
 
 ## 功能
 
-- **个人博客**：极简编辑风首页，自动拉取 GitHub 头像与按 Star 排序的精选仓库；博文存放在 `src/posts/*.md`，frontmatter 支持 `title / date / tags / summary`。
+- **个人首页**：深空场景中，Blender 建模的环形飞船由 Three.js 驱动，从地球驶向黑洞。`scripts/build_journey_ship.py` 可重新生成可编辑的 `.blend` 和网页使用的 `.glb`。视觉参考包括 [devPilot 的 Endurance 模型](https://sketchfab.com/3d-models/interstellar-endurance-901fec2809704b74bec891e9a40a8726)；本站飞船网格由脚本独立构建。博客同时读取 `src/posts/*.md` 与 `src/study/*.md`；长文可使用 `layout: essay`、`updated` 和 `audience`，写法见 [博客写作模板](docs/blog-writing.md)。仅在文章明确提供 `cover: /图片路径` 时展示封面。
 - **GitHub 热点**：按语言 / 主题分类，支持今日 / 本周 / 本月时间范围、关键词搜索与限流兜底提示。
 - **每日榜单**：GitHub 项目、Agent Skills、Hugging Face 论文、AI 新闻四个榜单由服务器定时任务每天早间更新（`update_snapshots.py`，cron 08:10）。
 - **每日推送**：本地定时任务每天早间推送 Skills / GitHub / 论文 / AI 新闻 Top10（08:14–08:20，增量去重）。
@@ -48,6 +48,8 @@
 npm install
 npm run dev
 ```
+
+首页浏览器检查：`node scripts/home-ui-check.mjs`（需要本机 Chrome；非默认端口可设置 `HOME_CHECK_URL`）。
 
 本地 API 代理指向 `127.0.0.1:8080`，需要另外启动 `server.mjs`。口令不配置时为只读；本地启用方法见上面的管理口令文档。
 

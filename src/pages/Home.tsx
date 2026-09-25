@@ -25,6 +25,8 @@ import {
   type TimeRange,
 } from '@/lib/github'
 import { AlertTriangle, Flame, Github, RefreshCw, Search, Sparkles } from 'lucide-react'
+import '@/components/site-header.css'
+import './hotspot-header.css'
 
 type CategoryMode = 'language' | 'topic'
 type View = 'hot' | 'skills' | 'papers' | 'ai' | 'finance' | 'fav'
@@ -140,8 +142,8 @@ export default function Home() {
     <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9]">
       {/* Header */}
       <header className="border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur sm:sticky sm:top-0 sm:z-10">
-        <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 sm:py-4 flex items-center gap-3 flex-wrap">
-          <div className="w-full min-w-0 sm:w-auto sm:mr-auto">
+        <div className="site-header hotspot-header-inner flex-wrap sm:flex-nowrap">
+          <div className="w-full min-w-0 sm:flex-1">
             <a href="/" className="group flex min-w-0 items-center gap-2.5" title="返回我的博客" aria-label="返回我的博客">
               <img
                 src="/sheep-planet.png"
@@ -181,20 +183,6 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto px-3 py-4 space-y-4 sm:px-4 sm:py-6 sm:space-y-6">
-        {/* 统计条（仅热点视图显示） */}
-        {view === 'hot' && (
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
-          <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
-          <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
-          <StatCard icon={<Flame className="w-4 h-4 text-[#e3b341]" />} label="时间范围" value={rangeLabel(range)} />
-          <StatCard
-            icon={<RefreshCw className="w-4 h-4 text-[#58a6ff]" />}
-            label="上次更新"
-            value={updatedAt ? updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
-          />
-        </div>
-        )}
-
         {/* 主导航 */}
         <nav ref={navRef} aria-label="热点导航" className="-mx-3 flex items-center gap-2 overflow-x-auto border-b border-[#30363d] px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-4">
           {NAV.map((n) => (
@@ -223,6 +211,20 @@ export default function Home() {
               <TabsTrigger value="monthly">本月热点</TabsTrigger>
             </TabsList>
           </Tabs>
+        </div>
+        )}
+
+        {/* 统计条（仅热点视图显示） */}
+        {view === 'hot' && (
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
+          <StatCard icon={<Sparkles className="w-4 h-4 text-[#f78166]" />} label="热门新项目" value={loading ? '…' : String(repos.length)} />
+          <StatCard icon={<Github className="w-4 h-4 text-[#a371f7]" />} label="累计 Star" value={loading ? '…' : totalStars.toLocaleString()} />
+          <StatCard icon={<Flame className="w-4 h-4 text-[#e3b341]" />} label="时间范围" value={rangeLabel(range)} />
+          <StatCard
+            icon={<RefreshCw className="w-4 h-4 text-[#58a6ff]" />}
+            label="上次更新"
+            value={updatedAt ? updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
+          />
         </div>
         )}
 

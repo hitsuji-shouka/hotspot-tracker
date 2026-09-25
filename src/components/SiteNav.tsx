@@ -7,7 +7,6 @@ const GITHUB_USER = 'hitsuji-shouka'
 
 const ITEMS: { to: string; label: string; end?: boolean }[] = [
   { to: '/shelf', label: '漫游' },
-  { to: '/study', label: '学习' },
   { to: '/blog', label: '博客' },
   { to: '/lab', label: '实验室' },
 ]
@@ -62,7 +61,7 @@ export default function SiteNav() {
           end={it.end}
           className={({ isActive }) =>
             `pb-0.5 border-b-2 transition-colors hover:text-[#26221c] ${
-              isActive ? 'text-[#1d1a15] font-medium border-[#c2410c]' : 'border-transparent'
+              isActive || (it.to === '/blog' && location.pathname.startsWith('/post/')) ? 'text-[#1d1a15] font-medium border-[#c2410c]' : 'border-transparent'
             }`
           }
         >
@@ -80,8 +79,8 @@ export default function SiteNav() {
         <Flame className="w-3.5 h-3.5 text-[#c2410c]" />
         热点
       </NavLink>
-      <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noreferrer" aria-label="GitHub">
-        <Github className="w-4 h-4 hover:text-[#26221c] transition-colors" />
+      <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noreferrer" aria-label="GitHub" className="flex self-stretch items-center justify-center pb-0.5 border-b-2 border-transparent transition-colors hover:text-[#26221c]">
+        <Github className="w-4 h-4" />
       </a>
     </nav>
     </div>

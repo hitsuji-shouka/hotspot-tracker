@@ -1,0 +1,8 @@
+@media (max-width: 639px) {
+  .site-header.hotspot-header-inner {
+    height: auto;
+    min-height: 72px;
+    padding-block: 12px;
+    row-gap: 10px;
+  }
+}

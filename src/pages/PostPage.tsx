@@ -1,59 +1,41 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router'
-import { getPost } from '@/lib/posts'
+import { ArrowLeft } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 import ArticleBody from '@/components/ArticleBody'
-import { ArrowLeft, Calendar, Tag } from 'lucide-react'
-
-const BORDER = '#e8e4dc'
-const ACCENT = '#c2410c'
+import { getPost } from '@/lib/posts'
+import './blog.css'
 
 export default function PostPage() {
   const { slug } = useParams()
   const post = slug ? getPost(slug) : undefined
 
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-[#faf9f6] text-[#26221c] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-4xl mb-3">🫥</p>
-          <p className="text-[#6b655c]">文章不存在</p>
-          <Link to="/blog" className="hover:underline text-sm mt-2 inline-block" style={{ color: ACCENT }}>
-            返回博客
-          </Link>
+  useEffect(() => { document.title = post ? `${post.title} · 羊宇宙漫游指南` : '文章不存在 · 羊宇宙漫游指南' }, [post])
+
+  if (!post) return <div className="garden-page">
+    <SiteHeader />
+    <main className="garden-missing"><h1>这篇文章还没有出现。</h1><Link to="/blog">返回博客</Link></main>
+  </div>
+
+  return <div className={`garden-page garden-reading ${post.layout === 'essay' ? 'garden-essay' : ''}`}>
+    <SiteHeader />
+    <main className="garden-article-main">
+      <Link to="/blog" className="garden-back"><ArrowLeft size={16} /> 返回博客</Link>
+      <header className="garden-article-header">
+        <div className="garden-article-eyebrow"><span>FIELD NOTES</span><span aria-hidden="true">/</span><span>{post.tags[0] ?? '笔记'}</span></div>
+        <h1>{post.title}</h1>
+        {post.summary && <p className="garden-article-summary">{post.summary}</p>}
+        <div className="garden-article-meta">
+          <div className="garden-article-tags">{post.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+          <div className="garden-article-dates">
+            {post.date && <span>发布于 <time dateTime={post.date}>{post.date}</time></span>}
+            {post.updated && <span>更新于 <time dateTime={post.updated}>{post.updated}</time></span>}
+          </div>
         </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#26221c]">
-      <main className="max-w-3xl mx-auto px-6 py-10">
-        <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-[#a39e93] hover:text-[#26221c] transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" />
-          返回博客
-        </Link>
-
-        <h1 className="font-serif text-3xl font-bold text-[#1d1a15] leading-tight">{post.title}</h1>
-        <div className="flex items-center gap-3 mt-4 text-xs text-[#a39e93] flex-wrap">
-          {post.date && (
-            <span className="flex items-center gap-1 font-mono">
-              <Calendar className="w-3 h-3" />
-              {post.date}
-            </span>
-          )}
-          {post.tags.map((t) => (
-            <span
-              key={t}
-              className="flex items-center gap-1 px-2 py-0.5 rounded-full border"
-              style={{ borderColor: BORDER, color: ACCENT }}
-            >
-              <Tag className="w-2.5 h-2.5" />
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <ArticleBody key={post.slug} content={post.content} />
-      </main>
-    </div>
-  )
+      </header>
+      {post.audience && <aside className="garden-audience" aria-label="适合谁阅读"><strong>适合谁阅读</strong><p>{post.audience}</p></aside>}
+      {post.content.trim() ? <ArticleBody key={post.slug} content={post.content} /> : <p className="garden-empty-article">这篇笔记的正文还在整理中。</p>}
+      <Link to="/blog" className="garden-end-link">← 继续逛逛博客</Link>
+    </main>
+  </div>
 }
