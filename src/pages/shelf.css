@@ -29,8 +29,6 @@
 .shelf-subtopics button.is-active .shelf-sub-count { color: #64d5e9; opacity: .75; }
 .shelf-grid-compact { margin-top: clamp(16px, 2vw, 28px); }
 .shelf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px clamp(22px, 3vw, 50px); margin-top: clamp(40px, 5vw, 72px); }
-.shelf-card-featured { grid-column: span 2; }
-.shelf-cover-featured { aspect-ratio: 2.15; }
 @media (max-width: 950px) {
   .shelf-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .shelf-grid-music { grid-template-columns: repeat(2, minmax(0, 1fr)); }

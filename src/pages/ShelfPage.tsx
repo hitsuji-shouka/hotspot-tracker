@@ -98,16 +98,16 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
   )
 }
 
-function ShelfCard({ item, onPlay, featured = false }: { item: ShelfItem; onPlay: (item: ShelfItem) => void; featured?: boolean }) {
+function ShelfCard({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem) => void }) {
   const isVideo = !!item.videoUrl
-  const coverAspect = featured ? 'shelf-cover-featured' : item.category === 'music'
+  const coverAspect = item.category === 'music'
     ? isVideo
       ? 'aspect-video'
       : 'aspect-square'
     : 'aspect-[2/3]'
 
   return (
-    <article className={`group min-w-0 ${featured ? 'shelf-card-featured' : isVideo ? 'col-span-2 sm:col-span-1' : ''}`}>
+    <article className={`group min-w-0 ${isVideo ? 'col-span-2 sm:col-span-1' : ''}`}>
       <div className={`overflow-hidden rounded-lg border border-[#504b44] bg-[#2b2926] shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${coverAspect}`}>
         <CoverBox item={item} onPlay={onPlay} />
       </div>
@@ -231,11 +231,7 @@ export default function ShelfPage() {
       const fallback = filter === 'movie' ? 'film' : 'album'
       filtered = filtered.filter((item) => (item.subgroup ?? fallback) === subgroup)
     }
-    if (filter !== 'music') return filtered
-    const firstVideo = filtered.find(item => item.videoUrl)
-    const albums = filtered.filter(item => !item.videoUrl).slice(0, 2)
-    const firstRow = [firstVideo, ...albums].filter((item): item is ShelfItem => !!item)
-    return [...firstRow, ...filtered.filter(item => !firstRow.includes(item))]
+    return filtered
   }, [filter, subgroup, subgroups])
 
   return (
@@ -298,7 +294,7 @@ export default function ShelfPage() {
           </p>
         ) : (
           <div className={`shelf-grid ${filter === 'music' ? 'shelf-grid-music' : ''}`}>
-            {items.map((item, index) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} featured={filter === 'music' && index === 0 && !!item.videoUrl} />)}
+            {items.map((item) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} />)}
           </div>
         )}
       </main>
