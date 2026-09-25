@@ -1545,4 +1545,13 @@ export const SHELF: ShelfItem[] = [
     note: 'これは、ゲームであっても遊びではない。',
   },
 
+  {
+    id: 'book-langerhans-afternoon',
+    category: 'book',
+    title: '朗格汉斯岛的午后',
+    creator: '村上春树',
+    cover: '/shelf/langerhans-afternoon.jpg',
+    note: '抽屉里塞满团得圆溜溜的漂亮pants，我以为大约是人生中微小而又确实的幸福之一（简称“小确幸”）。',
+  },
+
 ]
