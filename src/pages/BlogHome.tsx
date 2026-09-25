@@ -102,7 +102,7 @@ export default function BlogHome() {
         </div>
         <div className="home-lab-grid">
           {EXPERIMENTS.filter(item => item.path).map(item => <Link key={item.id} className="home-lab-pick" to={item.path!}>
-            <div className="home-lab-visual"><img src={item.cover === 'room' ? '/lab/room.png' : '/lab/central-perk/cover.png'} alt="" loading="lazy" /></div>
+            <div className="home-lab-visual"><img src={item.cover === 'room' ? '/lab/room-card.webp' : '/lab/central-perk/cover-card.webp'} alt="" loading="lazy" /></div>
             <div className="home-lab-copy">
               <span className="home-pick-type">{item.status === 'ready' ? '可以体验' : '筹备中'}</span>
               <div className="home-pick-title"><h3>{item.title}</h3><ArrowUpRight size={19} aria-hidden="true" /></div>

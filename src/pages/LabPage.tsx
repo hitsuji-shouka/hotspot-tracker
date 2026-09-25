@@ -168,6 +168,13 @@ export default function LabPage() {
 
   useEffect(() => { document.title = '实验室 · 羊宇宙漫游指南' }, [])
   useEffect(() => {
+    for (const src of ['/lab/room-card.webp', '/lab/central-perk/cover-card.webp']) {
+      const image = new Image()
+      image.src = src
+      void image.decode().catch(() => {})
+    }
+  }, [])
+  useEffect(() => {
     if (!stage.current) return
     const observer = new ResizeObserver(([entry]) => setViewport(entry.contentRect.width))
     observer.observe(stage.current)
