@@ -1508,4 +1508,13 @@ export const SHELF: ShelfItem[] = [
     note: '有时候想把自己关起来，还是学着把心门打开。',
   },
 
+  {
+    id: 'book-madame-bovary',
+    category: 'book',
+    title: '包法利夫人',
+    creator: '福楼拜',
+    cover: '/shelf/madame-bovary.jpg',
+    note: '她既想死，也想去巴黎。',
+  },
+
 ]
