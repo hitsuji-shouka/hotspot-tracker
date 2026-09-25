@@ -16,7 +16,7 @@
 //   {
 //     id: 'movie-xxx',
 //     category: 'movie',
-//     subgroup: 'film', // 动漫 anime / 剧集 series / 电影 film
+//     subgroup: 'film', // 影视：动漫 anime / 剧集 series / 电影 film；音乐：专辑 album / 现场 live
 //     title: '某个很喜欢的视频',
 //     creator: 'UP 主名字',
 //     videoUrl: 'https://www.bilibili.com/video/BV1xx411c7mD',
@@ -30,10 +30,13 @@ export type ShelfCategory = 'movie' | 'book' | 'music'
 /** 影视分类下的子分组：动漫 / 剧集 / 电影 */
 export type MovieSubgroup = 'anime' | 'series' | 'film'
 
+/** 音乐分类下的子分组：专辑 / 现场 */
+export type MusicSubgroup = 'album' | 'live'
+
 export interface ShelfItem {
   id: string
   category: ShelfCategory
-  subgroup?: MovieSubgroup // 仅 category 为 movie 时有意义
+  subgroup?: MovieSubgroup | MusicSubgroup // movie: anime/series/film；music: album/live
   title: string
   creator: string
   cover?: string
@@ -53,6 +56,11 @@ export const MOVIE_SUBGROUP_META: Record<MovieSubgroup, { label: string }> = {
   anime: { label: '动漫' },
   series: { label: '剧集' },
   film: { label: '电影' },
+}
+
+export const MUSIC_SUBGROUP_META: Record<MusicSubgroup, { label: string }> = {
+  album: { label: '专辑' },
+  live: { label: '现场' },
 }
 
 export const SHELF: ShelfItem[] = [
@@ -85,6 +93,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-harudorobou-live',
     category: 'music',
+    subgroup: 'live',
     title: '春泥棒（Live 2024「前世」）',
     creator: 'ヨルシカ · UP 主 清秋_Seisyuu',
     cover: '/shelf/harudorobou.jpg',
@@ -93,6 +102,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-soyeon-quit',
     category: 'music',
+    subgroup: 'live',
     title: '我要辞职了（首打歌舞台）',
     creator: '田小娟（(G)I-DLE）· UP 主 pcyxjy',
     cover: '/shelf/soyen-quit.jpg',
@@ -101,6 +111,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-muzai',
     category: 'music',
+    subgroup: 'album',
     title: '無罪モラトリアム',
     creator: '椎名林檎',
     cover: '/shelf/benji.jpg',
@@ -110,6 +121,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-wanqing',
     category: 'music',
+    subgroup: 'album',
     title: '万能青年旅店',
     creator: '万能青年旅店',
     cover: '/shelf/wanqing.jpg',
@@ -136,6 +148,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-gamble-live',
     category: 'music',
+    subgroup: 'live',
     title: '赌局 Gamble（2008 现场）',
     creator: '椎名林檎 · UP 主 胡谍ix',
     videoUrl: 'https://www.bilibili.com/video/BV1aq4y1Z7aE',
@@ -144,6 +157,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-taozhe-hongloumeng',
     category: 'music',
+    subgroup: 'live',
     title: '讨厌红楼梦（Soul Power 2003 现场）',
     creator: '陶喆 · UP 主 The3heep',
     videoUrl: 'https://www.bilibili.com/video/BV1Bt4y1Y71r',
@@ -152,6 +166,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-marunouchi-live',
     category: 'music',
+    subgroup: 'live',
     title: '丸ノ内サディスティック',
     creator: '椎名林檎 · 東京事変 · UP 主 龙舌兰煮面包_Agave',
     videoUrl: 'https://www.bilibili.com/video/BV1RztaeCE5H',
@@ -160,6 +175,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-usotsuki-live',
     category: 'music',
+    subgroup: 'live',
     title: '嘘月（Live 2024「前世」）',
     creator: 'ヨルシカ · UP 主 清秋_Seisyuu',
     videoUrl: 'https://www.bilibili.com/video/BV1oiK6zrEsK',
@@ -168,6 +184,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-gidle-fate',
     category: 'music',
+    subgroup: 'live',
     title: 'Fate（LIVE CLIP）',
     creator: '(G)I-DLE · 官方',
     videoUrl: 'https://www.bilibili.com/video/BV1Zx421k7AZ',
@@ -176,6 +193,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-hitsuji-golden',
     category: 'music',
+    subgroup: 'live',
     title: '金色（Fuji Rock Festival 2023）',
     creator: '羊文学 · UP 主 炒饭的蜘蛛侠',
     videoUrl: 'https://www.bilibili.com/video/BV1Yx4y1B7om',
@@ -184,6 +202,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-hitsuji-1999',
     category: 'music',
+    subgroup: 'album',
     title: '1999（官方 MV）',
     creator: '羊文学',
     videoUrl: 'https://www.bilibili.com/video/BV1kk4y1E7LW',
@@ -1470,6 +1489,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-our-hope',
     category: 'music',
+    subgroup: 'album',
     title: 'our hope',
     creator: '羊文学',
     cover: '/shelf/our-hope.jpg',
@@ -1480,6 +1500,7 @@ export const SHELF: ShelfItem[] = [
   {
     id: 'music-zhangzhenyue-ok',
     category: 'music',
+    subgroup: 'album',
     title: 'OK',
     creator: '张震岳',
     cover: '/shelf/ok-zhangzhenyue.jpg',

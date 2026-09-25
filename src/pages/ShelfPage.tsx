@@ -2,12 +2,22 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { Music, Play, Star, X } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
-import { CATEGORY_META, MOVIE_SUBGROUP_META, SHELF, type MovieSubgroup, type ShelfCategory, type ShelfItem } from '@/data/shelf'
+import { CATEGORY_META, MOVIE_SUBGROUP_META, MUSIC_SUBGROUP_META, SHELF, type MovieSubgroup, type MusicSubgroup, type ShelfCategory, type ShelfItem } from '@/data/shelf'
 import './shelf.css'
 
 const ACCENT = '#e6b976'
 const CATEGORIES: ShelfCategory[] = ['movie', 'book', 'music']
 const MOVIE_SUBGROUPS: MovieSubgroup[] = ['anime', 'series', 'film']
+const MUSIC_SUBGROUPS: MusicSubgroup[] = ['album', 'live']
+type Subgroup = MovieSubgroup | MusicSubgroup
+const SUBGROUPS: Partial<Record<ShelfCategory, Subgroup[]>> = {
+  movie: MOVIE_SUBGROUPS,
+  music: MUSIC_SUBGROUPS,
+}
+const SUBGROUP_META: Record<Subgroup, { label: string }> = {
+  ...MOVIE_SUBGROUP_META,
+  ...MUSIC_SUBGROUP_META,
+}
 const DESCRIPTIONS: Record<ShelfCategory, string> = {
   movie: '借一段光影，走进另一种人生。',
   book: '在书页之间，慢慢认识更辽阔的世界。',
@@ -198,7 +208,8 @@ function MediaModal({ item, onClose }: { item: ShelfItem; onClose: () => void })
 export default function ShelfPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filter = CATEGORIES.find(category => category === searchParams.get('category')) ?? 'movie'
-  const subgroup: MovieSubgroup = MOVIE_SUBGROUPS.find(g => g === searchParams.get('sub')) ?? 'anime'
+  const subgroups = SUBGROUPS[filter] ?? []
+  const subgroup: Subgroup = subgroups.find(g => g === searchParams.get('sub')) ?? subgroups[0] ?? 'anime'
   const [playing, setPlaying] = useState<ShelfItem | null>(null)
 
   useEffect(() => {
@@ -206,20 +217,26 @@ export default function ShelfPage() {
   }, [])
 
   const subgroupCounts = useMemo(() => {
-    const counts: Record<MovieSubgroup, number> = { anime: 0, series: 0, film: 0 }
-    for (const item of SHELF) if (item.category === 'movie') counts[item.subgroup ?? 'film'] += 1
+    const counts: Record<Subgroup, number> = { anime: 0, series: 0, film: 0, album: 0, live: 0 }
+    for (const item of SHELF) {
+      if (item.category === 'movie') counts[(item.subgroup as MovieSubgroup) ?? 'film'] += 1
+      if (item.category === 'music') counts[(item.subgroup as MusicSubgroup) ?? 'album'] += 1
+    }
     return counts
   }, [])
 
   const items = useMemo(() => {
     let filtered = SHELF.filter((item) => item.category === filter)
-    if (filter === 'movie') filtered = filtered.filter((item) => (item.subgroup ?? 'film') === subgroup)
+    if (subgroups.length > 0) {
+      const fallback = filter === 'movie' ? 'film' : 'album'
+      filtered = filtered.filter((item) => (item.subgroup ?? fallback) === subgroup)
+    }
     if (filter !== 'music') return filtered
     const firstVideo = filtered.find(item => item.videoUrl)
     const albums = filtered.filter(item => !item.videoUrl).slice(0, 2)
     const firstRow = [firstVideo, ...albums].filter((item): item is ShelfItem => !!item)
     return [...firstRow, ...filtered.filter(item => !firstRow.includes(item))]
-  }, [filter, subgroup])
+  }, [filter, subgroup, subgroups])
 
   return (
     <div className="shelf-page min-h-screen">
@@ -252,9 +269,9 @@ export default function ShelfPage() {
           </div>
           <div className="shelf-intro-line">
             <p className="shelf-description" aria-live="polite">{DESCRIPTIONS[filter]}</p>
-            {filter === 'movie' && (
-              <nav className="shelf-subtopics" aria-label="影视分组">
-                {MOVIE_SUBGROUPS.map((g) => (
+            {subgroups.length > 0 && (
+              <nav className="shelf-subtopics" aria-label={filter === 'movie' ? '影视分组' : '音乐分组'}>
+                {subgroups.map((g) => (
                   <button
                     key={g}
                     type="button"
@@ -266,8 +283,8 @@ export default function ShelfPage() {
                     aria-pressed={subgroup === g}
                     className={subgroup === g ? 'is-active' : ''}
                   >
-                    {MOVIE_SUBGROUP_META[g].label}
-                    <span className="shelf-sub-count" aria-label={`${subgroupCounts[g]} 部`}>{subgroupCounts[g]}</span>
+                    {SUBGROUP_META[g].label}
+                    <span className="shelf-sub-count" aria-label={`${subgroupCounts[g]} ${filter === 'music' ? '首' : '部'}`}>{subgroupCounts[g]}</span>
                   </button>
                 ))}
               </nav>
