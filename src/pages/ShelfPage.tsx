@@ -205,6 +205,12 @@ export default function ShelfPage() {
     document.title = '漫游 · 羊宇宙漫游指南'
   }, [])
 
+  const subgroupCounts = useMemo(() => {
+    const counts: Record<MovieSubgroup, number> = { anime: 0, series: 0, film: 0 }
+    for (const item of SHELF) if (item.category === 'movie') counts[item.subgroup ?? 'film'] += 1
+    return counts
+  }, [])
+
   const items = useMemo(() => {
     let filtered = SHELF.filter((item) => item.category === filter)
     if (filter === 'movie') filtered = filtered.filter((item) => (item.subgroup ?? 'film') === subgroup)
@@ -260,6 +266,7 @@ export default function ShelfPage() {
                   className={subgroup === g ? 'is-active' : ''}
                 >
                   {MOVIE_SUBGROUP_META[g].label}
+                  <span className="shelf-sub-count" aria-label={`${subgroupCounts[g]} 部`}>{subgroupCounts[g]}</span>
                 </button>
               ))}
             </nav>
