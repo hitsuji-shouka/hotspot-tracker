@@ -165,12 +165,11 @@
   .lab-main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
   .lab-intro { flex: none; padding: 12px 16px 18px; }
   .lab-intro h1, .lab-intro p { transform: none; }
-  .lab-intro h1 { font-size: clamp(29px, 8.2vw, 38px); line-height: 1.28; letter-spacing: -.055em; }
-  .lab-intro h1 span { display: block; }
-  .lab-intro p { font-size: 14px; margin-top: 10px; line-height: 1.5; }
-  .lab-intro p span { display: block; margin: 0; }
+  .lab-intro h1 { font-size: clamp(24px, 7.8vw, 34px); line-height: 1.28; letter-spacing: -.055em; white-space: nowrap; }
+  .lab-intro p { font-size: clamp(12px, 3.5vw, 14px); margin-top: 10px; line-height: 1.5; white-space: nowrap; }
+  .lab-intro p span { margin-left: .5em; }
   .lab-backdrop i:nth-child(1) { width: 76vw; height: 76vw; top: 21%; left: -55vw; }
-  .lab-backdrop i:nth-child(2) { width: 62vw; height: 62vw; top: -31vw; right: -31vw; }
+  .lab-backdrop i:nth-child(2) { width: 62vw; height: 62vw; top: -43vw; right: -31vw; }
   .lab-backdrop i:nth-child(3) { width: 76vw; height: 76vw; bottom: -38vw; right: -38vw; }
   #lab-experiments { --card-height: calc(100% - 44px); flex: 1; min-height: 0; height: auto; }
   .lab-card { padding: 16px; }
@@ -200,7 +199,7 @@
 @media (max-width: 639px) and (max-height: 700px) {
   .lab-page:not(.sheep-room) .lab-header { height: 60px; }
   .lab-intro { padding: 4px 16px 10px; }
-  .lab-intro h1 { font-size: 29px; line-height: 1.16; }
+  .lab-intro h1 { line-height: 1.16; }
   .lab-intro p { margin-top: 6px; line-height: 1.3; }
   .lab-categories { padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
   .lab-main { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
