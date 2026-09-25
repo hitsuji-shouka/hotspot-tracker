@@ -1458,4 +1458,13 @@ export const SHELF: ShelfItem[] = [
     cover: '/shelf/reply-1988.jpg',
     note: '어쩌면 가족이란 가장 미안하고, 가장 서운하고, 가장 고맙고, 그리고 가장 사랑하는 사람들이다.',
   },
+  {
+    id: 'movie-unnatural',
+    category: 'movie',
+    subgroup: 'series',
+    title: '非自然死亡',
+    creator: 'TBS',
+    cover: '/shelf/unnatural.jpg',
+    note: '絶望？絶望してる暇あったら、うまいもん食べて寝るかな。',
+  },
 ]
