@@ -1517,4 +1517,13 @@ export const SHELF: ShelfItem[] = [
     note: '她既想死，也想去巴黎。',
   },
 
+  {
+    id: 'book-flowers-for-algernon',
+    category: 'book',
+    title: '献给阿尔吉侬的花束',
+    creator: '丹尼尔·凯斯',
+    cover: '/shelf/flowers-for-algernon.jpg',
+    note: '我要去的地方我将会有很多的朋友。',
+  },
+
 ]
