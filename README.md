@@ -55,9 +55,9 @@ npm run dev
 
 ### 羊的小屋服务
 
-Jev 选品：服务端设置 `JEV_API_KEY`（也支持 `TYPESAFE_API_KEY`）、`ROOM_ENABLED=1`、`ROOM_BROWSER_EXECUTABLE` 和 `SITE_ORIGIN`，即可通过现有 Playwright 浏览器选品；有 Jev 密钥时优先使用 Jev，不依赖 OpenAI 文本模型。`JEV_MODEL` 默认 `jev-latest`。按 [TypeSafe 官方 API](https://docs.typesafe.ai/api) 调用 `https://api.typesafe.ai/v1/systemone`，由 Choice 从真实页面商品链接、搜索类别、入袋、滚动和结束动作中选择，再由浏览器执行并核实。Jev 模式在设定时间内尽量多找符合需求的商品，不设件数和 20 步上限；时间到、预算用完或用户停止时结束，连续模型超时/服务失败仍会中断。保留去重和整袋总预算校验，也可选择同类别的不同商品。搜索和打开已观察到的商品链接直接导航，省去输入动画及弹窗等待。搜索类别使用常见家具词表，Jev 不生成自由文本；这里复用项目浏览器执行器，没有额外安装 Python browser-use。网页内容作为非可信商品资料处理；模型响应只接受本次提供的动作，价格、照片、重复商品与总预算仍由程序校验。
+Jev 选品：服务端同时设置 `JEV_API_KEY`（或 `TYPESAFE_API_KEY`）与 `ROOM_API_KEY`（或 `OPENAI_API_KEY`）、`ROOM_ENABLED=1`、`ROOM_BROWSER_EXECUTABLE` 和 `SITE_ORIGIN`。实现遵循 [browser-use/jev-ultrafast](https://github.com/browser-use/jev-ultrafast/tree/1231850a0bf1a0c0341fe408ef1668dbbfdfac46) 的“完整自然语言目标 → 当前页面编号元素 → 一次 Jev 请求选择操作及对应目标”循环；只有 Jev 选择搜索框的 `TYPE_TEXT` 时，文本模型才根据原始需求、已选商品和历史搜索词生成一个新搜索词。没有预先生成的家具清单，也没有固定家具词表。`JEV_MODEL` 默认 `jev-latest`，文字模型默认 `gpt-6-luna`，可通过 `ROOM_QUERY_MODEL` 调整。只有文本模型密钥时沿用 Luna 逛店；只有 Jev 密钥时不能生成搜索文字。浏览器执行器仍为本项目已有的 Node/Playwright，保留实时画面、宜家商品核验、去重和预算限制。上游仓库的 Python 3.12 + Browser Harness 运行时没有直接打进 ECS 包，因为现有线上服务是 Node/systemd；此处移植的是它的决策循环，而非直接运行其 Python 包。
 
-本地密钥放入 Git 忽略的 `.env.jev`，运行 `node --env-file=.env.jev server.mjs 4192`，对应 `SITE_ORIGIN=http://127.0.0.1:4192`。`GET /api/room/status` 返回 `available`、`provider` 和 `renderAvailable`，不返回密钥。Jev 只负责选品；效果图仍需另外配置下述 `ROOM_API_KEY`/`OPENAI_API_KEY`，未配置时页面禁用生图，选品与保存清单可正常使用。`node scripts/room-jev-check.mjs` 可免费验证 Jev 协议、动作边界、预算、异常和取消。
+本地密钥放入 Git 忽略的 `.env.jev`，运行 `node --env-file=.env.jev server.mjs 4192`，对应 `SITE_ORIGIN=http://127.0.0.1:4192`。`GET /api/room/status` 返回 `available`、`provider` 和 `renderAvailable`，不返回密钥。效果图仍需另外配置支持图片编辑的服务；文本搜索可用并不代表生图接口可用。`node scripts/room-jev-check.mjs` 可免费验证动态操作/目标、搜索文字边界、预算、异常和取消。`node scripts/room-jev-browser-check.mjs` 用真实宜家页面和确定性动作验证浏览器搜索、打开商品、入袋及画面流，不调用付费模型；需要可联网的 Chrome 或设置 `ROOM_BROWSER_EXECUTABLE`。
 
 以下为原有 Luna 选品及效果图配置（没有 Jev 密钥时使用 Luna）：
 

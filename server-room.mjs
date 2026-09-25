@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { isIP } from 'node:net'
 import { shopWithLuna, productImage } from './server-room-browser.mjs'
-import { decideWithJev } from './server-room-jev.mjs'
+import { decideWithJev, writeSearchText } from './server-room-jev.mjs'
 
 const STORES = ['ikea.cn', 'yeswood.com', 'item.jd.com']
 const DAY = 24 * 60 * 60 * 1000
@@ -136,7 +136,7 @@ export function createRoomService(env = process.env, call = openai) {
   const apiKey = env.ROOM_API_KEY || env.OPENAI_API_KEY
   const jevKey = env.JEV_API_KEY || env.TYPESAFE_API_KEY
   const provider = jevKey ? 'jev' : 'luna'
-  const configured = env.ROOM_ENABLED === '1' && !!(apiKey || jevKey)
+  const configured = env.ROOM_ENABLED === '1' && !!apiKey
   const renderAvailable = env.ROOM_ENABLED === '1' && !!apiKey
   const request = (path, body, key, timeout, signal) => call(path, body, key, timeout, env.ROOM_API_BASE_URL || 'https://api.openai.com/v1', signal)
   const browserReady = configured && !!env.ROOM_BROWSER_EXECUTABLE && existsSync(env.ROOM_BROWSER_EXECUTABLE)
@@ -189,7 +189,10 @@ export function createRoomService(env = process.env, call = openai) {
         const result = await shopWithLuna(brief, {
           key: apiKey, model: env.ROOM_TEXT_MODEL || 'gpt-6-luna',
           executablePath: env.ROOM_BROWSER_EXECUTABLE, call: request, startedAt: record.created,
-          decide: jevKey ? (state, timeout, signal) => decideWithJev(state, { key: jevKey, model: env.JEV_MODEL || 'jev-latest', timeout, signal }) : undefined,
+          decide: jevKey ? (state, timeout, signal) => decideWithJev(state, {
+            key: jevKey, model: env.JEV_MODEL || 'jev-latest', timeout, signal,
+            text: (context, textSignal) => writeSearchText(context, { request, key: apiKey, model: env.ROOM_QUERY_MODEL || 'gpt-6-luna', signal: textSignal }),
+          }) : undefined,
           onStep: event => { if (event.type === 'bag') record.products = event.products; onStep(event) }, cancelled,
         })
         record.products = result.products
