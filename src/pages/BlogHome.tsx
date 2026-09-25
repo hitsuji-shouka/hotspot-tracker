@@ -39,7 +39,7 @@ export default function BlogHome() {
         <h1>喜欢探究技术，<br />也喜欢感受故事。</h1>
         <div className="home-intro-copy">
           <p>你好，我是羊宇宙。</p>
-          <p>这里记录 AI Agent、后端开发，以及文学、电影和音乐。</p>
+          <p>这里记录 AI Agent、后端开发，<span className="home-intro-interests">以及文学、电影和音乐。</span></p>
         </div>
       </div>
       <a className="home-scroll-cue" href="#home-wander">继续探索 <ArrowDown size={16} aria-hidden="true" /></a>
