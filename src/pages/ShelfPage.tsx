@@ -250,25 +250,29 @@ export default function ShelfPage() {
               ))}
             </nav>
           </div>
-          <p className="shelf-description" aria-live="polite">{DESCRIPTIONS[filter]}</p>
-          <nav className={`shelf-subtopics ${filter === 'movie' ? '' : 'shelf-subtopics-empty'}`} aria-label="影视分组" aria-hidden={filter !== 'movie'}>
-            {filter === 'movie' && MOVIE_SUBGROUPS.map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setSearchParams(previous => {
-                  const next = new URLSearchParams(previous)
-                  next.set('sub', g)
-                  return next
-                }, { preventScrollReset: true })}
-                aria-pressed={subgroup === g}
-                className={subgroup === g ? 'is-active' : ''}
-              >
-                {MOVIE_SUBGROUP_META[g].label}
-                <span className="shelf-sub-count" aria-label={`${subgroupCounts[g]} 部`}>{subgroupCounts[g]}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="shelf-intro-line">
+            <p className="shelf-description" aria-live="polite">{DESCRIPTIONS[filter]}</p>
+            {filter === 'movie' && (
+              <nav className="shelf-subtopics" aria-label="影视分组">
+                {MOVIE_SUBGROUPS.map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setSearchParams(previous => {
+                      const next = new URLSearchParams(previous)
+                      next.set('sub', g)
+                      return next
+                    }, { preventScrollReset: true })}
+                    aria-pressed={subgroup === g}
+                    className={subgroup === g ? 'is-active' : ''}
+                  >
+                    {MOVIE_SUBGROUP_META[g].label}
+                    <span className="shelf-sub-count" aria-label={`${subgroupCounts[g]} 部`}>{subgroupCounts[g]}</span>
+                  </button>
+                ))}
+              </nav>
+            )}
+          </div>
         </section>
 
         {items.length === 0 ? (
@@ -276,7 +280,7 @@ export default function ShelfPage() {
             这一类还空着，去 src/data/shelf.ts 添一件喜欢的作品吧。
           </p>
         ) : (
-          <div className={`shelf-grid shelf-grid-compact ${filter === 'music' ? 'shelf-grid-music' : ''}`}>
+          <div className={`shelf-grid ${filter === 'music' ? 'shelf-grid-music' : ''}`}>
             {items.map((item, index) => <ShelfCard key={item.id} item={item} onPlay={setPlaying} featured={filter === 'music' && index === 0 && !!item.videoUrl} />)}
           </div>
         )}

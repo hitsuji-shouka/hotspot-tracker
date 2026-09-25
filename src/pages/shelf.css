@@ -16,9 +16,9 @@
 .shelf-tab.is-active .shelf-tab-large { opacity: 1; }
 .shelf-tab:not(.is-active):hover .shelf-tab-small { color: #bcb7b1; }
 .shelf-tab:focus-visible { outline: 2px solid #64d5e9; outline-offset: 7px; }
-.shelf-description { margin: 28px 0 0 clamp(31px, 3.6vw, 58px); max-width: 38em; color: #d5cec5; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(21px, 2.5vw, 38px); line-height: 1.45; }
-.shelf-subtopics { display: flex; align-items: baseline; gap: clamp(22px, 2.6vw, 40px); min-height: 36px; margin: clamp(28px, 3.2vw, 44px) 0 0 clamp(31px, 3.6vw, 58px); overflow-x: auto; scrollbar-width: none; }
-.shelf-subtopics-empty { pointer-events: none; }
+.shelf-intro-line { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: clamp(30px, 3.4vw, 60px); row-gap: 12px; margin: 28px 0 0 clamp(31px, 3.6vw, 58px); }
+.shelf-description { margin: 0; max-width: 38em; color: #d5cec5; font-family: ui-serif, Georgia, Cambria, serif; font-size: clamp(21px, 2.5vw, 38px); line-height: 1.45; }
+.shelf-subtopics { display: flex; align-items: baseline; gap: clamp(22px, 2.6vw, 40px); padding-bottom: 4px; overflow-x: auto; scrollbar-width: none; }
 .shelf-subtopics::-webkit-scrollbar { display: none; }
 .shelf-subtopics button { position: relative; flex: none; border: 0; padding: 0 0 9px; color: #8f8981; font-family: ui-serif, Georgia, Cambria, serif; font-size: 19px; line-height: 1.4; letter-spacing: .08em; white-space: nowrap; transition: color 180ms ease; }
 .shelf-subtopics button:hover { color: #d5cec5; }
@@ -28,7 +28,7 @@
 .shelf-sub-count { margin-left: 6px; font-size: 12px; font-variant-numeric: tabular-nums; vertical-align: super; letter-spacing: 0; color: #6b665f; transition: color 180ms ease; }
 .shelf-subtopics button.is-active .shelf-sub-count { color: #64d5e9; opacity: .75; }
 .shelf-grid-compact { margin-top: clamp(16px, 2vw, 28px); }
-.shelf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px clamp(22px, 3vw, 50px); margin-top: clamp(74px, 8vw, 120px); }
+.shelf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px clamp(22px, 3vw, 50px); margin-top: clamp(40px, 5vw, 72px); }
 .shelf-card-featured { grid-column: span 2; }
 .shelf-cover-featured { aspect-ratio: 2.15; }
 @media (max-width: 950px) {
@@ -44,10 +44,10 @@
   .shelf-tab { width: clamp(76px, calc((100vw - 86px) / 3), 112px); }
   .shelf-tab-small { font-size: clamp(25px, 7vw, 35px); }
   .shelf-tab-large { font-size: clamp(36px, 10vw, 50px); }
-  .shelf-description { min-height: 2.9em; margin: 23px 0 0; font-size: 22px; }
-  .shelf-subtopics { margin: 22px 0 0; gap: 26px; min-height: 31px; }
+  .shelf-intro-line { margin: 23px 0 0; row-gap: 0; }
+  .shelf-description { min-height: 2.9em; font-size: 22px; }
+  .shelf-subtopics { width: 100%; margin-top: 14px; gap: 26px; }
   .shelf-subtopics button { padding-bottom: 7px; font-size: 17px; }
-  .shelf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 16px; margin-top: 62px; }
-  .shelf-grid-compact { margin-top: 22px; }
+  .shelf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 16px; margin-top: 34px; }
 }
 @media (prefers-reduced-motion: reduce) { .shelf-tab-small, .shelf-tab-large { transition: none; } }
