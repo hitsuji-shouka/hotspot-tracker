@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 const VOYAGE_MS = 24000
 export default function HomeSpace() {
   const canvasHost = useRef<HTMLDivElement>(null)
+  const [shipReady, setShipReady] = useState(false)
 
   useEffect(() => {
     const host = canvasHost.current
@@ -40,6 +41,7 @@ export default function HomeSpace() {
       const box = new THREE.Box3().setFromObject(ship)
       ship.position.sub(box.getCenter(new THREE.Vector3()))
       craft.add(ship)
+      requestAnimationFrame(() => { if (!disposed) setShipReady(true) })
     })
 
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -107,5 +109,6 @@ export default function HomeSpace() {
   return <div className="home-journey-backdrop" aria-hidden="true">
     <div className="home-space-art" />
     <div ref={canvasHost} className="home-journey-canvas" />
+    <img className={`home-ship-poster${shipReady ? ' is-ready' : ''}`} src="/space/journey-ring-ship-poster.webp" alt="" />
   </div>
 }

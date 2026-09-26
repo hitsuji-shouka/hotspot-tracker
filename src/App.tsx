@@ -1,13 +1,13 @@
 import { Routes, Route, Navigate, useParams } from 'react-router'
 import BlogHome from './pages/BlogHome'
-import PostPage from './pages/PostPage'
-import Home from './pages/Home'
-import ShelfPage from './pages/ShelfPage'
-import BlogPage from './pages/BlogPage'
-import LabPage from './pages/LabPage'
-import SheepRoomPage from './pages/SheepRoomPage'
 import { AdminSession } from './components/AdminControl'
 import { lazy, Suspense } from 'react'
+const PostPage = lazy(() => import('./pages/PostPage'))
+const Home = lazy(() => import('./pages/Home'))
+const ShelfPage = lazy(() => import('./pages/ShelfPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const LabPage = lazy(() => import('./pages/LabPage'))
+const SheepRoomPage = lazy(() => import('./pages/SheepRoomPage'))
 const CentralPerkPage = lazy(() => import('./pages/CentralPerkPage'))
 
 function OldStudyLink() {
@@ -17,7 +17,7 @@ function OldStudyLink() {
 
 export default function App() {
   return (
-    <><AdminSession /><Routes>
+    <><AdminSession /><Suspense fallback={<div style={{ minHeight: '100svh', background: '#111419' }} />}><Routes>
       <Route path="/" element={<BlogHome />} />
       <Route path="/shelf" element={<ShelfPage />} />
       <Route path="/reading" element={<Navigate to="/hotspot?view=fav&tab=articles" replace />} />
@@ -29,6 +29,6 @@ export default function App() {
       <Route path="/study/:slug" element={<OldStudyLink />} />
       <Route path="/post/:slug" element={<PostPage />} />
       <Route path="/hotspot" element={<Home />} />
-    </Routes></>
+    </Routes></Suspense></>
   )
 }

@@ -8,6 +8,35 @@
     <link rel="icon" type="image/png" href="/sheep-planet.png?v=3" />
     <link rel="apple-touch-icon" href="/sheep-planet.png?v=3" />
     <meta name="theme-color" content="#0d1117" />
+    <style>
+      html.home-preload body { background: #111419; }
+      html.home-preload #root:empty { position: relative; height: clamp(650px, 78svh, 850px); background: #030507 url('/space/home-earth-blackhole-desktop.webp') center / cover no-repeat; }
+      html.home-preload #root:empty::before { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(0deg, #111419 0%, #111419 8%, #111419d9 20%, #0b101681 36%, transparent 62%, #0203064d), linear-gradient(90deg, #020306bf, #03050870 44%, #03050810 74%); }
+      html.home-preload #root:empty::after { content: ''; position: absolute; z-index: 1; left: 71%; top: 48%; width: 200px; aspect-ratio: 299 / 234; transform: translate(-50%, -50%); background: url('/space/journey-ring-ship-poster.webp') center / contain no-repeat; }
+      @media (max-width: 800px) {
+        html.home-preload #root:empty { height: max(690px, 84svh); background-image: url('/space/home-earth-blackhole-mobile.webp'); }
+        html.home-preload #root:empty::before { background: linear-gradient(180deg, #020306c9 0%, #02030695 30%, transparent 52%, #111419ac 72%, #111419 91%, #111419 100%); }
+        html.home-preload #root:empty::after { left: 64.5%; top: 53.5%; width: 140px; }
+      }
+    </style>
+    <script>
+      if (location.pathname === '/') {
+        document.documentElement.classList.add('home-preload')
+        const image = document.createElement('link')
+        image.rel = 'preload'
+        image.as = 'image'
+        image.href = matchMedia('(max-width: 800px)').matches
+          ? '/space/home-earth-blackhole-mobile.webp'
+          : '/space/home-earth-blackhole-desktop.webp'
+        image.fetchPriority = 'high'
+        document.head.append(image)
+        const poster = document.createElement('link')
+        poster.rel = 'preload'
+        poster.as = 'image'
+        poster.href = '/space/journey-ring-ship-poster.webp'
+        document.head.append(poster)
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

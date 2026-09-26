@@ -36,16 +36,17 @@ try {
     await page.goto(origin, { waitUntil: 'domcontentloaded' })
     const metrics = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
-      scrollHeight: document.documentElement.scrollHeight,
+      heroBottom: document.querySelector('.home-hero').getBoundingClientRect().bottom,
       introBottom: document.querySelector('.home-intro-copy').getBoundingClientRect().bottom,
+      artwork: getComputedStyle(document.querySelector('.home-space-art')).backgroundImage,
       width: innerWidth, height: innerHeight,
     }))
     assert.ok(metrics.scrollWidth <= metrics.width, `home overflows horizontally at ${viewport.width}px`)
-    assert.ok(metrics.scrollHeight <= metrics.height, `home scrolls vertically at ${viewport.width}px`)
-    assert.ok(metrics.introBottom <= metrics.height - 8, `intro is clipped at ${viewport.width}px`)
+    assert.ok(metrics.introBottom <= metrics.heroBottom - 8, `intro is clipped at ${viewport.width}px`)
+    assert.match(metrics.artwork, /home-earth-blackhole-(mobile|desktop)\.webp/)
   }
   assert.deepEqual(errors, [])
-  console.log('One-screen cinematic home and moving 3D spacecraft passed.')
+  console.log('Homepage artwork, responsive layout, and moving 3D spacecraft passed.')
 } finally {
   await browser.close()
 }

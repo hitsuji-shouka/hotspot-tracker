@@ -1,7 +1,9 @@
 """Build an original ring spacecraft for the homepage journey with Blender."""
 
 import bpy
+import gzip
 import math
+from pathlib import Path
 from mathutils import Vector
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -98,3 +100,6 @@ beam("forward aerial", (0, 0, 1.2), (0, 0, 1.83), 0.025, gold, 8)
 
 bpy.ops.wm.save_as_mainfile(filepath="design/journey-ring-ship.blend")
 bpy.ops.export_scene.gltf(filepath="public/space/journey-ring-ship.glb", export_format="GLB", export_apply=True)
+model = Path("public/space/journey-ring-ship.glb")
+model.with_suffix(".glb.gz").write_bytes(gzip.compress(model.read_bytes(), compresslevel=9, mtime=0))
+# Refresh journey-ring-ship-poster.webp if the model silhouette changes.

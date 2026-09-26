@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowDown, ArrowRight, ArrowUpRight, Github, Mail } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
 import { SHELF, type ShelfItem } from '@/data/shelf'
 import { EXPERIMENTS } from '@/data/lab'
 import { posts, type Post } from '@/lib/posts'
-import HomeSpace from './HomeSpace'
 import './home.css'
+
+const HomeSpace = lazy(() => import('./HomeSpace'))
 
 const shelfPicks = ['movie-interstellar', 'book-qianshuiting', 'music-wanqing']
   .map(id => SHELF.find(item => item.id === id))
@@ -32,7 +33,7 @@ export default function BlogHome() {
 
   return <div className="home-page">
     <section className="home-hero" aria-label="关于我">
-      <HomeSpace />
+      <Suspense fallback={<div className="home-journey-backdrop" aria-hidden="true"><div className="home-space-art" /><img className="home-ship-poster" src="/space/journey-ring-ship-poster.webp" alt="" /></div>}><HomeSpace /></Suspense>
       <div className="home-hero-vignette" aria-hidden="true" />
       <SiteHeader className="home-header" />
       <div className="home-intro">

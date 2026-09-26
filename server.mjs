@@ -6,6 +6,7 @@ import { readFile, writeFile, rename } from 'node:fs/promises'
 import { extname, join, resolve, relative, isAbsolute } from 'node:path'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
+import { gzipSync } from 'node:zlib'
 import { createAdmin } from './server-auth.mjs'
 import { createRoomService, createRenderJobs } from './server-room.mjs'
 import { createCafeService, serveAudio } from './server-cafe.mjs'
@@ -19,6 +20,7 @@ const renderJobs = createRenderJobs((ip, body) => roomService.render(ip, body))
 const cafeService = createCafeService(process.env.CAFE_DATA_DIR || fileURLToPath(new URL('./state/central-perk', import.meta.url)), admin, jsonBody)
 const publicKeys = ['favorites', 'bookmarks', 'fav_skills', 'fav_papers', 'readingArticles']
 let writes = Promise.resolve()
+const compressedAssets = new Map()
 
 function clientIp(req) {
   return req.socket.remoteAddress?.includes('127.0.0.1') || req.socket.remoteAddress === '::1'
@@ -55,6 +57,8 @@ const MIME = {
   '.json': 'application/json',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.glb': 'model/gltf-binary',
   '.jpg': 'image/jpeg',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
@@ -161,8 +165,12 @@ const server = http.createServer(async (req, res) => {
     const rel = relative(root, file)
     if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('forbidden')
     let data
+    let compressed = false
     try {
-      data = await readFile(file)
+      if (path === '/space/journey-ring-ship.glb' && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
+        try { data = await readFile(`${file}.gz`); compressed = true } catch { /* use the original model during deployment */ }
+      }
+      data ??= await readFile(file)
     } catch {
       // 带扩展名的请求视为静态资源，缺失时返回 404 ——
       // 不能回退到 index.html，否则 Cloudflare 会把 HTML 当 JS 缓存 4 小时，整站白屏
@@ -175,7 +183,15 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': MIME['.html'], 'Cache-Control': 'no-cache' })
       return res.end(data)
     }
+    const compressedAsset = path.startsWith('/assets/') && /\.(?:js|css)$/.test(path)
+    if (compressedAsset && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
+      if (!compressedAssets.has(path)) compressedAssets.set(path, gzipSync(data))
+      data = compressedAssets.get(path)
+      compressed = true
+    }
     const headers = { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' }
+    if (path === '/space/journey-ring-ship.glb' || compressedAsset) headers['Vary'] = 'Accept-Encoding'
+    if (compressed) headers['Content-Encoding'] = 'gzip'
     // index.html 不缓存（内容hash在JS文件名里），assets 可长缓存，其余静态文件短缓存
     if (path === '/index.html') headers['Cache-Control'] = 'no-cache'
     else if (path.startsWith('/assets/')) headers['Cache-Control'] = 'public, max-age=31536000, immutable'

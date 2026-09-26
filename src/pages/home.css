@@ -20,12 +20,14 @@
 .home-space-art {
   position: absolute;
   inset: 0;
-  background: #030507 url('/space/home-earth-blackhole-desktop.png') center / cover no-repeat;
+  background: #030507 url('/space/home-earth-blackhole-desktop.webp') center / cover no-repeat;
   animation: home-space-breathe 30s ease-in-out infinite alternate;
 }
 @keyframes home-space-breathe { from { transform: scale(1); } to { transform: scale(1.055); } }
 .home-journey-canvas { position: absolute; inset: 0; }
 .home-journey-canvas canvas { display: block; width: 100%; height: 100%; }
+.home-ship-poster { position: absolute; z-index: 1; left: 71%; top: 48%; width: 200px; height: auto; transform: translate(-50%, -50%); pointer-events: none; transition: opacity 350ms ease; }
+.home-ship-poster.is-ready { opacity: 0; }
 .home-hero-vignette {
   z-index: -1;
   pointer-events: none;
@@ -155,7 +157,8 @@
   .home-intro { width: 100%; padding: clamp(30px, 7vh, 70px) 23px 120px; }
   .home-intro h1 { max-width: 100%; font-size: clamp(39px, 8.4vw, 62px); line-height: 1.23; }
   .home-intro-copy { max-width: 100%; margin-top: 34px; font-size: clamp(17px, 3vw, 23px); line-height: 1.55; }
-  .home-space-art { background-image: url('/space/home-earth-blackhole-mobile.png'); }
+  .home-space-art { background-image: url('/space/home-earth-blackhole-mobile.webp'); }
+  .home-ship-poster { left: 64.5%; top: 53.5%; width: 140px; }
   .home-hero-vignette { background: linear-gradient(180deg, #020306c9 0%, #02030695 30%, transparent 52%, #111419ac 72%, var(--home-bg) 91%, var(--home-bg) 100%); }
   .home-scroll-cue { left: 23px; bottom: 44px; }
   .home-sections, .home-footer-inner { width: calc(100% - 46px); }
