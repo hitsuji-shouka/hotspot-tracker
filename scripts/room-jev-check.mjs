@@ -110,6 +110,18 @@ assert.equal(chosenClick.index, 1)
 assert.equal(textCalls, 1, 'Only TYPE_TEXT calls the helper')
 assert.equal((await decideWithJev(state, { key: 'fixture', fetchImpl: async () => response('ADD') })).action, 'add')
 assert.equal((await decideWithJev({ ...state, products: [product] }, { key: 'fixture', fetchImpl: async () => response('DONE') })).action, 'finish')
+let transientCalls = 0
+assert.equal((await decideWithJev(state, { key: 'fixture', fetchImpl: async () => {
+  if (++transientCalls === 1) throw new TypeError('temporary network failure')
+  return response('ADD')
+} })).action, 'add')
+assert.equal(transientCalls, 2, 'A transient Jev connection failure gets one retry')
+await assert.rejects(decideWithJev(state, { key: 'fixture', fetchImpl: async () => { throw new TypeError('private transport details') } }), error => {
+  assert.equal(error.retryable, true)
+  assert.equal(error.status, 502)
+  assert.ok(!error.message.includes('private'))
+  return true
+})
 for (const result of [response('CLICK', 2), response('CLICK', '__proto__'), response('TYPE_TEXT', 1), response('TYPE_TEXT', 'constructor'), response('DONE'), response('BLOCKED'), response('__proto__'), response('ARBITRARY')]) {
   await assert.rejects(decideWithJev(state, { key: 'fixture', fetchImpl: async () => result.clone() }), /有效的/)
 }

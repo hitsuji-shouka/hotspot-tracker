@@ -194,7 +194,13 @@ export function createRoomService(env = process.env, call = openai) {
           executablePath: env.ROOM_BROWSER_EXECUTABLE, call: request, startedAt: record.created,
           decide: jevKey ? async (state, timeout, signal) => decideWithJev({ ...state, searchCandidates: await searchChoices }, {
             key: jevKey, model: env.JEV_MODEL || 'jev-latest', timeout, signal,
-            text: (context, textSignal) => writeSearchText(context, { request, key: apiKey, model: env.ROOM_QUERY_MODEL || 'gpt-6-luna', signal: textSignal }),
+            text: async (context, textSignal) => {
+              try { return await writeSearchText(context, { request, key: apiKey, model: env.ROOM_QUERY_MODEL || 'gpt-6-luna', signal: textSignal }) }
+              catch (error) {
+                if (error.name !== 'TypeError' || textSignal?.aborted) throw error
+                throw Object.assign(new Error('搜索词服务连接中断'), { status: 502, retryable: true })
+              }
+            },
           }) : undefined,
           onStep: event => { if (event.type === 'bag') record.products = event.products; onStep(event) }, cancelled,
         })

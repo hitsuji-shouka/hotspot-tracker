@@ -230,11 +230,14 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         }
       } catch (error) {
         if (stopped()) break
-        if (error.name === 'TimeoutError') {
-          metrics.modelTimeouts++; consecutiveTimeouts++
-          if (consecutiveTimeouts >= 2) { stopReason = 'model_timeout'; break }
-          feedback = '上次决策请求超时，尚未执行任何动作。请根据当前页面尽快选择下一步。'
-          emit('这次响应有点慢，时间还够，再试一次')
+        if (error.name === 'TimeoutError' || error.retryable === true) {
+          if (error.name === 'TimeoutError') metrics.modelTimeouts++
+          consecutiveTimeouts++
+          if (consecutiveTimeouts >= 2) { stopReason = error.name === 'TimeoutError' ? 'model_timeout' : 'model_unavailable'; break }
+          feedback = error.name === 'TimeoutError'
+            ? '上次决策请求超时，尚未执行任何动作。请根据当前页面尽快选择下一步。'
+            : '上次决策服务连接失败，尚未执行任何动作。请根据当前页面尽快选择下一步。'
+          emit(error.name === 'TimeoutError' ? '这次响应有点慢，时间还够，再试一次' : '选品服务暂时没有响应，正在重试')
           continue
         }
         throw error
@@ -299,11 +302,11 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
             await page.goto(`https://www.ikea.cn/cn/zh/search/products/?q=${encodeURIComponent(query)}&qtype=search_keywords`, { waitUntil: 'domcontentloaded', timeout: 12_000 })
           }
           // A new URL alone is insufficient: the old product cards can linger during an SPA update.
-          await page.waitForFunction(({ query, previousQuery, previousResults }) => {
+          await page.waitForFunction(({ query, previousQuery, previousResults, freshNavigation }) => {
             const nodes = [...document.querySelectorAll('a[href*="/p/"]')]
             const signature = nodes.slice(0, 12).map(node => node.getAttribute('href')).join('|')
-            return new URL(location.href).searchParams.get('q') === query && nodes.some(node => node.getBoundingClientRect().height > 0) && (previousQuery === query || signature !== previousResults)
-          }, { query, previousQuery, previousResults }, { timeout: 8_000 })
+            return new URL(location.href).searchParams.get('q') === query && nodes.some(node => node.getBoundingClientRect().height > 0) && (freshNavigation || previousQuery === query || signature !== previousResults)
+          }, { query, previousQuery, previousResults, freshNavigation: !!decide }, { timeout: 8_000 })
           feedback = `搜索了${query}`
         } else if (action.action === 'click') {
           const index = Number(action.index)

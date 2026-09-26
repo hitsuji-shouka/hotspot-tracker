@@ -91,6 +91,18 @@ try {
   assert.equal(recovered.metrics.actionErrors, 0)
   assert.equal(recovered.metrics.modelCalls, recoveryCalls)
 
+  let unavailableCalls = 0
+  const unavailable = await shopWithLuna(brief, {
+    executablePath,
+    decide: async () => {
+      unavailableCalls++
+      throw Object.assign(new Error('temporary Jev failure'), { retryable: true })
+    },
+  })
+  assert.equal(unavailableCalls, 2)
+  assert.equal(unavailable.stopReason, 'model_unavailable', 'Repeated Jev failures end cleanly')
+  assert.deepEqual(unavailable.products, [])
+
   let jevCalls = 0
   const many = await shopWithLuna({ ...brief, budget: 199 * 7 }, {
     executablePath,

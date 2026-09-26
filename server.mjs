@@ -85,7 +85,9 @@ const server = http.createServer(async (req, res) => {
           const result = await roomService.play(ip, body, send, () => closed)
           send({ type: 'done', result })
         } catch (error) {
-          if (process.env.ROOM_DEBUG === '1') console.error('Room browsing failed:', error)
+          if (process.env.ROOM_DEBUG === '1' || !error.status) {
+            console.error('Room browsing failed:', error.name, error.code || error.cause?.code || '', String(error.stack || '').split('\n').slice(1, 4).join(' | '))
+          }
           send({ type: 'error', message: error.status ? error.message : '逛店暂时失败，请稍后重试' })
         }
         res.end()

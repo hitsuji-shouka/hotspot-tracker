@@ -150,6 +150,7 @@ export default function SheepRoomPage() {
             setRunId(update.result.runId); setComplete(true); setElapsed(update.result.elapsed)
             setMessage(update.result.timedOut ? '时间到了，已选商品都留下了'
               : update.result.stopReason === 'model_timeout' ? '响应太慢，这轮先停在这里'
+              : update.result.stopReason === 'model_unavailable' ? '选品服务暂时断开，已选商品都留下了'
               : update.result.stopReason === 'budget_limit' ? '预算已用完，已选商品都留下了'
               : update.result.stopReason === 'step_limit' ? '这轮尝试次数用完了，已选商品都留下了'
               : update.result.products.length < 3 ? `这轮先挑到 ${update.result.products.length} 件，看看合不合心意`

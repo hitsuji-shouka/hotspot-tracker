@@ -130,7 +130,7 @@ export async function decideWithJev(state, { key, model = 'jev-latest', timeout 
     }
   }
   const combinedSignal = AbortSignal.any([AbortSignal.timeout(timeout), ...(signal ? [signal] : [])])
-  const response = await fetchImpl('https://api.typesafe.ai/v1/systemone', {
+  const request = {
     method: 'POST', redirect: 'error', signal: combinedSignal,
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ model, state: {
@@ -140,11 +140,22 @@ export async function decideWithJev(state, { key, model = 'jev-latest', timeout 
       bag: state.products.map(({ name, description, type, price, quantity, url }) => ({ name, description, type, price, quantity, url })),
       recentActions: state.history.slice(-10), previousResult: state.previousResult,
     }, questions }),
-  })
+  }
+  let response
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try { response = await fetchImpl('https://api.typesafe.ai/v1/systemone', request) }
+    catch (error) {
+      if (combinedSignal.aborted) throw combinedSignal.reason || error
+      if (attempt === 0) continue
+      throw Object.assign(new Error('Jev 连接中断，请稍后再试'), { status: 502, retryable: true })
+    }
+    if (response.ok || response.status < 500 || attempt === 1) break
+    await response.body?.cancel()
+  }
   if (!response.ok) {
     await response.body?.cancel()
     const reason = ({ 401: '密钥验证失败', 403: '没有调用权限', 422: '请求参数不受支持', 429: '额度或频率受限', 529: '服务暂时繁忙' })[response.status] || '服务暂时不可用'
-    throw Object.assign(new Error(`Jev ${reason}（HTTP ${response.status}）`), { status: 502 })
+    throw Object.assign(new Error(`Jev ${reason}（HTTP ${response.status}）`), { status: 502, retryable: response.status >= 500 })
   }
   let data
   try { data = await response.json() } catch { throw Object.assign(new Error('Jev 返回了无效响应'), { status: 502 }) }
