@@ -267,9 +267,10 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         if (action.action === 'search') {
           const query = String(action.query || '').trim().slice(0, 70)
           if (!query) throw new Error('搜索词为空')
-          if (decide) {
+          if (decide && page.url() !== state.url) throw new Error('页面已经变化，请重新观察后搜索')
+          if (decide && !action.planned) {
             const target = state.controls?.find(item => item.index === Number(action.index))
-            if (page.url() !== state.url || !target || (target.tag !== 'input' && target.role !== 'searchbox') ||
+            if (!target || (target.tag !== 'input' && target.role !== 'searchbox') ||
               !/search|搜索|你在找什么/i.test(`${target.role} ${target.type} ${target.label}`)) throw new Error('搜索框已经变化，请重新观察页面')
           }
           emit(`正在找「${query}」`)
@@ -277,12 +278,7 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           const previousResults = await page.locator('a[href*="/p/"]').evaluateAll(nodes => nodes.slice(0, 12).map(node => node.getAttribute('href')).join('|'))
           try {
             if (decide) {
-              await click(page.locator(`[data-room-agent-index="${action.index}"]`))
-              const field = page.locator('.nav-header-search .input-search:visible, input[aria-label="search"]:visible').last()
-              await field.waitFor({ state: 'visible', timeout: 2500 })
-              await field.fill(query)
-              await field.press('Enter')
-              await page.waitForURL(url => url.pathname.includes('/search/') && url.searchParams.get('q') === query, { waitUntil: 'commit', timeout: 5_000 })
+              await page.goto(`https://www.ikea.cn/cn/zh/search/products/?q=${encodeURIComponent(query)}&qtype=search_keywords`, { waitUntil: 'commit', timeout: 12_000 })
             } else {
               // Keep the real input/cursor visible; fall back only if the storefront overlay fails.
               const field = page.locator('.nav-header-search .input-search:visible').first()

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { isIP } from 'node:net'
 import { shopWithLuna, productImage } from './server-room-browser.mjs'
-import { decideWithJev, writeSearchText } from './server-room-jev.mjs'
+import { decideWithJev, planSearchChoices, writeSearchText } from './server-room-jev.mjs'
 
 const STORES = ['ikea.cn', 'yeswood.com', 'item.jd.com']
 const DAY = 24 * 60 * 60 * 1000
@@ -186,10 +186,13 @@ export function createRoomService(env = process.env, call = openai) {
         const record = { brief, products: [], created: Date.now(), completed: false, attempted: false }
         sessions.set(runId, record)
         onStep({ type: 'session', runId, duration: brief.duration, startedAt: record.created })
+        const searchChoices = jevKey ? planSearchChoices(brief, {
+          request, key: apiKey, model: env.ROOM_QUERY_MODEL || 'gpt-6-luna',
+        }).catch(() => []) : null
         const result = await shopWithLuna(brief, {
           key: apiKey, model: env.ROOM_TEXT_MODEL || 'gpt-6-luna',
           executablePath: env.ROOM_BROWSER_EXECUTABLE, call: request, startedAt: record.created,
-          decide: jevKey ? (state, timeout, signal) => decideWithJev(state, {
+          decide: jevKey ? async (state, timeout, signal) => decideWithJev({ ...state, searchCandidates: await searchChoices }, {
             key: jevKey, model: env.JEV_MODEL || 'jev-latest', timeout, signal,
             text: (context, textSignal) => writeSearchText(context, { request, key: apiKey, model: env.ROOM_QUERY_MODEL || 'gpt-6-luna', signal: textSignal }),
           }) : undefined,

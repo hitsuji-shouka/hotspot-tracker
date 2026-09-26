@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { jevActions, decideWithJev, writeSearchText } from '../server-room-jev.mjs'
+import { jevActions, decideWithJev, planSearchChoices, writeSearchText } from '../server-room-jev.mjs'
 import { createRoomService } from '../server-room.mjs'
 
 const url = 'https://www.ikea.cn/cn/zh/p/chair/'
@@ -22,8 +22,8 @@ assert.ok(space.operations.SCROLL_DOWN)
 assert.equal(space.operations.DONE, undefined, 'An empty bag cannot finish before trying to shop')
 assert.equal(space.operations.BLOCKED, undefined, 'A first search must not end while targets remain')
 assert.equal(jevActions({ ...state, history: [{ action: 'search', query: '绿植', result: '搜索了绿植' }] }).operations.BLOCKED, undefined)
-assert.ok(jevActions({ ...state, history: [{ action: 'search', query: '绿植', result: '搜索了绿植' }, { action: 'search', query: '室内植物', result: '搜索了室内植物' }] }).operations.BLOCKED)
-assert.ok(jevActions({ ...state, page: { ...state.page, controls: [], canScroll: false } }).operations.BLOCKED)
+assert.equal(jevActions({ ...state, history: [{ action: 'search', query: '绿植', result: '搜索了绿植' }, { action: 'search', query: '室内植物', result: '搜索了室内植物' }] }).operations.BLOCKED, undefined)
+assert.ok(jevActions({ ...state, currentProduct: null, page: { ...state.page, controls: [], canScroll: false } }).operations.BLOCKED)
 assert.ok(jevActions({ ...state, products: [product] }).operations.DONE)
 assert.equal(jevActions({ ...state, brief: { ...brief, budget: 198 } }).operations.ADD, undefined)
 assert.equal(jevActions({ ...state, currentProduct: { ...product, image: '' } }).operations.ADD, undefined)
@@ -33,6 +33,14 @@ assert.equal(jevActions({ ...state, page: { ...state.page, canScroll: false } })
 assert.ok(!JSON.stringify(space).includes('search_沙发'), 'No preset furniture list')
 
 const modelOutput = query => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify({ query }) }] }] })
+const planned = await planSearchChoices(brief, { key: 'fixture', request: async (path, body, key) => {
+  assert.equal(path, 'responses')
+  assert.equal(body.text.format.name, 'room_search_choices')
+  assert.equal(key, 'fixture')
+  assert.match(body.input[1].content, /绿植和收纳/)
+  return { output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify({ queries: ['绿植', '收纳柜', '沙发', '绿植', 'https://evil.test'] }) }] }] }
+} })
+assert.deepEqual(planned, ['绿植', '收纳柜'])
 const query = await writeSearchText(state, { key: 'fixture', model: 'query-model', request: async (path, body, key) => {
   assert.equal(path, 'responses')
   assert.equal(body.model, 'query-model')
@@ -53,6 +61,29 @@ const response = (operation, target) => Response.json({ answers: {
   ...(target === undefined ? {} : { [`${operation.toLowerCase()}_target`]: { type: 'choice', choice: String(target) } }),
 } })
 let textCalls = 0
+const candidateState = { ...state, searchCandidates: planned }
+const selectedCandidate = await decideWithJev(candidateState, { key: 'fixture', text: async () => { textCalls++; return 'unexpected' }, fetchImpl: async (_endpoint, options) => {
+  const body = JSON.parse(options.body)
+  assert.ok(body.questions.operation.criteria.SEARCH)
+  assert.equal(body.questions.operation.criteria.TYPE_TEXT, undefined)
+  assert.match(JSON.stringify(body.questions.search_target.criteria), /绿植/)
+  return response('SEARCH', 0)
+} })
+assert.equal(selectedCandidate.query, '绿植')
+assert.equal(selectedCandidate.action, 'search')
+assert.equal(selectedCandidate.planned, true)
+assert.equal(textCalls, 0, 'Jev picks a planned term without another text call')
+assert.ok(jevActions({ ...candidateState, history: [{ action: 'search', query: '绿植' }] }).operations.SEARCH)
+const productWithoutSearch = jevActions({ ...candidateState, currentProduct: null, page: { ...state.page, controls: [], canScroll: false }, history: [{ action: 'search', query: '绿植' }, { action: 'click', url: state.page.url }] })
+assert.ok(productWithoutSearch.operations.SEARCH, 'Continue planned search even when product page hides search input')
+assert.equal(productWithoutSearch.operations.BLOCKED, undefined)
+assert.equal(productWithoutSearch.targets.SEARCH['0'].index, -1)
+assert.ok(jevActions({ ...candidateState, history: planned.map(query => ({ action: 'search', query })) }).operations.TYPE_TEXT)
+const results = { ...candidateState, history: [{ action: 'search', query: '绿植', result: '搜索了绿植' }],
+  page: { ...state.page, url: 'https://www.ikea.cn/cn/zh/search/products/?q=绿植' } }
+assert.equal(jevActions(results).operations.SEARCH, undefined, 'Inspect visible results before another search')
+assert.equal(jevActions(results).operations.TYPE_TEXT, undefined)
+assert.ok(jevActions(results).operations.CLICK)
 const chosenSearch = await decideWithJev(state, { key: 'fixture-key', text: async () => { textCalls++; return '绿植' }, fetchImpl: async (endpoint, options) => {
   assert.equal(endpoint, 'https://api.typesafe.ai/v1/systemone')
   assert.equal(options.headers.Authorization, 'Bearer fixture-key')
@@ -70,6 +101,9 @@ assert.equal(chosenSearch.action, 'search')
 assert.equal(chosenSearch.query, '绿植')
 assert.equal(chosenSearch.index, 0)
 assert.equal(textCalls, 1)
+const badText = async () => { throw Object.assign(new Error('没有生成可用的新搜索词，请稍后重试'), { status: 502 }) }
+assert.equal((await decideWithJev(state, { key: 'fixture', text: badText, fetchImpl: async () => response('TYPE_TEXT', 0) })).action, 'blocked')
+assert.equal((await decideWithJev({ ...state, products: [product] }, { key: 'fixture', text: badText, fetchImpl: async () => response('TYPE_TEXT', 0) })).action, 'finish')
 const chosenClick = await decideWithJev(state, { key: 'fixture', text: async () => { textCalls++; return 'bad' }, fetchImpl: async () => response('CLICK', 1) })
 assert.equal(chosenClick.action, 'click')
 assert.equal(chosenClick.index, 1)

@@ -55,7 +55,7 @@ npm run dev
 
 ### 羊的小屋服务
 
-Jev 选品：服务端同时设置 `JEV_API_KEY`（或 `TYPESAFE_API_KEY`）与 `ROOM_API_KEY`（或 `OPENAI_API_KEY`）、`ROOM_ENABLED=1`、`ROOM_BROWSER_EXECUTABLE` 和 `SITE_ORIGIN`。实现遵循 [browser-use/jev-ultrafast](https://github.com/browser-use/jev-ultrafast/tree/1231850a0bf1a0c0341fe408ef1668dbbfdfac46) 的“完整自然语言目标 → 当前页面编号元素 → 一次 Jev 请求选择操作及对应目标”循环；只有 Jev 选择搜索框的 `TYPE_TEXT` 时，文本模型才根据原始需求、已选商品和历史搜索词生成一个新搜索词。没有预先生成的家具清单，也没有固定家具词表。`JEV_MODEL` 默认 `jev-latest`，文字模型默认 `gpt-6-luna`，可通过 `ROOM_QUERY_MODEL` 调整。只有文本模型密钥时沿用 Luna 逛店；只有 Jev 密钥时不能生成搜索文字。浏览器执行器仍为本项目已有的 Node/Playwright，保留实时画面、宜家商品核验、去重和预算限制。上游仓库的 Python 3.12 + Browser Harness 运行时没有直接打进 ECS 包，因为现有线上服务是 Node/systemd；此处移植的是它的决策循环，而非直接运行其 Python 包。
+Jev 选品：服务端同时设置 `JEV_API_KEY`（或 `TYPESAFE_API_KEY`）与 `ROOM_API_KEY`（或 `OPENAI_API_KEY`）、`ROOM_ENABLED=1`、`ROOM_BROWSER_EXECUTABLE` 和 `SITE_ORIGIN`。文本模型在浏览器启动时根据本轮房型、预算和需求提出搜索候选词；Jev 结合当前页面、已选商品和历史操作选择搜索词及后续动作。候选词用完或生成失败时，才由 `TYPE_TEXT` 再生成一个新词。没有固定家具词表。`JEV_MODEL` 默认 `jev-latest`，文字模型默认 `gpt-6-luna`，可通过 `ROOM_QUERY_MODEL` 调整。只有文本模型密钥时沿用 Luna 逛店；只有 Jev 密钥时不能生成搜索文字。浏览器执行器仍为本项目已有的 Node/Playwright，保留实时画面、宜家商品核验、去重和预算限制。上游仓库的 Python 3.12 + Browser Harness 运行时没有直接打进 ECS 包，因为现有线上服务是 Node/systemd；此处移植的是它的决策循环，而非直接运行其 Python 包。
 
 本地密钥放入 Git 忽略的 `.env.jev`，运行 `node --env-file=.env.jev server.mjs 4192`，对应 `SITE_ORIGIN=http://127.0.0.1:4192`。`GET /api/room/status` 返回 `available`、`provider` 和 `renderAvailable`，不返回密钥。效果图仍需另外配置支持图片编辑的服务；文本搜索可用并不代表生图接口可用。`node scripts/room-jev-check.mjs` 可免费验证动态操作/目标、搜索文字边界、预算、异常和取消。`node scripts/room-jev-browser-check.mjs` 用真实宜家页面和确定性动作验证浏览器搜索、打开商品、入袋及画面流，不调用付费模型；需要可联网的 Chrome 或设置 `ROOM_BROWSER_EXECUTABLE`。
 
