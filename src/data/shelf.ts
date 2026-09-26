@@ -1,5 +1,6 @@
 // 书架数据：想加作品就改这里。
-// 封面图放到 public/shelf/ 目录（比如 public/shelf/qianshuiting.jpg），cover 写 '/shelf/qianshuiting.jpg'；
+// 封面原图放到 public/shelf/ 目录，cover 写 '/shelf/qianshuiting.jpg'；
+// 新增或替换封面后运行 python scripts/build_shelf_previews.py，列表和首页会优先使用生成的 WebP 小图。
 // 不填 cover 会自动生成一个渐变占位封面，也很好看。
 //
 // ⚠️ 替换已有封面时务必换新文件名（如 fire-of-love.jpg → fire-of-love-2.jpg）：
@@ -26,6 +27,10 @@
 //   },
 
 export type ShelfCategory = 'movie' | 'book' | 'music'
+
+export function shelfPreview(cover: string): string {
+  return cover.replace(/^\/shelf\/([^/]+)\.(?:jpe?g|png)$/i, '/shelf/previews/$1.webp')
+}
 
 /** 影视分类下的子分组：动漫 / 剧集 / 电影 */
 export type MovieSubgroup = 'anime' | 'series' | 'film'

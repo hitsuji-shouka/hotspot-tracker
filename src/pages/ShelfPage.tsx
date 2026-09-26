@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { Music, Play, Star, X } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
-import { CATEGORY_META, MOVIE_SUBGROUP_META, MUSIC_SUBGROUP_META, SHELF, type MovieSubgroup, type MusicSubgroup, type ShelfCategory, type ShelfItem } from '@/data/shelf'
+import { CATEGORY_META, MOVIE_SUBGROUP_META, MUSIC_SUBGROUP_META, SHELF, shelfPreview, type MovieSubgroup, type MusicSubgroup, type ShelfCategory, type ShelfItem } from '@/data/shelf'
 import './shelf.css'
 
 const ACCENT = '#e6b976'
@@ -55,10 +55,11 @@ function CoverBox({ item, onPlay }: { item: ShelfItem; onPlay: (item: ShelfItem)
 
   const inner = item.cover ? (
     <img
-      src={item.cover}
+      src={shelfPreview(item.cover)}
       alt={item.title}
       className={`h-full w-full ${preserveWholeCover ? 'object-contain' : 'object-cover'}`}
       loading="lazy"
+      onError={event => { if (item.cover && event.currentTarget.getAttribute('src') !== item.cover) event.currentTarget.src = item.cover }}
     />
   ) : media === 'video' ? (
     // 直链视频：截首帧当封面（#t=0.1 让浏览器定位到第一帧附近的画面）

@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowDown, ArrowRight, ArrowUpRight, Github, Mail } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
-import { SHELF, type ShelfItem } from '@/data/shelf'
+import { SHELF, shelfPreview, type ShelfItem } from '@/data/shelf'
 import { EXPERIMENTS } from '@/data/lab'
 import { posts, type Post } from '@/lib/posts'
 import './home.css'
@@ -58,7 +58,7 @@ export default function BlogHome() {
         </div>
         <div className="home-shelf-grid">
           {shelfPicks.map(item => <Link key={item.id} className={`home-shelf-pick home-shelf-pick--${item.category}`} to={`/shelf?category=${item.category}`}>
-            <div className={`home-shelf-visual home-shelf-visual--${item.category}`}>{item.cover && <img src={item.cover} alt="" loading="lazy" />}</div>
+            <div className={`home-shelf-visual home-shelf-visual--${item.category}`}>{item.cover && <img src={shelfPreview(item.cover)} alt="" loading="lazy" onError={event => { if (item.cover && event.currentTarget.getAttribute('src') !== item.cover) event.currentTarget.src = item.cover }} />}</div>
             <span className="home-pick-type">{{ movie: '影视', book: '图书', music: '音乐' }[item.category]}</span>
             <div className="home-pick-title"><h3>{item.title}</h3><ArrowUpRight size={19} aria-hidden="true" /></div>
             <p>{item.creator}</p>
