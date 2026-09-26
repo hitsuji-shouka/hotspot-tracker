@@ -98,20 +98,10 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
     if (stopped()) return result()
     browser = await chromium.launch({ headless: true, executablePath, timeout: Math.max(1, deadline - Date.now()) })
     if (stopped()) return result()
-    const context = await browser.newContext({ viewport: { width: 1180, height: decide ? 1200 : 760 }, locale: 'zh-CN', acceptDownloads: false, serviceWorkers: 'block', javaScriptEnabled: !decide })
-    await context.route('**/*', async route => {
+    const context = await browser.newContext({ viewport: { width: 1180, height: 760 }, locale: 'zh-CN', acceptDownloads: false, serviceWorkers: 'block' })
+    await context.route('**/*', route => {
       const request = route.request()
-      if (!request.isNavigationRequest()) return route.continue()
-      if (!ikeaPage(request.url())) return route.abort()
-      if (!decide) return route.continue()
-      // IKEA server-renders product facts; skip its slow client scripts while keeping the real page visible.
-      try {
-        const response = await fetch(request.url(), { redirect: 'error', signal: AbortSignal.any([AbortSignal.timeout(8_000), controller.signal]) })
-        if (response.ok && response.headers.get('content-type')?.includes('text/html')) {
-          return route.fulfill({ status: response.status, contentType: 'text/html; charset=utf-8', body: await response.text() })
-        }
-      } catch { /* Use the browser request when the fast path is unavailable. */ }
-      return route.continue()
+      return request.isNavigationRequest() && !ikeaPage(request.url()) ? route.abort() : route.continue()
     })
     // The visible cursor follows real DOM mouse events; it cannot intercept input.
     await context.addInitScript(() => {
@@ -134,13 +124,11 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
     })
     let page = await context.newPage()
     page.setDefaultTimeout(7_000)
-    let hasFrame = false
     const streamPage = async () => {
       await client?.send('Page.stopScreencast').catch(() => {})
       await client?.detach().catch(() => {})
       const session = await context.newCDPSession(page)
       client = session
-      if (decide) return
       let lastFrame = 0
       session.on('Page.screencastFrame', ({ data, sessionId }) => {
         void session.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
@@ -149,21 +137,6 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         onStep({ type: 'frame', image: `data:image/jpeg;base64,${data}` })
       })
       await session.send('Page.startScreencast', { format: 'jpeg', quality: 65, maxWidth: 1180, maxHeight: 760 })
-    }
-    const capture = async () => {
-      if (!decide || stopped()) return
-      let timer, onAbort
-      const frame = await Promise.race([
-        client.send('Page.captureScreenshot', { format: 'jpeg', quality: 60, captureBeyondViewport: false }).catch(() => null),
-        new Promise(resolve => {
-          onAbort = () => resolve(null)
-          timer = setTimeout(onAbort, Math.min(12_000, deadline - Date.now()))
-          controller.signal.addEventListener('abort', onAbort, { once: true })
-        }),
-      ])
-      clearTimeout(timer)
-      controller.signal.removeEventListener('abort', onAbort)
-      if (frame && !stopped()) { hasFrame = true; onStep({ type: 'frame', image: `data:image/jpeg;base64,${frame.data}` }) }
     }
     await streamPage()
     const emit = message => !stopped() && onStep({ type: 'step', message, found: products.length, elapsed: Math.round((Date.now() - started) / 1000) })
@@ -211,7 +184,7 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
         description: document.querySelector('.info .des')?.innerText?.slice(0, 400) || '',
         scripts: [...document.querySelectorAll('script[type="application/ld+json"]')].map(item => item.textContent || ''),
         priceText: document.querySelector('.info .i-product-price, .parent-product__price')?.textContent || '',
-        image: document.querySelector('meta[name="og:image"]')?.getAttribute('content') || image?.currentSrc || image?.src || '' }
+        image: image?.currentSrc || image?.src || '' }
     }))
     const readyProduct = async () => {
       if (!new URL(page.url()).pathname.includes('/p/')) return null
@@ -304,7 +277,12 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           const previousResults = await page.locator('a[href*="/p/"]').evaluateAll(nodes => nodes.slice(0, 12).map(node => node.getAttribute('href')).join('|'))
           try {
             if (decide) {
-              await page.goto(`https://www.ikea.cn/cn/zh/search/products/?q=${encodeURIComponent(query)}&qtype=search_keywords`, { waitUntil: 'commit', timeout: 12_000 })
+              await click(page.locator(`[data-room-agent-index="${action.index}"]`))
+              const field = page.locator('.nav-header-search .input-search:visible, input[aria-label="search"]:visible').last()
+              await field.waitFor({ state: 'visible', timeout: 2500 })
+              await field.fill(query)
+              await field.press('Enter')
+              await page.waitForURL(url => url.pathname.includes('/search/') && url.searchParams.get('q') === query, { waitUntil: 'commit', timeout: 5_000 })
             } else {
               // Keep the real input/cursor visible; fall back only if the storefront overlay fails.
               const field = page.locator('.nav-header-search .input-search:visible').first()
@@ -364,7 +342,7 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
           feedback = '已向下滚动'
         } else if (action.action === 'add') {
           if (!decide) await page.locator('.info .name').first().waitFor({ state: 'visible', timeout: 5_000 })
-          if (!decide) await page.waitForFunction(() => [...document.querySelectorAll('img[alt="gallery-image"], img[alt="gallery-img"]')]
+          await page.waitForFunction(() => [...document.querySelectorAll('img[alt="gallery-image"], img[alt="gallery-img"]')]
             .some(image => image.complete && image.naturalWidth > 0 && image.currentSrc.startsWith('https://')), null, { timeout: 10_000 })
           const product = await currentProduct()
           if (!product || !product.image) throw new Error('当前商品照片或价格还未能核实，请先打开详情并等待加载')
@@ -392,7 +370,6 @@ export async function shopWithLuna(brief, { key, model = 'gpt-6-luna', executabl
       if (stopped()) break
       history.push({ action: action.action, query: action.query, url: page.url(), result: feedback })
       state = await snapshot(page)
-      if (action.action === 'search' && !hasFrame) await capture()
     }
     emit('正在整理小屋购物袋')
     return result()
